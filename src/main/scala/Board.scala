@@ -127,7 +127,7 @@ case class Board(fn: String, nr: Int) {
       tiles(y)(x).paths(1)= Line.Placed
       tiles(y+1)(x).paths(2)=Line.Placed
     }
-    if (tiles(y)(x).paths(1) == Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
+    if (tiles(y)(x).paths(1) != Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
 
       tiles(y)(x).paths(1) = Line.Illegal
       tiles(y + 1)(x).paths(2) = Line.Illegal
@@ -142,23 +142,113 @@ case class Board(fn: String, nr: Int) {
       tiles(y)(x).paths(2) = Line.Placed
       tiles(y - 1)(x).paths(1) = Line.Placed
     }
-    if (tiles(y)(x).paths(2) == Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
+    if (tiles(y)(x).paths(2) != Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
 
       tiles(y)(x).paths(1) = Line.Illegal
       tiles(y - 1)(x).paths(2) = Line.Illegal
     }
   }
 
-  def draw_Up(legality: Int, x: Int, y: Int) {
-    if (!tiles(y)(x).up() && !tiles(y)(x).crowded() && legality == 1) {
+  def draw_left(legality: Int, x: Int, y: Int) {
+    if (!tiles(y)(x).left() && !tiles(y)(x).crowded() && legality == 1) {
 
-      tiles(y)(x).paths(2) = Line.Placed
-      tiles(y - 1)(x).paths(1) = Line.Placed
+      tiles(y)(x).paths(0) = Line.Placed
+      tiles(y - 1)(x).paths(3) = Line.Placed
     }
-    if (tiles(y)(x).paths(2) == Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
+    if (tiles(y)(x).paths(0) != Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
 
-      tiles(y)(x).paths(1) = Line.Illegal
-      tiles(y - 1)(x).paths(2) = Line.Illegal
+      tiles(y)(x).paths(0) = Line.Illegal
+      tiles(y)(x-1).paths(3) = Line.Illegal
+    }
+  }
+
+  def draw_Right(legality: Int, x: Int, y: Int) {
+    if (!tiles(y)(x).right() && !tiles(y)(x).crowded() && legality == 1) {
+
+      tiles(y)(x).paths(3) = Line.Placed
+      tiles(y - 1)(x).paths(0) = Line.Placed
+    }
+    if (tiles(y)(x).paths(3) != Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
+
+      tiles(y)(x).paths(3) = Line.Illegal
+      tiles(y)(x - 1).paths(0) = Line.Illegal
+    }
+  }
+
+
+  def print_ugly(): Unit = {
+    for (ii <- 0 until width) {
+      for (j <- 0 until height) {
+        print(tiles(ii)(j).ttype + " ")
+      }
+      println()
+
+    }
+
+    println("Left")
+    for (ii <- 0 until width) {
+      for (j <- 0 until height) {
+
+        if(tiles(ii)(j).paths(0) == Line.Missing){
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).paths(0) == Line.Illegal) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).paths(0) == Line.Placed) {
+          print(" - ")
+        }
+      }
+      println()
+    }
+    println("Down")
+    for (ii <- 0 until width) {
+      for (j <- 0 until height) {
+
+        if (tiles(ii)(j).paths(1) == Line.Missing) {
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).paths(1) == Line.Illegal) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).paths(1) == Line.Placed) {
+          print(" | ")
+        }
+      }
+      println()
+    }
+
+    println("Right")
+    for (ii <- 0 until width) {
+      for (j <- 0 until height) {
+
+        if (tiles(ii)(j).paths(3) == Line.Missing) {
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).paths(3) == Line.Illegal) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).paths(3) == Line.Placed) {
+          print(" - ")
+        }
+      }
+      println()
+    }
+    println("UP")
+    for (ii <- 0 until width) {
+      for (j <- 0 until height) {
+
+        if (tiles(ii)(j).paths(2) == Line.Missing) {
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).paths(2) == Line.Illegal) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).paths(2) == Line.Placed) {
+          print(" | ")
+        }
+      }
+      println()
     }
   }
 

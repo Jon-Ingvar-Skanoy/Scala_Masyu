@@ -283,7 +283,19 @@ case class Board(fn: String, nr: Int) {
     border_Top()
     border_Bottom()
   }
+  def black_dot(x: Int, y: Int):Unit = {
+    if(tiles(y)(x).paths(1) == Line.Missing && tiles(y+1)(x).paths(1)==Line.Illegal) draw_down(-1,x, y)
 
+  }
+  def illegal_moves():Boolean={
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+        if(tiles(ii)(j).ttype==TileType.Black) black_dot(j,ii)
+      }
+
+      }
+     true
+  }
 
 }
 

@@ -1,13 +1,13 @@
 import scala.io.Source._
-import Array._
+
 case class Board(fn: String, nr: Int) {
-  val filename = fn
-  val width: Int = set_width()
-  val height: Int = set_height()
-  println(height)
-  val iterator: Array[Int] = Array.ofDim[Int](3)
-  println(width)
-  val tiles: Array[Array[Tile]] = Array.ofDim[Tile](height, width)
+  private val  filename = fn
+  private val width: Int = set_width()
+  private val height: Int = set_height()
+
+  private val iterator: Array[Int] = Array.ofDim[Int](3)
+
+  private val tiles: Array[Array[Tile]] = Array.ofDim[Tile](height, width)
 
   def input(): Unit = {
     for (line <- fromFile(filename).getLines()) {
@@ -33,28 +33,28 @@ case class Board(fn: String, nr: Int) {
   }
 
 
-  def set_height(): Int = {
+  private def set_height(): Int = {
 
     val startLines: List[String] =
       for (i <- fromFile(filename).getLines().toList if i.startsWith("size")) yield i
     //startLines.foreach(x:String
 
-    return startLines(nr).split(" ")(1).split("x")(1).toInt
+    startLines(nr).split(" ")(1).split("x")(1).toInt
 
 
-    return 1
+
   }
 
-  def set_width(): Int = {
+  private def set_width(): Int = {
     val startLines: List[String] =
       for(i <- fromFile(filename).getLines().toList if i.startsWith("size") ) yield i
     //startLines.foreach(x:String
 
-    return startLines(nr).split(" ")(1).split("x")(0).toInt
+    startLines(nr).split(" ")(1).split("x")(0).toInt
     //return startLines.split(" ")(1).split("x")(1).toInt
 
 
-  return  1
+
   }
  // def print(): Unit = {
 
@@ -121,7 +121,7 @@ case class Board(fn: String, nr: Int) {
 
   }
 
-  def draw_down(legality: Int, x: Int, y: Int) {
+  def draw_down(legality: Int, x: Int, y: Int): Unit = {
     if(!tiles(y)(x).down() && !tiles(y)(x).crowded() && legality == 1){
 
       tiles(y)(x).paths(1)= Line.Placed
@@ -136,7 +136,7 @@ case class Board(fn: String, nr: Int) {
 
   }
 
-  def draw_Up(legality: Int, x: Int, y: Int) {
+  def draw_Up(legality: Int, x: Int, y: Int) : Unit = {
     if (!tiles(y)(x).up() && !tiles(y)(x).crowded() && legality == 1) {
 
       tiles(y)(x).paths(2) = Line.Placed
@@ -149,7 +149,7 @@ case class Board(fn: String, nr: Int) {
     }
   }
 
-  def draw_left(legality: Int, x: Int, y: Int) {
+  def draw_left(legality: Int, x: Int, y: Int): Unit = {
     if (!tiles(y)(x).left() && !tiles(y)(x).crowded() && legality == 1) {
 
       tiles(y)(x).paths(0) = Line.Placed
@@ -158,11 +158,11 @@ case class Board(fn: String, nr: Int) {
     if (tiles(y)(x).paths(0) != Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
 
       tiles(y)(x).paths(0) = Line.Illegal
-      tiles(y)(x-1).paths(3) = Line.Illegal
+      tiles(y)(x - 1).paths(3) = Line.Illegal
     }
   }
 
-  def draw_Right(legality: Int, x: Int, y: Int) {
+  def draw_Right(legality: Int, x: Int, y: Int):  Unit = {
     if (!tiles(y)(x).right() && !tiles(y)(x).crowded() && legality == 1) {
 
       tiles(y)(x).paths(3) = Line.Placed
@@ -253,29 +253,37 @@ case class Board(fn: String, nr: Int) {
   }
 
 
-  def border_Top(): Unit = {
+  private def border_Top(): Unit = {
     for (i <- 0 until width){
       tiles(0)(i).paths(2)=Line.Illegal
     }
   }
 
-  def border_Bottom(): Unit = {
+  private def border_Bottom(): Unit = {
     for (i <- 0 until width) {
       tiles(height-1)(i).paths(1) = Line.Illegal
     }
   }
 
-  def border_Left(): Unit = {
+  private def border_Left(): Unit = {
     for (i <- 0 until height) {
       tiles(i)(0).paths(0) = Line.Illegal
     }
   }
 
-  def border_Right(): Unit = {
+  private def border_Right(): Unit = {
     for (i <- 0 until height) {
       tiles(i)(width-1).paths(3) = Line.Illegal
     }
   }
+
+  def borders():Unit = {
+    border_Left()
+    border_Right()
+    border_Top()
+    border_Bottom()
+  }
+
 
 }
 

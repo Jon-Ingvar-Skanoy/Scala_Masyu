@@ -28,7 +28,7 @@ case class Tile (val char: Char) {
 
   //index 0 = left, 1 = down, 2 = up, 3 = right
   def initializeLine(): Array[Line] = {
-    return Array[Line](Line.Missing, Line.Missing, Line.Missing, Line.Missing)
+     Array[Line](Line.Missing, Line.Missing, Line.Missing, Line.Missing)
   }
 
   val ttype: TileType = returnTileType(char)

@@ -7,7 +7,7 @@ case class Board(fn: String, nr: Int) {
   println(height)
   val iterator: Array[Int] = Array.ofDim[Int](3)
   println(width)
-  val tiles: Array[Array[Tile]] = Array.ofDim[Tile](width, height)
+  val tiles: Array[Array[Tile]] = Array.ofDim[Tile](height, width)
 
   def input(): Unit = {
     for (line <- fromFile(filename).getLines()) {
@@ -39,7 +39,7 @@ case class Board(fn: String, nr: Int) {
       for (i <- fromFile(filename).getLines().toList if i.startsWith("size")) yield i
     //startLines.foreach(x:String
 
-    return startLines(nr).split(" ")(1).split("x")(0).toInt
+    return startLines(nr).split(" ")(1).split("x")(1).toInt
 
 
     return 1
@@ -50,7 +50,7 @@ case class Board(fn: String, nr: Int) {
       for(i <- fromFile(filename).getLines().toList if i.startsWith("size") ) yield i
     //startLines.foreach(x:String
 
-    return startLines(nr).split(" ")(1).split("x")(1).toInt
+    return startLines(nr).split(" ")(1).split("x")(0).toInt
     //return startLines.split(" ")(1).split("x")(1).toInt
 
 
@@ -61,8 +61,8 @@ case class Board(fn: String, nr: Int) {
  // }
 
   def printBoard(): Any = {
-    for(i <- 0 until width){
-      for (j <- 0 until height) {
+    for(i <- 0 until height){
+      for (j <- 0 until width) {
         if(tiles(i)(j).ttype == TileType.Black){
           print('┼')
         }
@@ -177,8 +177,8 @@ case class Board(fn: String, nr: Int) {
 
 
   def print_ugly(): Unit = {
-    for (ii <- 0 until width) {
-      for (j <- 0 until height) {
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
         print(tiles(ii)(j).ttype + " ")
       }
       println()
@@ -186,8 +186,8 @@ case class Board(fn: String, nr: Int) {
     }
 
     println("Left")
-    for (ii <- 0 until width) {
-      for (j <- 0 until height) {
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
 
         if(tiles(ii)(j).paths(0) == Line.Missing){
           print(" 0 ")
@@ -202,8 +202,8 @@ case class Board(fn: String, nr: Int) {
       println()
     }
     println("Down")
-    for (ii <- 0 until width) {
-      for (j <- 0 until height) {
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
 
         if (tiles(ii)(j).paths(1) == Line.Missing) {
           print(" 0 ")
@@ -219,8 +219,8 @@ case class Board(fn: String, nr: Int) {
     }
 
     println("Right")
-    for (ii <- 0 until width) {
-      for (j <- 0 until height) {
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
 
         if (tiles(ii)(j).paths(3) == Line.Missing) {
           print(" 0 ")
@@ -235,8 +235,8 @@ case class Board(fn: String, nr: Int) {
       println()
     }
     println("UP")
-    for (ii <- 0 until width) {
-      for (j <- 0 until height) {
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
 
         if (tiles(ii)(j).paths(2) == Line.Missing) {
           print(" 0 ")
@@ -252,6 +252,30 @@ case class Board(fn: String, nr: Int) {
     }
   }
 
+
+  def border_Top(): Unit = {
+    for (i <- 0 until width){
+      tiles(0)(i).paths(2)=Line.Illegal
+    }
+  }
+
+  def border_Bottom(): Unit = {
+    for (i <- 0 until width) {
+      tiles(height-1)(i).paths(1) = Line.Illegal
+    }
+  }
+
+  def border_Left(): Unit = {
+    for (i <- 0 until height) {
+      tiles(i)(0).paths(0) = Line.Illegal
+    }
+  }
+
+  def border_Right(): Unit = {
+    for (i <- 0 until height) {
+      tiles(i)(width-1).paths(3) = Line.Illegal
+    }
+  }
 
 }
 

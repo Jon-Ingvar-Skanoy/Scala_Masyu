@@ -283,6 +283,22 @@ case class Board(fn: String, nr: Int) {
     border_Top()
     border_Bottom()
   }
+  def set_up_black(x: Int, y: Int): Unit = {
+    if(tiles(y)(x).paths(3) == Line.Missing && tiles(y)(x+1).ttype == TileType.Black){
+      draw_Right(-1,x,y)
+    }
+    if (tiles(y)(x).paths(1) == Line.Missing && tiles(y+1)(x).ttype == TileType.Black) {
+      draw_down(-1, x, y)
+    }
+  }
+  def set_Up():Unit ={
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+        if(tiles(ii)(j).ttype == TileType.Black) set_up_black(j,ii)
+      }
+    }
+
+  }
   def illegal_black_dot(x: Int, y: Int):Unit = {
     if(tiles(y)(x).paths(1) == Line.Missing && (tiles(y+1)(x).paths(1)==Line.Illegal | tiles(y+1)(x).paths(0)==Line.Placed | tiles(y+1)(x).paths(3)==Line.Placed)) draw_down(-1,x, y)
     if(tiles(y)(x).paths(2) == Line.Missing && (tiles(y-1)(x).paths(2)==Line.Illegal | tiles(y-1)(x).paths(0)==Line.Placed | tiles(y-1)(x).paths(3)==Line.Placed)) draw_Up(-1,x, y)

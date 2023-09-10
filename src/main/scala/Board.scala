@@ -294,6 +294,27 @@ case class Board(fn: String, nr: Int) {
     if(tiles(y)(x).paths(2) == Line.Placed && (tiles(y-1)(x).paths(2)==Line.Placed)) draw_down(-1,x, y+1)
     if(tiles(y)(x).paths(3) == Line.Placed && (tiles(y)(x+1).paths(3)==Line.Placed)) draw_left(-1,x-1, y)
     if(tiles(y)(x).paths(0) == Line.Placed && (tiles(y)(x-1).paths(0)==Line.Placed)) draw_Right(-1,x+1, y)
+    if(tiles(y)(x).paths(0) == Line.Placed) {
+      draw_Up(-1,x, y)
+      draw_down(-1,x,y)
+
+    }
+    if (tiles(y)(x).paths(3) == Line.Placed) {
+      draw_Up(-1, x, y)
+      draw_down(-1, x, y)
+
+    }
+    if (tiles(y)(x).paths(2) == Line.Placed) {
+      draw_left(-1, x, y)
+      draw_Right(-1, x, y)
+
+    }
+    if (tiles(y)(x).paths(1) == Line.Placed) {
+      draw_left(-1, x, y)
+      draw_Right(-1, x, y)
+
+    }
+
   }
   def illegal_moves():Boolean={
     for (ii <- 0 until height) {

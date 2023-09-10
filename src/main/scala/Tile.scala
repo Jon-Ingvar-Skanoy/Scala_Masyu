@@ -91,5 +91,13 @@ case class Tile (val char: Char) {
 
 
   }
+  def dead_end(): Boolean = {
+    val lineCount =
+      for (i <- paths.toList if i == Line.Illegal) yield i
+    if (lineCount.length >= 3) {
+      return true
+    }
+    false
+  }
 
 }

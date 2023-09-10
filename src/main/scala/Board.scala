@@ -361,7 +361,7 @@ case class Board(fn: String, nr: Int) {
       for (j <- 0 until width) {
         if(tiles(ii)(j).ttype==TileType.Black) illegal_black_dot(j,ii)
         if(tiles(ii)(j).ttype==TileType.White) illegal_white_dots(j,ii)
-        if( tiles(ii)(j).crowded()) illegal_crowded(j,ii)
+        if( tiles(ii)(j).crowded() | tiles(ii)(j).dead_end()) illegal_crowded(j,ii)
       }
 
       }

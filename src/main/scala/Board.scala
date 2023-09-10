@@ -289,6 +289,15 @@ case class Board(fn: String, nr: Int) {
     if(tiles(y)(x).paths(0) == Line.Missing && (tiles(y)(x-1).paths(0)==Line.Illegal | tiles(y)(x-1).paths(2)==Line.Placed | tiles(y)(x-1).paths(1)==Line.Placed)) draw_left(-1,x, y)
     if(tiles(y)(x).paths(3) == Line.Missing && (tiles(y)(x+1).paths(3)==Line.Illegal | tiles(y)(x+1).paths(2)==Line.Placed | tiles(y)(x+1).paths(1)==Line.Placed)) draw_Right(-1,x, y)
   }
+  def legal_crowded(x: Int, y: Int):Unit = {
+
+    if (tiles(y)(x).paths(0) == Line.Missing) draw_left(1, x, y)
+    if (tiles(y)(x).paths(1) == Line.Missing) draw_down(1, x, y)
+    if (tiles(y)(x).paths(2) == Line.Missing) draw_Up(1, x, y)
+    if (tiles(y)(x).paths(3) == Line.Missing) draw_Right(1, x, y)
+
+
+  }
   def illegal_white_dots(x: Int, y: Int):Unit = {
     if(tiles(y)(x).paths(1) == Line.Placed && (tiles(y+1)(x).paths(1)==Line.Placed)) draw_Up(-1,x, y-1)
     if(tiles(y)(x).paths(2) == Line.Placed && (tiles(y-1)(x).paths(2)==Line.Placed)) draw_down(-1,x, y+1)
@@ -314,25 +323,58 @@ case class Board(fn: String, nr: Int) {
       draw_Right(-1, x, y)
 
     }
+    if (tiles(y)(x).paths(0) == Line.Illegal) draw_Right(-1, x, y)
+    if (tiles(y)(x).paths(1) == Line.Illegal) draw_Up(-1, x, y)
+    if (tiles(y)(x).paths(2) == Line.Illegal) draw_down(-1, x, y)
+    if (tiles(y)(x).paths(3) == Line.Illegal) draw_left(-1, x, y)
 
   }
-  def illegal_empty(x: Int, y: Int):Unit = {
-    print(x,y)
+  def illegal_crowded(x: Int, y: Int):Unit = {
+
     if(tiles(y)(x).paths(0)==Line.Missing) draw_left(-1,x,y)
     if(tiles(y)(x).paths(1)==Line.Missing) draw_down(-1,x,y)
     if(tiles(y)(x).paths(2)==Line.Missing) draw_Up(-1,x,y)
     if(tiles(y)(x).paths(3)==Line.Missing) draw_Right(-1,x,y)
   }
+  def legal_black(x: Int, y: Int):Unit = {
+    if(tiles(y)(x).paths(0)==Line.Illegal){
+      draw_Right(1,x,y)
+      draw_Right(1,x+1,y)
+    }
+    if (tiles(y)(x).paths(3) == Line.Illegal) {
+      draw_left(1, x, y)
+      draw_left(1, x - 1, y)
+    }
+    if (tiles(y)(x).paths(1) == Line.Illegal) {
+      draw_Up(1, x, y)
+      draw_Up(1, x, y-1)
+    }
+    if (tiles(y)(x).paths(2) == Line.Illegal) {
+      draw_down(1, x, y)
+      draw_down(1, x, y + 1)
+    }
+  }
+
+
   def illegal_moves():Boolean={
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
         if(tiles(ii)(j).ttype==TileType.Black) illegal_black_dot(j,ii)
         if(tiles(ii)(j).ttype==TileType.White) illegal_white_dots(j,ii)
-        if(tiles(ii)(j).ttype==TileType.Empty & tiles(ii)(j).crowded()) illegal_empty(j,ii)
+        if( tiles(ii)(j).crowded()) illegal_crowded(j,ii)
       }
 
       }
      true
+  }
+  def legal_moves():Unit= {
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+        if(tiles(ii)(j).ttype==TileType.Black) legal_black(j,ii)
+        if(tiles(ii)(j).Illegal_crowded() && tiles(ii)(j).inn_ring()) legal_crowded(j,ii)
+
+      }
+    }
   }
 
 }

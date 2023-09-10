@@ -28,7 +28,7 @@ case class Tile (val char: Char) {
 
   //index 0 = left, 1 = down, 2 = up, 3 = right
   def initializeLine(): Array[Line] = {
-     Array[Line](Line.Missing, Line.Missing, Line.Missing, Line.Missing)
+    Array[Line](Line.Missing, Line.Missing, Line.Missing, Line.Missing)
   }
 
   val ttype: TileType = returnTileType(char)
@@ -65,9 +65,31 @@ case class Tile (val char: Char) {
   def crowded(): Boolean = {
     val lineCount =
       for (i <- paths.toList if i == Line.Placed) yield i
-    if (lineCount.length >=2) {
+    if (lineCount.length >= 2) {
       return true
     }
     false
   }
+
+  def Illegal_crowded(): Boolean = {
+    val lineCount =
+      for (i <- paths.toList if i == Line.Illegal) yield i
+    if (lineCount.length >= 2) {
+      return true
+    }
+    false
+  }
+
+  def inn_ring(): Boolean = {
+    val lineCount =
+      for (i <- paths.toList if i == Line.Placed) yield i
+    if ((lineCount.length >= 1) | ttype != TileType.Empty) {
+      return true
+    }
+    false
+
+
+
+  }
+
 }

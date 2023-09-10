@@ -2,11 +2,13 @@
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val newBoard: Board = Board("src/main/scala/puzzle_unsolved.txt", 1);
+    val newBoard: Board = Board("src/main/scala/puzzle_unsolved.txt", 0);
     newBoard.input()
     //    println(newBoard.tiles(0)(2).ttype)
 
     newBoard.borders()
+    newBoard.draw_Right(1, 1, 3)
+    newBoard.draw_Right(1, 2, 3)
     newBoard.illegal_moves()
     newBoard.printBoard()
     newBoard.print_ugly()

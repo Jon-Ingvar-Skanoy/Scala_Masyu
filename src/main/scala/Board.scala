@@ -153,7 +153,7 @@ case class Board(fn: String, nr: Int) {
     if (!tiles(y)(x).left() && !tiles(y)(x).crowded() && legality == 1) {
 
       tiles(y)(x).paths(0) = Line.Placed
-      tiles(y - 1)(x).paths(3) = Line.Placed
+      tiles(y)(x - 1).paths(3) = Line.Placed
     }
     if (tiles(y)(x).paths(0) != Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
 
@@ -166,12 +166,12 @@ case class Board(fn: String, nr: Int) {
     if (!tiles(y)(x).right() && !tiles(y)(x).crowded() && legality == 1) {
 
       tiles(y)(x).paths(3) = Line.Placed
-      tiles(y - 1)(x).paths(0) = Line.Placed
+      tiles(y)(x +1 ).paths(0) = Line.Placed
     }
     if (tiles(y)(x).paths(3) != Line.Illegal && !tiles(y)(x).crowded() && legality == -1) {
 
       tiles(y)(x).paths(3) = Line.Illegal
-      tiles(y)(x - 1).paths(0) = Line.Illegal
+      tiles(y)(x + 1).paths(0) = Line.Illegal
     }
   }
 
@@ -284,7 +284,7 @@ case class Board(fn: String, nr: Int) {
     border_Bottom()
   }
   def black_dot(x: Int, y: Int):Unit = {
-    if(tiles(y)(x).paths(1) == Line.Missing && tiles(y+1)(x).paths(1)==Line.Illegal) draw_down(-1,x, y)
+    if(tiles(y)(x).paths(1) == Line.Missing && (tiles(y+1)(x).paths(1)==Line.Illegal | tiles(y+1)(x).paths(0)==Line.Placed | tiles(y+1)(x).paths(3)==Line.Placed)) draw_down(-1,x, y)
 
   }
   def illegal_moves():Boolean={

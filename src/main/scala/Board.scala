@@ -18,7 +18,7 @@ case class Board(fn: String, nr: Int) {
 
 
 
-            tiles(iterator(1))(iterator(2)) =  Tile(i)
+            tiles(iterator(1))(iterator(2)) =  Tile(i,iterator(1),iterator(2))
 
             iterator(2) = iterator(2)+1
 

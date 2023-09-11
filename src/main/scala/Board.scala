@@ -370,6 +370,28 @@ case class Board(fn: String, nr: Int) {
       draw_down(1, x, y + 1)
     }
   }
+  def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
+    if(tiles(current_y)(Current_x).ttype != TileType.Empty) {
+      val new_remaining_dots = Remaining_dots -1
+    }
+    else{
+      val new_remaining_dots = Remaining_dots
+    }
+
+    if(start_y == current_y & start_x == Current_x){
+      println(2)
+      if(Remaining_dots == 0){
+        return 1
+      }
+      return -1
+    }
+    if(!tiles(current_y)(Current_x).crowded()) return 0
+    if(tiles(current_y)(Current_x).paths(2) == Line.Placed & 2!= Current_direction) return circle(start_x,start_y-1, Current_x, current_y, Remaining_dots, 2)
+    if(tiles(current_y)(Current_x).paths(1) == Line.Placed & 1!= Current_direction) return circle(start_x,start_y+1, Current_x, current_y, Remaining_dots, 1)
+    if(tiles(current_y)(Current_x).paths(3) == Line.Placed & 3!= Current_direction) return circle(start_x+1,start_y, Current_x, current_y, Remaining_dots, 3)
+    if(tiles(current_y)(Current_x).paths(0) == Line.Placed & 0!= Current_direction) return circle(start_x+1,start_y, Current_x, current_y, Remaining_dots, 0)
+    return 0
+  }
 
 
   def illegal_moves():Boolean={
@@ -378,6 +400,7 @@ case class Board(fn: String, nr: Int) {
         if(tiles(ii)(j).ttype==TileType.Black) illegal_black_dot(j,ii)
         if(tiles(ii)(j).ttype==TileType.White) illegal_white_dots(j,ii)
         if( tiles(ii)(j).crowded() | tiles(ii)(j).dead_end()) illegal_crowded(j,ii)
+
       }
 
       }

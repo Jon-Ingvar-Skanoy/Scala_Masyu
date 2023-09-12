@@ -318,10 +318,10 @@ case class Board(fn: String, nr: Int) {
     if(tiles(y)(x).paths(0) == Line.Missing && (tiles(y)(x-1).paths(0)==Line.Illegal | tiles(y)(x-1).paths(2)==Line.Placed | tiles(y)(x-1).paths(1)==Line.Placed)) draw_left(-1,x, y)
     if(tiles(y)(x).paths(3) == Line.Missing && (tiles(y)(x+1).paths(3)==Line.Illegal | tiles(y)(x+1).paths(2)==Line.Placed | tiles(y)(x+1).paths(1)==Line.Placed)) draw_Right(-1,x, y)
     // check if circle is formed
-    if(tiles(y)(x).paths(1) == Line.Missing  && circle(x,y+2,x,y,count_dots(),1)== -1) draw_down(-1,x, y)
-    if(tiles(y)(x).paths(2) == Line.Missing  && circle(x,y-2,x,y,count_dots(),2)== -1) draw_down(-1,x, y)
-    if (tiles(y)(x).paths(0) == Line.Missing && circle(x-2, y, x, y, count_dots(), 1) == -1) draw_down(-1, x, y)
-    if (tiles(y)(x).paths(3) == Line.Missing && circle(x-2, y, x, y, count_dots(), 2) == -1) draw_down(-1, x, y)
+    if(tiles(y)(x).paths(1) == Line.Missing  && circle(x,y+2,x,y,count_dots(),2)== -1) draw_down(-1,x, y)
+    if(tiles(y)(x).paths(2) == Line.Missing  && circle(x,y-2,x,y,count_dots(),1)== -1) draw_Up(-1,x, y)
+    if (tiles(y)(x).paths(0) == Line.Missing && circle(x-2, y, x, y, count_dots(), 3) == -1) draw_left(-1, x, y)
+    if (tiles(y)(x).paths(3) == Line.Missing && circle(x-2, y, x, y, count_dots(), 0) == -1) draw_Right(-1, x, y)
 
   }
   def legal_crowded(x: Int, y: Int):Unit = {
@@ -392,37 +392,56 @@ case class Board(fn: String, nr: Int) {
   def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
     if(tiles(current_y)(Current_x).ttype != TileType.Empty) {
 
-      if (start_y == current_y & start_x == Current_x) {
+      if (start_y == current_y && start_x == Current_x) {
         println(2)
-        if (Remaining_dots == 1) {
+        if (Remaining_dots ==0) {
           return 1
         }
-        if (!tiles(current_y)(Current_x).crowded()) return 0
-        if (tiles(current_y)(Current_x).paths(2) == Line.Placed & 2 != Current_direction) return circle(start_x, start_y - 1, Current_x, current_y, Remaining_dots-1, 2)
-        if (tiles(current_y)(Current_x).paths(1) == Line.Placed & 1 != Current_direction) return circle(start_x, start_y + 1, Current_x, current_y, Remaining_dots-1, 1)
-        if (tiles(current_y)(Current_x).paths(3) == Line.Placed & 3 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots-1, 3)
-        if (tiles(current_y)(Current_x).paths(0) == Line.Placed & 0 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots-1, 0)
-
+        else{
+          println(Remaining_dots, current_y,Current_x,start_y,start_x)
+        return -1
+        }
       }
-    }
-    else{
 
-      if (start_y == current_y & start_x == Current_x) {
+
+        if (tiles(current_y)(Current_x).paths(2) == Line.Placed && 2 != Current_direction) return circle(start_x, start_y, Current_x, current_y-1, Remaining_dots-1, 1)
+        if (tiles(current_y)(Current_x).paths(1) == Line.Placed && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y+1, Remaining_dots-1, 2)
+        if (tiles(current_y)(Current_x).paths(3) == Line.Placed && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots-1, 0)
+        if (tiles(current_y)(Current_x).paths(0) == Line.Placed && 0 != Current_direction) return circle(start_x , start_y, Current_x-1, current_y, Remaining_dots-1, 3)
+      if (!tiles(current_y)(Current_x).crowded()) return 0
+
+    }
+    else {
+        if (start_y == current_y & start_x == Current_x) {
         println(2)
         if (Remaining_dots == 0) {
           return 1
         }
-        if (!tiles(current_y)(Current_x).crowded()) return 0
-        if (tiles(current_y)(Current_x).paths(2) == Line.Placed & 2 != Current_direction) return circle(start_x, start_y - 1, Current_x, current_y, Remaining_dots, 2)
-        if (tiles(current_y)(Current_x).paths(1) == Line.Placed & 1 != Current_direction) return circle(start_x, start_y + 1, Current_x, current_y, Remaining_dots, 1)
-        if (tiles(current_y)(Current_x).paths(3) == Line.Placed & 3 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots, 3)
-        if (tiles(current_y)(Current_x).paths(0) == Line.Placed & 0 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots, 0)
+        else{
+          println(Remaining_dots, current_y, Current_x, start_x, start_y)
 
+          return -1
+        }
       }
+
+        if (tiles(current_y)(Current_x).paths(2) == Line.Placed && 2 != Current_direction) return circle(start_x, start_y , Current_x, current_y-1, Remaining_dots, 1)
+        if (tiles(current_y)(Current_x).paths(1) == Line.Placed && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y +1, Remaining_dots, 2)
+        if (tiles(current_y)(Current_x).paths(3) == Line.Placed && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots, 0)
+        if (tiles(current_y)(Current_x).paths(0) == Line.Placed && 0 != Current_direction) return circle(start_x, start_y, Current_x-1, current_y, Remaining_dots, 3)
+      if (!tiles(current_y)(Current_x).crowded()) return 0
+
+
     }
 
 
     return 0
+  }
+  def avoid_circle_empthy(x: Int, y: Int): Unit={
+
+    if (tiles(y)(x).paths(1) == Line.Missing && circle(x, y , x, y+1, count_dots(), 2) == -1) draw_down(-1, x, y)
+    if (tiles(y)(x).paths(2) == Line.Missing && circle(x, y, x, y-1, count_dots(), 1) == -1) draw_Up(-1, x, y)
+    if (tiles(y)(x).paths(0) == Line.Missing && circle(x, y, x-1, y, count_dots(), 3) == -1) draw_left(-1, x, y)
+    if (tiles(y)(x).paths(3) == Line.Missing && circle(x , y, x+1, y, count_dots(), 0) == -1) draw_Right(-1, x, y)
   }
 
 
@@ -432,6 +451,7 @@ case class Board(fn: String, nr: Int) {
         if(tiles(ii)(j).ttype==TileType.Black) illegal_black_dot(j,ii)
         if(tiles(ii)(j).ttype==TileType.White) illegal_white_dots(j,ii)
         if( tiles(ii)(j).crowded() | tiles(ii)(j).dead_end()) illegal_crowded(j,ii)
+        if(!tiles(ii)(j).crowded() && tiles(ii)(j).inn_ring()) avoid_circle_empthy(j,ii)
 
       }
 

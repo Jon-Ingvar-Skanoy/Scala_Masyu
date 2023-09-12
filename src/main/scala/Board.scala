@@ -88,7 +88,7 @@ case class Board(fn: String, nr: Int) {
             //print left + right
             print('─')
           }
-          else {
+          else{
             print(' ')
           }
         }

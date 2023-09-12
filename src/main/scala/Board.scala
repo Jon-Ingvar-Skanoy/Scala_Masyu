@@ -101,16 +101,16 @@ case class Board(fn: String, nr: Int) {
             print('│')
           }
           else if(tiles(i)(j).right()){
-            //print down + right
-            print('┌')
+            //print up + right
+            print('└')
           }
           else{
             print(' ')
           }
         }
         else if(tiles(i)(j).paths(2)==Line.Placed){
-          // print up+right
-          print('└')
+          // print down+right
+          print('┌')
         }
         else{
           print(' ')
@@ -197,7 +197,7 @@ case class Board(fn: String, nr: Int) {
           print(" x ")
         }
         if (tiles(ii)(j).paths(0) == Line.Placed) {
-          print(" - ")
+          print(" ─ ")
         }
       }
       println()
@@ -230,7 +230,7 @@ case class Board(fn: String, nr: Int) {
           print(" x ")
         }
         if (tiles(ii)(j).paths(3) == Line.Placed) {
-          print(" - ")
+          print(" ─ ")
         }
       }
       println()

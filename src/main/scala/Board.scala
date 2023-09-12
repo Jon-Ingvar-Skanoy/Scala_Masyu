@@ -448,5 +448,20 @@ case class Board(fn: String, nr: Int) {
     }
   }
 
+  def createAlteredBoard(board: Board, arr:Array[Array[Array[Boolean]]]): Board = {
+    val newBoard = board
+    for(i<-0 until height){
+      for (j<-0 until width){
+        for (d<-0 until 4){
+          if(arr(i)(j)(d) == true ){
+            if(newBoard.tiles(i)(j).paths(d) != Line.Illegal){
+              newBoard.tiles(i)(j).paths(d) = Line.Placed
+            }
+          }
+        }
+      }
+    }
+    return newBoard
+  }
 }
 

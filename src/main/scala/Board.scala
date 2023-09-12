@@ -1,7 +1,7 @@
 import scala.io.Source._
 
 case class Board(fn: String, nr: Int) {
-  private val  filename = fn
+  private val filename = fn
   private val width: Int = set_width()
   private val height: Int = set_height()
 
@@ -9,25 +9,24 @@ case class Board(fn: String, nr: Int) {
 
   private val tiles: Array[Array[Tile]] = Array.ofDim[Tile](height, width)
 
+
   def input(): Unit = {
     for (line <- fromFile(filename).getLines()) {
 
-      if (line.startsWith("size")) iterator(0) = iterator(0)+1
-      else if (iterator(0) == nr+1){
-        for(i<- line if ' '!=i){
+      if (line.startsWith("size")) iterator(0) = iterator(0) + 1
+      else if (iterator(0) == nr + 1) {
+        for (i <- line if ' ' != i) {
 
 
+          tiles(iterator(1))(iterator(2)) = Tile(i, iterator(1), iterator(2))
 
-            tiles(iterator(1))(iterator(2)) =  Tile(i,iterator(1),iterator(2))
-
-            iterator(2) = iterator(2)+1
-
+          iterator(2) = iterator(2) + 1
 
 
         }
 
         iterator(2) = 0
-        iterator(1) = iterator(1)+1
+        iterator(1) = iterator(1) + 1
       }
     }
   }
@@ -42,77 +41,75 @@ case class Board(fn: String, nr: Int) {
     startLines(nr).split(" ")(1).split("x")(1).toInt
 
 
-
   }
 
   private def set_width(): Int = {
     val startLines: List[String] =
-      for(i <- fromFile(filename).getLines().toList if i.startsWith("size") ) yield i
+      for (i <- fromFile(filename).getLines().toList if i.startsWith("size")) yield i
     //startLines.foreach(x:String
 
     startLines(nr).split(" ")(1).split("x")(0).toInt
     //return startLines.split(" ")(1).split("x")(1).toInt
 
 
-
   }
- // def print(): Unit = {
+  // def print(): Unit = {
 
- // }
+  // }
 
   def printBoard(): Any = {
     println()
-    for(i <- 0 until height){
+    for (i <- 0 until height) {
       for (j <- 0 until width) {
-        if(tiles(i)(j).ttype == TileType.Black){
+        if (tiles(i)(j).ttype == TileType.Black) {
           print('┼')
         }
-        else if(tiles(i)(j).ttype == TileType.White){
-          if(tiles(i)(j).left()){
+        else if (tiles(i)(j).ttype == TileType.White) {
+          if (tiles(i)(j).left()) {
             print('╨')
           }
-          else if(tiles(i)(j).down()){
+          else if (tiles(i)(j).down()) {
             print('╡')
           }
-          else{
+          else {
             print(' ')
           }
         }
-        else if(tiles(i)(j).left()){
-          if(tiles(i)(j).down()){
+        else if (tiles(i)(j).left()) {
+          if (tiles(i)(j).down()) {
             // print left + down
             print('┐')
           }
-          else if(tiles(i)(j).up()){
+          else if (tiles(i)(j).up()) {
             //print left + up
             print('┘')
           }
-          else if(tiles(i)(j).right()){
+          else if (tiles(i)(j).right()) {
             //print left + right
             print('─')
           }
-          else{
+          else {
             print(' ')
           }
         }
-        else if(tiles(i)(j).up()){
-           if(tiles(i)(j).down()){
+        else if (tiles(i)(j).up()) {
+          if (tiles(i)(j).down()) {
             //print up+down
             print('│')
           }
-          else if(tiles(i)(j).right()){
+          else if (tiles(i)(j).right()) {
             //print up + right
             print('└')
           }
-          else{
+          else {
             print(' ')
           }
         }
-        else if(tiles(i)(j).paths(2)==Line.Placed){
+        else if (tiles(i)(j).right()) {
           // print down+right
           print('┌')
         }
-        else{
+        else {
           print(' ')
         }
 
@@ -121,6 +118,21 @@ case class Board(fn: String, nr: Int) {
     }
 
   }
+
+  def count_dots(): Int = {
+    var count = 0
+
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+        if (tiles(ii)(j).ttype != TileType.Empty) {
+          count = count + 1
+        }
+      }
+    }
+
+    return count
+  }
+
 
   def draw_down(legality: Int, x: Int, y: Int): Unit = {
     if(!tiles(y)(x).down() && !tiles(y)(x).crowded() && legality == 1){
@@ -305,6 +317,12 @@ case class Board(fn: String, nr: Int) {
     if(tiles(y)(x).paths(2) == Line.Missing && (tiles(y-1)(x).paths(2)==Line.Illegal | tiles(y-1)(x).paths(0)==Line.Placed | tiles(y-1)(x).paths(3)==Line.Placed)) draw_Up(-1,x, y)
     if(tiles(y)(x).paths(0) == Line.Missing && (tiles(y)(x-1).paths(0)==Line.Illegal | tiles(y)(x-1).paths(2)==Line.Placed | tiles(y)(x-1).paths(1)==Line.Placed)) draw_left(-1,x, y)
     if(tiles(y)(x).paths(3) == Line.Missing && (tiles(y)(x+1).paths(3)==Line.Illegal | tiles(y)(x+1).paths(2)==Line.Placed | tiles(y)(x+1).paths(1)==Line.Placed)) draw_Right(-1,x, y)
+    //
+    if(tiles(y)(x).paths(1) == Line.Missing  && circle(x,y+2,x,y,count_dots(),1)== -1) draw_down(-1,x, y)
+    if(tiles(y)(x).paths(2) == Line.Missing  && circle(x,y-2,x,y,count_dots(),2)== -1) draw_down(-1,x, y)
+    if (tiles(y)(x).paths(0) == Line.Missing && circle(x-2, y, x, y, count_dots(), 1) == -1) draw_down(-1, x, y)
+    if (tiles(y)(x).paths(3) == Line.Missing && circle(x-2, y, x, y, count_dots(), 2) == -1) draw_down(-1, x, y)
+
   }
   def legal_crowded(x: Int, y: Int):Unit = {
 
@@ -373,24 +391,37 @@ case class Board(fn: String, nr: Int) {
   }
   def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
     if(tiles(current_y)(Current_x).ttype != TileType.Empty) {
-      val new_remaining_dots = Remaining_dots -1
+
+      if (start_y == current_y & start_x == Current_x) {
+        println(2)
+        if (Remaining_dots == 1) {
+          return 1
+        }
+        if (!tiles(current_y)(Current_x).crowded()) return 0
+        if (tiles(current_y)(Current_x).paths(2) == Line.Placed & 2 != Current_direction) return circle(start_x, start_y - 1, Current_x, current_y, Remaining_dots-1, 2)
+        if (tiles(current_y)(Current_x).paths(1) == Line.Placed & 1 != Current_direction) return circle(start_x, start_y + 1, Current_x, current_y, Remaining_dots-1, 1)
+        if (tiles(current_y)(Current_x).paths(3) == Line.Placed & 3 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots-1, 3)
+        if (tiles(current_y)(Current_x).paths(0) == Line.Placed & 0 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots-1, 0)
+
+      }
     }
     else{
-      val new_remaining_dots = Remaining_dots
+
+      if (start_y == current_y & start_x == Current_x) {
+        println(2)
+        if (Remaining_dots == 0) {
+          return 1
+        }
+        if (!tiles(current_y)(Current_x).crowded()) return 0
+        if (tiles(current_y)(Current_x).paths(2) == Line.Placed & 2 != Current_direction) return circle(start_x, start_y - 1, Current_x, current_y, Remaining_dots, 2)
+        if (tiles(current_y)(Current_x).paths(1) == Line.Placed & 1 != Current_direction) return circle(start_x, start_y + 1, Current_x, current_y, Remaining_dots, 1)
+        if (tiles(current_y)(Current_x).paths(3) == Line.Placed & 3 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots, 3)
+        if (tiles(current_y)(Current_x).paths(0) == Line.Placed & 0 != Current_direction) return circle(start_x + 1, start_y, Current_x, current_y, Remaining_dots, 0)
+
+      }
     }
 
-    if(start_y == current_y & start_x == Current_x){
-      println(2)
-      if(Remaining_dots == 0){
-        return 1
-      }
-      return -1
-    }
-    if(!tiles(current_y)(Current_x).crowded()) return 0
-    if(tiles(current_y)(Current_x).paths(2) == Line.Placed & 2!= Current_direction) return circle(start_x,start_y-1, Current_x, current_y, Remaining_dots, 2)
-    if(tiles(current_y)(Current_x).paths(1) == Line.Placed & 1!= Current_direction) return circle(start_x,start_y+1, Current_x, current_y, Remaining_dots, 1)
-    if(tiles(current_y)(Current_x).paths(3) == Line.Placed & 3!= Current_direction) return circle(start_x+1,start_y, Current_x, current_y, Remaining_dots, 3)
-    if(tiles(current_y)(Current_x).paths(0) == Line.Placed & 0!= Current_direction) return circle(start_x+1,start_y, Current_x, current_y, Remaining_dots, 0)
+
     return 0
   }
 

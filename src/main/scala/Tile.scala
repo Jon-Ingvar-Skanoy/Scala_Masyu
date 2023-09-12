@@ -103,4 +103,59 @@ case class Tile (val char: Char, val h: Int, val w: Int) {
     false
   }
 
+  def leftMissing(): Boolean = {
+    if (paths(0) == Line.Missing){
+      return true
+    }
+    false
+  }
+
+
+  def upMissing(): Boolean = {
+    if (paths(2) == Line.Missing) {
+      return true
+    }
+    false
+  }
+
+  def downMissing(): Boolean = {
+    if (paths(1) == Line.Missing) {
+      return true
+    }
+    false
+  }
+
+  def rightMissing(): Boolean = {
+    if (paths(3) == Line.Missing) {
+      return true
+    }
+    false
+  }
+  def rightIllegal(): Boolean = {
+    if (paths(3) == Line.Illegal) {
+      return true
+    }
+    false
+  }
+
+  def leftIllegal(): Boolean = {
+    if (paths(0) == Line.Illegal) {
+      return true
+    }
+    false
+  }
+
+  def upIllegal(): Boolean = {
+    if (paths(2) == Line.Illegal) {
+      return true
+    }
+    false
+  }
+
+  def downIllegal(): Boolean = {
+    if (paths(1) == Line.Illegal) {
+      return true
+    }
+    false
+  }
 }

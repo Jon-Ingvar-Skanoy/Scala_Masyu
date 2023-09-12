@@ -88,7 +88,7 @@ case class Board(fn: String, nr: Int) {
           }
           if(tiles(i)(j).right()){
             //print left + right
-            print('-')
+            print('─')
           }
           else{
             print(' ')

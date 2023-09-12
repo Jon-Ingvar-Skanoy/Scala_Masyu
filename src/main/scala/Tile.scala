@@ -15,7 +15,8 @@ object TileType{
 
 
 
-case class Tile (val char: Char) {
+case class Tile (val char: Char, val h: Int, val w: Int) {
+
   def returnTileType(char: Char): TileType = {
     if (char == '*') {
       return TileType.Black
@@ -33,6 +34,8 @@ case class Tile (val char: Char) {
 
   val ttype: TileType = returnTileType(char)
   val paths: Array[Line] = initializeLine()
+  val width: Int = w
+  val height: Int = h
 
   def left(): Boolean = {
     if (paths(0) == Line.Placed) {

@@ -18,7 +18,7 @@ case class Board(fn: String, nr: Int) {
 
 
 
-            tiles(iterator(1))(iterator(2)) =  Tile(i)
+            tiles(iterator(1))(iterator(2)) =  Tile(i,iterator(1),iterator(2))
 
             iterator(2) = iterator(2)+1
 
@@ -61,6 +61,7 @@ case class Board(fn: String, nr: Int) {
  // }
 
   def printBoard(): Any = {
+    println()
     for(i <- 0 until height){
       for (j <- 0 until width) {
         if(tiles(i)(j).ttype == TileType.Black){
@@ -82,34 +83,34 @@ case class Board(fn: String, nr: Int) {
             // print left + down
             print('┐')
           }
-          if(tiles(i)(j).up()){
+          else if(tiles(i)(j).up()){
             //print left + up
             print('┘')
           }
-          if(tiles(i)(j).right()){
+          else if(tiles(i)(j).right()){
             //print left + right
-            print('-')
+            print('─')
           }
           else{
             print(' ')
           }
         }
         else if(tiles(i)(j).up()){
-          if(tiles(i)(j).down()){
+           if(tiles(i)(j).down()){
             //print up+down
             print('│')
           }
-          if(tiles(i)(j).right()){
-            //print down + right
-            print('┌')
+          else if(tiles(i)(j).right()){
+            //print up + right
+            print('└')
           }
           else{
             print(' ')
           }
         }
         else if(tiles(i)(j).paths(2)==Line.Placed){
-          // print up+right
-          print('└')
+          // print down+right
+          print('┌')
         }
         else{
           print(' ')
@@ -196,7 +197,7 @@ case class Board(fn: String, nr: Int) {
           print(" x ")
         }
         if (tiles(ii)(j).paths(0) == Line.Placed) {
-          print(" - ")
+          print(" ─ ")
         }
       }
       println()
@@ -229,7 +230,7 @@ case class Board(fn: String, nr: Int) {
           print(" x ")
         }
         if (tiles(ii)(j).paths(3) == Line.Placed) {
-          print(" - ")
+          print(" ─ ")
         }
       }
       println()

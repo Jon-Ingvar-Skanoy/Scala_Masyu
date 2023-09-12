@@ -108,7 +108,7 @@ case class Board(fn: String, nr: Int) {
             print(' ')
           }
         }
-        else if(tiles(i)(j).paths(2)==Line.Placed){
+        else if(tiles(i)(j).right()){
           // print down+right
           print('┌')
         }

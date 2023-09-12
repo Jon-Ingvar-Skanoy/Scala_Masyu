@@ -318,10 +318,10 @@ case class Board(fn: String, nr: Int) {
     if(tiles(y)(x).paths(0) == Line.Missing && (tiles(y)(x-1).paths(0)==Line.Illegal | tiles(y)(x-1).paths(2)==Line.Placed | tiles(y)(x-1).paths(1)==Line.Placed)) draw_left(-1,x, y)
     if(tiles(y)(x).paths(3) == Line.Missing && (tiles(y)(x+1).paths(3)==Line.Illegal | tiles(y)(x+1).paths(2)==Line.Placed | tiles(y)(x+1).paths(1)==Line.Placed)) draw_Right(-1,x, y)
     // check if circle is formed
-    if(tiles(y)(x).paths(1) == Line.Missing  && circle(x,y+2,x,y,count_dots(),1)== -1) draw_down(-1,x, y)
-    if(tiles(y)(x).paths(2) == Line.Missing  && circle(x,y-2,x,y,count_dots(),2)== -1) draw_down(-1,x, y)
-    if (tiles(y)(x).paths(0) == Line.Missing && circle(x-2, y, x, y, count_dots(), 1) == -1) draw_down(-1, x, y)
-    if (tiles(y)(x).paths(3) == Line.Missing && circle(x-2, y, x, y, count_dots(), 2) == -1) draw_down(-1, x, y)
+    if(tiles(y)(x).paths(1) == Line.Missing  && circle(x,y+2,x,y,count_dots(),2)== -1) draw_down(-1,x, y)
+    if(tiles(y)(x).paths(2) == Line.Missing  && circle(x,y-2,x,y,count_dots(),1)== -1) draw_Up(-1,x, y)
+    if (tiles(y)(x).paths(0) == Line.Missing && circle(x-2, y, x, y, count_dots(), 3) == -1) draw_left(-1, x, y)
+    if (tiles(y)(x).paths(3) == Line.Missing && circle(x-2, y, x, y, count_dots(), 0) == -1) draw_Right(-1, x, y)
 
   }
   def legal_crowded(x: Int, y: Int):Unit = {

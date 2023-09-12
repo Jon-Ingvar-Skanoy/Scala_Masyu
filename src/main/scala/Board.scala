@@ -304,10 +304,53 @@ case class Board(fn: String, nr: Int) {
       draw_down(-1, x, y)
     }
   }
+  def set_up_white_vertical(x: Int, y: Int): Unit = {
+    if((tiles(y)(x).paths(1) == Line.Missing && tiles(y+1)(x).ttype == TileType.White)&& ((tiles(y+1)(x).paths(1) == Line.Missing && tiles(y+2)(x).ttype == TileType.White))){
+      draw_Right(-1,x,y)
+      println(222)
+    }
+  }
+
+  def set_up_white_horizontal(x: Int, y: Int): Unit = {
+    if ((tiles(y)(x).paths(0) == Line.Missing && tiles(y)(x-1).ttype == TileType.White) && ((tiles(y)(x-1).paths(0) == Line.Missing && tiles(y)(x-2).ttype == TileType.White))) {
+      draw_down(-1, x, y)
+      println(222)
+    }
+  }
+  def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
+    if((tiles(y)(x).paths(1) == Line.Missing)&&((tiles(y)(x).paths(0) == Line.Missing)&&(tiles(y)(x).paths(3) == Line.Missing))){
+      if((tiles(y+1)( x-1).ttype == TileType.White ) & (tiles(y+1)(x+1).ttype == TileType.White)){
+        draw_down(-1,x,y)
+      }
+    }
+    if ((tiles(y)(x).paths(2) == Line.Missing) && ((tiles(y)(x).paths(0) == Line.Missing) && (tiles(y)(x).paths(3) == Line.Missing))) {
+      if ((tiles(y - 1)(x - 1).ttype == TileType.White) & (tiles(y - 1)(x + 1).ttype == TileType.White)) {
+        draw_Up(-1, x, y)
+      }
+    }
+    if ((tiles(y)(x).paths(0) == Line.Missing) && ((tiles(y)(x).paths(1) == Line.Missing) && (tiles(y)(x).paths(2) == Line.Missing))) {
+      if ((tiles(y + 1)(x - 1).ttype == TileType.White) & (tiles(y - 1)(x - 1).ttype == TileType.White)) {
+        draw_Right(-1, x, y)
+      }
+    }
+    if ((tiles(y)(x).paths(3) == Line.Missing) && ((tiles(y)(x).paths(1) == Line.Missing) && (tiles(y)(x).paths(2) == Line.Missing))) {
+      if ((tiles(y + 1)(x + 1).ttype == TileType.White) & (tiles(y - 1)(x + 1).ttype == TileType.White)) {
+        draw_left(-1, x, y)
+      }
+    }
+  }
+
+
   def set_Up():Unit ={
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
-        if(tiles(ii)(j).ttype == TileType.Black) set_up_black(j,ii)
+        if(tiles(ii)(j).ttype == TileType.Black) {
+          set_up_black(j,ii)
+          set_up_black_diagonal_whites(j,ii)
+        }
+        if(tiles(ii)(j).ttype == TileType.White) set_up_white_vertical(j,ii)
+        if(tiles(ii)(j).ttype == TileType.White) set_up_white_horizontal(j,ii)
+
       }
     }
 

@@ -15,7 +15,7 @@ object TileType{
 
 
 
-case class Tile (val char: Char, val w: Int, val h: Int) {
+case class Tile (val char: Char, val h: Int, val w: Int) {
 
   def returnTileType(char: Char): TileType = {
     if (char == '*') {

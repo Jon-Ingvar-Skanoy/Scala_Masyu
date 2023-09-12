@@ -61,6 +61,7 @@ case class Board(fn: String, nr: Int) {
  // }
 
   def printBoard(): Any = {
+    println()
     for(i <- 0 until height){
       for (j <- 0 until width) {
         if(tiles(i)(j).ttype == TileType.Black){
@@ -82,11 +83,11 @@ case class Board(fn: String, nr: Int) {
             // print left + down
             print('┐')
           }
-          if(tiles(i)(j).up()){
+          else if(tiles(i)(j).up()){
             //print left + up
             print('┘')
           }
-          if(tiles(i)(j).right()){
+          else if(tiles(i)(j).right()){
             //print left + right
             print('─')
           }
@@ -95,11 +96,11 @@ case class Board(fn: String, nr: Int) {
           }
         }
         else if(tiles(i)(j).up()){
-          if(tiles(i)(j).down()){
+           if(tiles(i)(j).down()){
             //print up+down
             print('│')
           }
-          if(tiles(i)(j).right()){
+          else if(tiles(i)(j).right()){
             //print down + right
             print('┌')
           }

@@ -517,7 +517,7 @@ case class Board(fn: String, nr: Int) {
       for (j<-0 until width){
         for (d<-0 until 4){
           if(arr(i)(j)(d) == true ){
-            if(newBoard.tiles(i)(j).paths(d) != Line.Illegal){
+            if(newBoard.tiles(i)(j).paths(d) != Line.Illegal && !newBoard.tiles(i)(j).crowded()){
               newBoard.tiles(i)(j).paths(d) = Line.Placed
             }
           }
@@ -526,5 +526,45 @@ case class Board(fn: String, nr: Int) {
     }
     return newBoard
   }
+
+  def createPathCombination(combination: Int): Array[Boolean] = {
+    if(combination==0){
+      return Array[Boolean](false,false,false,false)
+   }
+    else if(combination==1){
+      return Array[Boolean](true,false,false,false)
+    }
+    else if(combination==2){
+      return Array[Boolean](false,true,false,false)
+    }
+    else if(combination==3){
+      return Array[Boolean](false,false,true,false)
+    }
+    else if (combination == 4) {
+      return Array[Boolean](false, false, false, true)
+    }
+    else if (combination == 5) {
+      return Array[Boolean](true, true, false, false)
+    }
+    else if (combination == 6) {
+      return Array[Boolean](true, false, true, false)
+    }
+    else if (combination == 7) {
+      return Array[Boolean](true, false, false, true)
+    }
+    else if (combination == 8) {
+      return Array[Boolean](false, true, true, false)
+    }
+    else if (combination == 9) {
+      return Array[Boolean](false, true, false, true)
+    }
+    else if (combination == 10) {
+      return Array[Boolean](false, false, true, true)
+    }
+    else{
+      return Array[Boolean](true, true, true, true)
+    }
+  }
 }
+
 

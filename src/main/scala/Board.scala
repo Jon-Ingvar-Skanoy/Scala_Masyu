@@ -305,14 +305,14 @@ case class Board(fn: String, nr: Int) {
   }
   def set_up_white_vertical(x: Int, y: Int): Unit = {
     if((tiles(y)(x).downMissing() && tiles(y+1)(x).isWhite())&& ((tiles(y+1)(x).downMissing() && tiles(y+2)(x).isWhite()))){
-      draw_Right(-1,x,y)
+      draw_down(-1,x,y)
       println(222)
     }
   }
 
   def set_up_white_horizontal(x: Int, y: Int): Unit = {
     if ((tiles(y)(x).leftMissing() && tiles(y)(x-1).isWhite()) && ((tiles(y)(x-1).leftMissing() && tiles(y)(x-2).isWhite()))) {
-      draw_down(-1, x, y)
+      draw_left(-1, x, y)
       println(222)
     }
   }

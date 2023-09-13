@@ -2,7 +2,7 @@
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val newBoard: Board = Board("src/main/scala/puzzle_unsolved.txt", 5);
+    val newBoard: Board = Board("src/main/scala/puzzle_unsolved.txt", 4);
     newBoard.input()
     //    println(newBoard.til  es(0)(2).ttype)
 
@@ -15,7 +15,7 @@ object Main {
     }
 
     newBoard.printBoard()
-    //newBoard.print_ugly()
+    newBoard.print_ugly()
   }
 }
 

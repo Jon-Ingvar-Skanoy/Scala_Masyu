@@ -61,10 +61,10 @@ case class Board(fn: String, nr: Int) {
     println()
     for (i <- 0 until height) {
       for (j <- 0 until width) {
-        if (tiles(i)(j).ttype == TileType.Black) {
+        if (tiles(i)(j).isBlack()) {
           print('┼')
         }
-        else if (tiles(i)(j).ttype == TileType.White) {
+        else if (tiles(i)(j).isWhite()) {
           if (tiles(i)(j).left()) {
             print('╨')
           }
@@ -202,13 +202,13 @@ case class Board(fn: String, nr: Int) {
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
 
-        if(tiles(ii)(j).paths(0) == Line.Missing){
+        if(tiles(ii)(j).leftMissing()){
           print(" 0 ")
         }
-        if (tiles(ii)(j).paths(0) == Line.Illegal) {
+        if (tiles(ii)(j).leftIllegal()) {
           print(" x ")
         }
-        if (tiles(ii)(j).paths(0) == Line.Placed) {
+        if (tiles(ii)(j).left()) {
           print(" ─ ")
         }
       }
@@ -218,13 +218,13 @@ case class Board(fn: String, nr: Int) {
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
 
-        if (tiles(ii)(j).paths(1) == Line.Missing) {
+        if (tiles(ii)(j).downMissing()) {
           print(" 0 ")
         }
-        if (tiles(ii)(j).paths(1) == Line.Illegal) {
+        if (tiles(ii)(j).downIllegal()) {
           print(" x ")
         }
-        if (tiles(ii)(j).paths(1) == Line.Placed) {
+        if (tiles(ii)(j).down()) {
           print(" | ")
         }
       }
@@ -235,13 +235,13 @@ case class Board(fn: String, nr: Int) {
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
 
-        if (tiles(ii)(j).paths(3) == Line.Missing) {
+        if (tiles(ii)(j).rightMissing()) {
           print(" 0 ")
         }
-        if (tiles(ii)(j).paths(3) == Line.Illegal) {
+        if (tiles(ii)(j).rightIllegal()) {
           print(" x ")
         }
-        if (tiles(ii)(j).paths(3) == Line.Placed) {
+        if (tiles(ii)(j).right()) {
           print(" ─ ")
         }
       }
@@ -251,13 +251,13 @@ case class Board(fn: String, nr: Int) {
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
 
-        if (tiles(ii)(j).paths(2) == Line.Missing) {
+        if (tiles(ii)(j).upMissing()) {
           print(" 0 ")
         }
-        if (tiles(ii)(j).paths(2) == Line.Illegal) {
+        if (tiles(ii)(j).upIllegal()) {
           print(" x ")
         }
-        if (tiles(ii)(j).paths(2) == Line.Placed) {
+        if (tiles(ii)(j).up()) {
           print(" | ")
         }
       }
@@ -297,44 +297,44 @@ case class Board(fn: String, nr: Int) {
     border_Bottom()
   }
   def set_up_black(x: Int, y: Int): Unit = {
-    if(tiles(y)(x).paths(3) == Line.Missing && tiles(y)(x+1).ttype == TileType.Black){
+    if(tiles(y)(x).rightMissing() && tiles(y)(x+1).isBlack()){
       draw_Right(-1,x,y)
     }
-    if (tiles(y)(x).paths(1) == Line.Missing && tiles(y+1)(x).ttype == TileType.Black) {
+    if (tiles(y)(x).downMissing() && tiles(y+1)(x).isBlack()) {
       draw_down(-1, x, y)
     }
   }
   def set_up_white_vertical(x: Int, y: Int): Unit = {
-    if((tiles(y)(x).paths(1) == Line.Missing && tiles(y+1)(x).ttype == TileType.White)&& ((tiles(y+1)(x).paths(1) == Line.Missing && tiles(y+2)(x).ttype == TileType.White))){
+    if((tiles(y)(x).downMissing() && tiles(y+1)(x).isWhite())&& ((tiles(y+1)(x).downMissing() && tiles(y+2)(x).isWhite()))){
       draw_Right(-1,x,y)
       println(222)
     }
   }
 
   def set_up_white_horizontal(x: Int, y: Int): Unit = {
-    if ((tiles(y)(x).paths(0) == Line.Missing && tiles(y)(x-1).ttype == TileType.White) && ((tiles(y)(x-1).paths(0) == Line.Missing && tiles(y)(x-2).ttype == TileType.White))) {
+    if ((tiles(y)(x).leftMissing() && tiles(y)(x-1).isWhite()) && ((tiles(y)(x-1).leftMissing() && tiles(y)(x-2).isWhite()))) {
       draw_down(-1, x, y)
       println(222)
     }
   }
   def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
-    if((tiles(y)(x).paths(1) == Line.Missing)&&((tiles(y)(x).paths(0) == Line.Missing)&&(tiles(y)(x).paths(3) == Line.Missing))){
-      if((tiles(y+1)( x-1).ttype == TileType.White ) & (tiles(y+1)(x+1).ttype == TileType.White)){
+    if((tiles(y)(x).downMissing())&&((tiles(y)(x).leftMissing())&&(tiles(y)(x).rightMissing()))){
+      if((tiles(y+1)( x-1).isWhite() ) & (tiles(y+1)(x+1).isWhite())){
         draw_down(-1,x,y)
       }
     }
-    if ((tiles(y)(x).paths(2) == Line.Missing) && ((tiles(y)(x).paths(0) == Line.Missing) && (tiles(y)(x).paths(3) == Line.Missing))) {
-      if ((tiles(y - 1)(x - 1).ttype == TileType.White) & (tiles(y - 1)(x + 1).ttype == TileType.White)) {
+    if ((tiles(y)(x).upMissing()) && ((tiles(y)(x).leftMissing()) && (tiles(y)(x).rightMissing()))) {
+      if ((tiles(y - 1)(x - 1).isWhite()) & (tiles(y - 1)(x + 1).isWhite())) {
         draw_Up(-1, x, y)
       }
     }
-    if ((tiles(y)(x).paths(0) == Line.Missing) && ((tiles(y)(x).paths(1) == Line.Missing) && (tiles(y)(x).paths(2) == Line.Missing))) {
-      if ((tiles(y + 1)(x - 1).ttype == TileType.White) & (tiles(y - 1)(x - 1).ttype == TileType.White)) {
+    if ((tiles(y)(x).leftMissing()) && ((tiles(y)(x).downMissing()) && (tiles(y)(x).upMissing()))) {
+      if ((tiles(y + 1)(x - 1).isWhite()) & (tiles(y - 1)(x - 1).isWhite())) {
         draw_Right(-1, x, y)
       }
     }
-    if ((tiles(y)(x).paths(3) == Line.Missing) && ((tiles(y)(x).paths(1) == Line.Missing) && (tiles(y)(x).paths(2) == Line.Missing))) {
-      if ((tiles(y + 1)(x + 1).ttype == TileType.White) & (tiles(y - 1)(x + 1).ttype == TileType.White)) {
+    if ((tiles(y)(x).rightMissing()) && ((tiles(y)(x).downMissing()) && (tiles(y)(x).upMissing()))) {
+      if ((tiles(y + 1)(x + 1).isWhite()) & (tiles(y - 1)(x + 1).isWhite())) {
         draw_left(-1, x, y)
       }
     }
@@ -344,90 +344,90 @@ case class Board(fn: String, nr: Int) {
   def set_Up():Unit ={
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
-        if(tiles(ii)(j).ttype == TileType.Black) {
+        if(tiles(ii)(j).isBlack()) {
           set_up_black(j,ii)
           set_up_black_diagonal_whites(j,ii)
         }
-        if(tiles(ii)(j).ttype == TileType.White) set_up_white_vertical(j,ii)
-        if(tiles(ii)(j).ttype == TileType.White) set_up_white_horizontal(j,ii)
+        if(tiles(ii)(j).isWhite()) set_up_white_vertical(j,ii)
+        if(tiles(ii)(j).isWhite()) set_up_white_horizontal(j,ii)
 
       }
     }
 
   }
   def illegal_black_dot(x: Int, y: Int):Unit = {
-    if(tiles(y)(x).paths(1) == Line.Missing && (tiles(y+1)(x).paths(1)==Line.Illegal | tiles(y+1)(x).paths(0)==Line.Placed | tiles(y+1)(x).paths(3)==Line.Placed)) draw_down(-1,x, y)
-    if(tiles(y)(x).paths(2) == Line.Missing && (tiles(y-1)(x).paths(2)==Line.Illegal | tiles(y-1)(x).paths(0)==Line.Placed | tiles(y-1)(x).paths(3)==Line.Placed)) draw_Up(-1,x, y)
-    if(tiles(y)(x).paths(0) == Line.Missing && (tiles(y)(x-1).paths(0)==Line.Illegal | tiles(y)(x-1).paths(2)==Line.Placed | tiles(y)(x-1).paths(1)==Line.Placed)) draw_left(-1,x, y)
-    if(tiles(y)(x).paths(3) == Line.Missing && (tiles(y)(x+1).paths(3)==Line.Illegal | tiles(y)(x+1).paths(2)==Line.Placed | tiles(y)(x+1).paths(1)==Line.Placed)) draw_Right(-1,x, y)
+    if(tiles(y)(x).downMissing() && (tiles(y+1)(x).downIllegal() | tiles(y+1)(x).left() | tiles(y+1)(x).right())) draw_down(-1,x, y)
+    if(tiles(y)(x).upMissing() && (tiles(y-1)(x).upIllegal() | tiles(y-1)(x).left() | tiles(y-1)(x).right())) draw_Up(-1,x, y)
+    if(tiles(y)(x).leftMissing() && (tiles(y)(x-1).leftIllegal() | tiles(y)(x-1).up() | tiles(y)(x-1).down())) draw_left(-1,x, y)
+    if(tiles(y)(x).rightMissing() && (tiles(y)(x+1).rightIllegal() | tiles(y)(x+1).up() | tiles(y)(x+1).down())) draw_Right(-1,x, y)
     // check if circle is formed
-    if(tiles(y)(x).paths(1) == Line.Missing  && circle(x,y+2,x,y,count_dots(),2)== -1) draw_down(-1,x, y)
-    if(tiles(y)(x).paths(2) == Line.Missing  && circle(x,y-2,x,y,count_dots(),1)== -1) draw_Up(-1,x, y)
-    if (tiles(y)(x).paths(0) == Line.Missing && circle(x-2, y, x, y, count_dots(), 3) == -1) draw_left(-1, x, y)
-    if (tiles(y)(x).paths(3) == Line.Missing && circle(x-2, y, x, y, count_dots(), 0) == -1) draw_Right(-1, x, y)
+    if(tiles(y)(x).downMissing()  && circle(x,y+2,x,y,count_dots(),2)== -1) draw_down(-1,x, y)
+    if(tiles(y)(x).upMissing()  && circle(x,y-2,x,y,count_dots(),1)== -1) draw_Up(-1,x, y)
+    if (tiles(y)(x).leftMissing() && circle(x-2, y, x, y, count_dots(), 3) == -1) draw_left(-1, x, y)
+    if (tiles(y)(x).rightMissing() && circle(x-2, y, x, y, count_dots(), 0) == -1) draw_Right(-1, x, y)
 
   }
   def legal_crowded(x: Int, y: Int):Unit = {
 
-    if (tiles(y)(x).paths(0) == Line.Missing) draw_left(1, x, y)
-    if (tiles(y)(x).paths(1) == Line.Missing) draw_down(1, x, y)
-    if (tiles(y)(x).paths(2) == Line.Missing) draw_Up(1, x, y)
-    if (tiles(y)(x).paths(3) == Line.Missing) draw_Right(1, x, y)
+    if (tiles(y)(x).leftMissing()) draw_left(1, x, y)
+    if (tiles(y)(x).downMissing()) draw_down(1, x, y)
+    if (tiles(y)(x).upMissing()) draw_Up(1, x, y)
+    if (tiles(y)(x).rightMissing()) draw_Right(1, x, y)
 
 
   }
   def illegal_white_dots(x: Int, y: Int):Unit = {
-    if(tiles(y)(x).paths(1) == Line.Placed && (tiles(y+1)(x).paths(1)==Line.Placed)) draw_Up(-1,x, y-1)
-    if(tiles(y)(x).paths(2) == Line.Placed && (tiles(y-1)(x).paths(2)==Line.Placed)) draw_down(-1,x, y+1)
-    if(tiles(y)(x).paths(3) == Line.Placed && (tiles(y)(x+1).paths(3)==Line.Placed)) draw_left(-1,x-1, y)
-    if(tiles(y)(x).paths(0) == Line.Placed && (tiles(y)(x-1).paths(0)==Line.Placed)) draw_Right(-1,x+1, y)
-    if(tiles(y)(x).paths(0) == Line.Placed) {
+    if(tiles(y)(x).down() && (tiles(y+1)(x).down())) draw_Up(-1,x, y-1)
+    if(tiles(y)(x).up() && (tiles(y-1)(x).up())) draw_down(-1,x, y+1)
+    if(tiles(y)(x).right() && (tiles(y)(x+1).right())) draw_left(-1,x-1, y)
+    if(tiles(y)(x).left() && (tiles(y)(x-1).left())) draw_Right(-1,x+1, y)
+    if(tiles(y)(x).left()) {
       draw_Up(-1,x, y)
       draw_down(-1,x,y)
 
     }
-    if (tiles(y)(x).paths(3) == Line.Placed) {
+    if (tiles(y)(x).right()) {
       draw_Up(-1, x, y)
       draw_down(-1, x, y)
 
     }
-    if (tiles(y)(x).paths(2) == Line.Placed) {
+    if (tiles(y)(x).up()) {
       draw_left(-1, x, y)
       draw_Right(-1, x, y)
 
     }
-    if (tiles(y)(x).paths(1) == Line.Placed) {
+    if (tiles(y)(x).down()) {
       draw_left(-1, x, y)
       draw_Right(-1, x, y)
 
     }
-    if (tiles(y)(x).paths(0) == Line.Illegal) draw_Right(-1, x, y)
-    if (tiles(y)(x).paths(1) == Line.Illegal) draw_Up(-1, x, y)
-    if (tiles(y)(x).paths(2) == Line.Illegal) draw_down(-1, x, y)
-    if (tiles(y)(x).paths(3) == Line.Illegal) draw_left(-1, x, y)
+    if (tiles(y)(x).leftIllegal()) draw_Right(-1, x, y)
+    if (tiles(y)(x).downIllegal()) draw_Up(-1, x, y)
+    if (tiles(y)(x).upIllegal()) draw_down(-1, x, y)
+    if (tiles(y)(x).rightIllegal()) draw_left(-1, x, y)
 
   }
   def illegal_crowded(x: Int, y: Int):Unit = {
 
-    if(tiles(y)(x).paths(0)==Line.Missing) draw_left(-1,x,y)
-    if(tiles(y)(x).paths(1)==Line.Missing) draw_down(-1,x,y)
-    if(tiles(y)(x).paths(2)==Line.Missing) draw_Up(-1,x,y)
-    if(tiles(y)(x).paths(3)==Line.Missing) draw_Right(-1,x,y)
+    if(tiles(y)(x).leftMissing()) draw_left(-1,x,y)
+    if(tiles(y)(x).downMissing()) draw_down(-1,x,y)
+    if(tiles(y)(x).upMissing()) draw_Up(-1,x,y)
+    if(tiles(y)(x).rightMissing()) draw_Right(-1,x,y)
   }
   def legal_black(x: Int, y: Int):Unit = {
-    if(tiles(y)(x).paths(0)==Line.Illegal){
+    if(tiles(y)(x).leftIllegal()){
       draw_Right(1,x,y)
       draw_Right(1,x+1,y)
     }
-    if (tiles(y)(x).paths(3) == Line.Illegal) {
+    if (tiles(y)(x).rightIllegal()) {
       draw_left(1, x, y)
       draw_left(1, x - 1, y)
     }
-    if (tiles(y)(x).paths(1) == Line.Illegal) {
+    if (tiles(y)(x).downIllegal()) {
       draw_Up(1, x, y)
       draw_Up(1, x, y-1)
     }
-    if (tiles(y)(x).paths(2) == Line.Illegal) {
+    if (tiles(y)(x).upIllegal()) {
       draw_down(1, x, y)
       draw_down(1, x, y + 1)
     }
@@ -447,10 +447,10 @@ case class Board(fn: String, nr: Int) {
       }
 
 
-        if (tiles(current_y)(Current_x).paths(2) == Line.Placed && 2 != Current_direction) return circle(start_x, start_y, Current_x, current_y-1, Remaining_dots-1, 1)
-        if (tiles(current_y)(Current_x).paths(1) == Line.Placed && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y+1, Remaining_dots-1, 2)
-        if (tiles(current_y)(Current_x).paths(3) == Line.Placed && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots-1, 0)
-        if (tiles(current_y)(Current_x).paths(0) == Line.Placed && 0 != Current_direction) return circle(start_x , start_y, Current_x-1, current_y, Remaining_dots-1, 3)
+        if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circle(start_x, start_y, Current_x, current_y-1, Remaining_dots-1, 1)
+        if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y+1, Remaining_dots-1, 2)
+        if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots-1, 0)
+        if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circle(start_x , start_y, Current_x-1, current_y, Remaining_dots-1, 3)
       if (!tiles(current_y)(Current_x).crowded()) return 0
 
     }
@@ -467,10 +467,10 @@ case class Board(fn: String, nr: Int) {
         }
       }
 
-        if (tiles(current_y)(Current_x).paths(2) == Line.Placed && 2 != Current_direction) return circle(start_x, start_y , Current_x, current_y-1, Remaining_dots, 1)
-        if (tiles(current_y)(Current_x).paths(1) == Line.Placed && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y +1, Remaining_dots, 2)
-        if (tiles(current_y)(Current_x).paths(3) == Line.Placed && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots, 0)
-        if (tiles(current_y)(Current_x).paths(0) == Line.Placed && 0 != Current_direction) return circle(start_x, start_y, Current_x-1, current_y, Remaining_dots, 3)
+        if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circle(start_x, start_y , Current_x, current_y-1, Remaining_dots, 1)
+        if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y +1, Remaining_dots, 2)
+        if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots, 0)
+        if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circle(start_x, start_y, Current_x-1, current_y, Remaining_dots, 3)
       if (!tiles(current_y)(Current_x).crowded()) return 0
 
 
@@ -481,10 +481,10 @@ case class Board(fn: String, nr: Int) {
   }
   def avoid_circle_empthy(x: Int, y: Int): Unit={
 
-    if (tiles(y)(x).paths(1) == Line.Missing && circle(x, y , x, y+1, count_dots(), 2) == -1) draw_down(-1, x, y)
-    if (tiles(y)(x).paths(2) == Line.Missing && circle(x, y, x, y-1, count_dots(), 1) == -1) draw_Up(-1, x, y)
-    if (tiles(y)(x).paths(0) == Line.Missing && circle(x, y, x-1, y, count_dots(), 3) == -1) draw_left(-1, x, y)
-    if (tiles(y)(x).paths(3) == Line.Missing && circle(x , y, x+1, y, count_dots(), 0) == -1) draw_Right(-1, x, y)
+    if (tiles(y)(x).downMissing() && circle(x, y , x, y+1, count_dots(), 2) == -1) draw_down(-1, x, y)
+    if (tiles(y)(x).upMissing() && circle(x, y, x, y-1, count_dots(), 1) == -1) draw_Up(-1, x, y)
+    if (tiles(y)(x).leftMissing() && circle(x, y, x-1, y, count_dots(), 3) == -1) draw_left(-1, x, y)
+    if (tiles(y)(x).rightMissing() && circle(x , y, x+1, y, count_dots(), 0) == -1) draw_Right(-1, x, y)
   }
 
 

@@ -158,4 +158,27 @@ case class Tile (val char: Char, val h: Int, val w: Int) {
     }
     false
   }
+
+  def isEmpty(): Boolean = {
+    if(ttype == TileType.Empty){
+      return true
+    }
+    false
+  }
+
+  def isWhite(): Boolean = {
+    if (ttype == TileType.White) {
+      return true
+    }
+    false
+  }
+
+
+  def isBlack(): Boolean = {
+    if (ttype == TileType.Black) {
+      return true
+    }
+    false
+  }
+
 }

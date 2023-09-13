@@ -139,7 +139,7 @@ case class Board(fn: String, nr: Int) {
       tiles(y)(x).paths(1)= Line.Placed
       tiles(y+1)(x).paths(2)=Line.Placed
     }
-    if (tiles(y)(x).paths(1) != Line.Illegal  && legality == -1) {
+    if (!tiles(y)(x).downIllegal()  && legality == -1) {
 
       tiles(y)(x).paths(1) = Line.Illegal
       tiles(y + 1)(x).paths(2) = Line.Illegal
@@ -154,7 +154,7 @@ case class Board(fn: String, nr: Int) {
       tiles(y)(x).paths(2) = Line.Placed
       tiles(y - 1)(x).paths(1) = Line.Placed
     }
-    if (tiles(y)(x).paths(2) != Line.Illegal && legality == -1) {
+    if (!tiles(y)(x).upIllegal() && legality == -1) {
 
       tiles(y)(x).paths(2) = Line.Illegal
       tiles(y - 1)(x).paths(1) = Line.Illegal
@@ -167,7 +167,7 @@ case class Board(fn: String, nr: Int) {
       tiles(y)(x).paths(0) = Line.Placed
       tiles(y)(x - 1).paths(3) = Line.Placed
     }
-    if (tiles(y)(x).paths(0) != Line.Illegal  && legality == -1) {
+    if (!tiles(y)(x).leftIllegal() && legality == -1) {
 
       tiles(y)(x).paths(0) = Line.Illegal
       tiles(y)(x - 1).paths(3) = Line.Illegal
@@ -180,7 +180,7 @@ case class Board(fn: String, nr: Int) {
       tiles(y)(x).paths(3) = Line.Placed
       tiles(y)(x +1 ).paths(0) = Line.Placed
     }
-    if (tiles(y)(x).paths(3) != Line.Illegal  && legality == -1) {
+    if (!tiles(y)(x).rightIllegal() && legality == -1) {
 
       tiles(y)(x).paths(3) = Line.Illegal
       tiles(y)(x + 1).paths(0) = Line.Illegal

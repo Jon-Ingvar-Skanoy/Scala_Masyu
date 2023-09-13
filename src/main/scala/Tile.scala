@@ -17,18 +17,19 @@ object TileType{
 
 case class Tile (val char: Char, val h: Int, val w: Int) {
 
-  def returnTileType(char: Char): TileType = {
+  private def returnTileType(char: Char): TileType = {
     if (char == '*') {
-      return TileType.Black
+     TileType.Black
     }
-    if (char == 'o') {
-      return TileType.White
+    else if (char == 'o') {
+     TileType.White
     }
-    return TileType.Empty
+    else {
+     TileType.Empty
+    }
   }
-
   //index 0 = left, 1 = down, 2 = up, 3 = right
-  def initializeLine(): Array[Line] = {
+  private def initializeLine(): Array[Line] = {
     Array[Line](Line.Missing, Line.Missing, Line.Missing, Line.Missing)
   }
 
@@ -86,7 +87,7 @@ case class Tile (val char: Char, val h: Int, val w: Int) {
   def inn_ring(): Boolean = {
     val lineCount =
       for (i <- paths.toList if i == Line.Placed) yield i
-    if ((lineCount.length >= 1) | ttype != TileType.Empty) {
+    if (lineCount.nonEmpty | ttype != TileType.Empty) {
       return true
     }
     false
@@ -159,14 +160,14 @@ case class Tile (val char: Char, val h: Int, val w: Int) {
     false
   }
 
-  def isEmpty(): Boolean = {
+  def isEmpty: Boolean = {
     if(ttype == TileType.Empty){
       return true
     }
     false
   }
 
-  def isWhite(): Boolean = {
+  def isWhite: Boolean = {
     if (ttype == TileType.White) {
       return true
     }
@@ -174,7 +175,7 @@ case class Tile (val char: Char, val h: Int, val w: Int) {
   }
 
 
-  def isBlack(): Boolean = {
+  def isBlack: Boolean = {
     if (ttype == TileType.Black) {
       return true
     }

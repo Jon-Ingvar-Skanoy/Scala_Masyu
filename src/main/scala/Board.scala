@@ -6,7 +6,6 @@ case class Board(fn: String, nr: Int) {
   private val height: Int = set_height()
 
   private val iterator: Array[Int] = Array.ofDim[Int](3)
-
   private val tiles: Array[Array[Tile]] = Array.ofDim[Tile](height, width)
 
 

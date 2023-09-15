@@ -8,10 +8,10 @@ import scala.util.control.Breaks.break
 
 object PuzzleSolver {
   def main(args: Array[String]): Unit = {
-    //val line1: String = args(0)
-    //val line2: String = args(1)
-     //initRW(line1, line2)
-    initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
+    val line1: String = args(0)
+    val line2: String = args(1)
+    initRW(line1, line2)
+    //initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
     var newBoard: Puzzle =  Puzzle(0,0,Array.ofDim[Tile](0, 0))
     val puzzleCount: Int = getNumPizzles()
     for (i <- 0 until puzzleCount) {
@@ -46,20 +46,24 @@ object PuzzleSolver {
   }
 
   def solve(puzzle: Puzzle, dept:Int): Puzzle = {
-    if(dept>5) {
-      return puzzle
-    }
 
+    puzzle.printBoard
 
 
 
     for (i <- 0 until 100) {
+
       puzzle.illegal_moves()
       puzzle.legal_moves()
+
     }
     puzzle.illegal_moves()
 
+    if (dept > 100) {
 
+      return puzzle
+
+    }
 
     if(puzzle.won()){
       print("WON32")
@@ -73,30 +77,44 @@ object PuzzleSolver {
      }
 
     var copy:Puzzle = new Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-    var random_move:List[Int] = List(0,2,3)
+    var random_move:Array[Int] = Array(0,2,33)
 
     while(random_move(0) != - 1){
+      copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+      for (i <- 0 until 100) {
 
+        copy.illegal_moves()
+        copy.legal_moves()
+
+      }
+      print(dept)
+      copy.illegal_moves()
       random_move = copy.find_random_move()
 
-      if(random_move(0)== -1) return copy
+
+      if(random_move(0)== -1) {
+        return puzzle.illegalize()
+
+      }
+
       if (random_move(2) == 0) {
         println(0)
-        copy.draw_right(1, random_move(0), random_move(1))
+        copy.draw_left(1, random_move(1), random_move(0))
       }
       if (random_move(2) == 3) {
         println(3)
-        copy.draw_right(1, random_move(0), random_move(1))
+        copy.draw_right(1, random_move(1), random_move(0))
       }
       if (random_move(2) == 1) {
-        println(1)
 
-        copy.draw_down(1, random_move(0), random_move(1))
+        println(1)
+        copy.draw_down(1, random_move(1), random_move(0))
       }
       if (random_move(2) == 2) {
         println(2)
-        copy.draw_up(1, random_move(0), random_move(1))
+        copy.draw_up(1, random_move(1), random_move(0))
       }
+
 
 
 
@@ -109,26 +127,26 @@ object PuzzleSolver {
 
         println("LOSR")
         if (random_move(2) == 0) {
-          puzzle.draw_right(-1, random_move(0), random_move(1))
+          puzzle.draw_right(-1, random_move(1), random_move(0))
         }
         if (random_move(2) == 3) {
-          puzzle.draw_right(-1, random_move(0), random_move(1))
+          puzzle.draw_right(-1, random_move(1), random_move(0))
         }
         if (random_move(2) == 1) {
-          puzzle.draw_down(-1, random_move(0), random_move(1))
+          puzzle.draw_down(-1, random_move(1), random_move(0))
         }
         if (random_move(2) == 2) {
-          puzzle.draw_up(-1, random_move(0), random_move(1))
+          puzzle.draw_up(-1, random_move(1), random_move(0))
         }
-        copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-        copy.printBoard
+
+
       }
 
 
     }
 
 
-    puzzle
+    copy
 
   }
 

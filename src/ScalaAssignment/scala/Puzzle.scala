@@ -35,28 +35,39 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     return false
   }
 
-  def find_random_move():List[Int] = {
-    for (i <- 0 until height) {
-      for (j <- 0 until width) {
-          if(tiles(i)(j).inn_ring() ){
+  def find_random_move():Array[Int] = {
 
-            if(tiles(i)(j).upMissing()){
-              return List[Int] (j,i,2)
+          for (i <- 0 until height) {
+            for (j <- 0 until width) {
+              if (!tiles(i)(j).crowded())
+
+          if(tiles(i)(j).inn_ring()){
+
+
+            if(!tiles(i)(j).up()&& !tiles(i)(j).upIllegal()){
+              println(tiles(i)(j).paths(2))
+              return Array[Int] (i,j,2)
             }
             if (tiles(i)(j).downMissing()) {
-              return List[Int](j, i, 1)
+              println(tiles(i)(j).paths(1))
+              return Array[Int](i, j, 1)
             }
             if (tiles(i)(j).leftMissing()) {
-              return List[Int](j, i, 0)
+              println(tiles(i)(j).paths(0))
+
+              return Array[Int](i, j, 0)
             }
             if (tiles(i)(j).rightMissing()) {
-              return List[Int](j, i, 3)
+              println(tiles(i)(j).paths(3))
+
+              return Array[Int](i, j, 3)
             }
+
 
           }
       }
     }
-    return List[Int] (-1,-1,-1)
+    return Array[Int] (-1,-1,-1)
   }
 
 
@@ -682,6 +693,16 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     else{
        Array[Boolean](true, true, true, true)
     }
+  }
+  def illegalize(): Puzzle = {
+    for (i <- 0 until height) {
+      for (j <- 0 until width) {
+        for (h <- 0 until 4){
+          if(tiles(i)(j).paths(h)==Line.Missing) tiles(i)(j).paths(h)= Line.Illegal
+        }
+      }
+      }
+    return new Puzzle(width, height, tiles)
   }
 }
 

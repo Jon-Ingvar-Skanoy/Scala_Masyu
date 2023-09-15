@@ -54,6 +54,11 @@ object PuzzleReaderWriter{
   def closing()={
     fw.close()
   }
+
+  def writeAnswer(board:Puzzle): Unit = {
+    fw.write("size "+board.width+"x"+board.height+"\n")
+    fw.write(board.boardString+"\n")
+  }
   def getPuzzle(index:Int):Puzzle={
     lines = Source.fromFile(unsolvedFile).getLines().toList
     val sizeNumbers = lines.filter(_ startsWith("size"))(index).split(" ").last.split("x")

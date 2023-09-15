@@ -3,8 +3,8 @@ import scala.io.Source._
 case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   val nr = 5
   private val filename = "src/ScalaAssignment/scala/puzzle_unsolved.txt"
-  private val width: Int = x
-  private val height: Int = y
+   val width: Int = x
+   val height: Int = y
 
 
    val tiles: Array[Array[Tile]] = sol

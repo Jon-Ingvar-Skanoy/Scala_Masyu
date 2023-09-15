@@ -17,11 +17,11 @@ object PuzzleSolver {
       newBoard.printBoard
 
 
-    //    println(newBoard.til  es(0)(2).ttype)
+      //    println(newBoard.til  es(0)(2).ttype)
 
-    newBoard.borders()
-    newBoard.set_Up()
-
+      newBoard.borders()
+      newBoard.set_Up()
+      val solutionstring: String = newBoard.boardString
 
       for (i <- 0 until 100) {
         newBoard.illegal_moves()

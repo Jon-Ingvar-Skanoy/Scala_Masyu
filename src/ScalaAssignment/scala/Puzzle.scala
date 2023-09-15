@@ -1,60 +1,26 @@
 import scala.io.Source._
 
-case class Board(fn: String, nr: Int) {
-  private val filename = fn
-  private val width: Int = set_width
-  private val height: Int = set_height
-
-  private val iterator: Array[Int] = Array.ofDim[Int](3)
-  private val tiles: Array[Array[Tile]] = Array.ofDim[Tile](height, width)
+case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
+  val nr = 5
+  private val filename = "src/ScalaAssignment/scala/puzzle_unsolved.txt"
+  private val width: Int = x
+  private val height: Int = y
 
 
-  def input: Unit = {
-    for (line <- fromFile(filename).getLines) {
-
-      if (line.startsWith("size")) iterator(0) = iterator(0) + 1
-      else if (iterator(0) == nr + 1) {
-        for (i <- line if ' ' != i) {
+   val tiles: Array[Array[Tile]] = sol
 
 
-          tiles(iterator(1))(iterator(2)) = Tile(i, iterator(1), iterator(2))
-
-          iterator(2) = iterator(2) + 1
-
-
-        }
-
-        iterator(2) = 0
-        iterator(1) = iterator(1) + 1
-      }
-    }
-  }
+  def get_tiles() :Array[Array[Tile]] ={
+    val value :Array[Array[Tile]] =Array.ofDim[Tile](height, width)
 
 
-  private def set_height: Int = {
 
-    val startLines: List[String] =
-      for (i <- fromFile(filename).getLines.toList if i.startsWith("size")) yield i
-    //startLines.foreach(x:String
-
-    startLines(nr).split(" ")(1).split("x")(1).toInt
-
+     value
 
   }
 
-  private def set_width: Int = {
-    val startLines: List[String] =
-      for (i <- fromFile(filename).getLines.toList if i.startsWith("size")) yield i
-    //startLines.foreach(x:String
-
-    startLines(nr).split(" ")(1).split("x")(0).toInt
-    //return startLines.split(" ")(1).split("x")(1).toInt
 
 
-  }
-  // def print: Unit = {
-
-  // }
 
   def printBoard: Any = {
     println
@@ -106,7 +72,12 @@ case class Board(fn: String, nr: Int) {
         }
         else if (tiles(i)(j).right) {
           // print down+right
-          print('┌')
+          if(tiles(i)(j).down()) {
+            print('┌')
+          }
+          else{
+            print(' ')
+          }
         }
         else {
           print(' ')
@@ -118,9 +89,74 @@ case class Board(fn: String, nr: Int) {
 
   }
 
+  def boardString: String = {
+    var str: String = ""
+    for (i <- 0 until height) {
+      for (j <- 0 until width) {
+
+        str = addCharToBoardString(str, i, j)
+      }
+      str = str + "\n"
+    }
+    str
+  }
+
+  def addCharToBoardString(str: String, i: Int, j: Int): String = {
+    if (tiles(i)(j).isBlack) {
+      str + "┼"
+    }
+    else if (tiles(i)(j).isWhite) {
+      if (tiles(i)(j).left) {
+        str + "╨"
+      }
+      else if (tiles(i)(j).down) {
+        str + "╡"
+      }
+      else {
+        str + " "
+      }
+    }
+    else if (tiles(i)(j).left) {
+      if (tiles(i)(j).down) {
+        // print left + down
+        str + "┐"
+      }
+      else if (tiles(i)(j).up) {
+        //print left + up
+        str + "┘"
+      }
+      else if (tiles(i)(j).right) {
+        //print left + right
+        str + "─"
+      }
+      else {
+        str + " "
+      }
+    }
+    else if (tiles(i)(j).up) {
+      if (tiles(i)(j).down) {
+        //print up+down
+        str + "│"
+      }
+      else if (tiles(i)(j).right) {
+        //print up + right
+        str + "└"
+      }
+      else {
+        str + " "
+      }
+    }
+    else if (tiles(i)(j).right) {
+      // print down+right
+      str + "┌"
+    }
+    else {
+      str + " "
+
+    }
+  }
   private def count_dots: Int = {
     var count = 0
-
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
         if (!tiles(ii)(j).isEmpty) {
@@ -128,7 +164,6 @@ case class Board(fn: String, nr: Int) {
         }
       }
     }
-
     count
   }
 
@@ -148,7 +183,7 @@ case class Board(fn: String, nr: Int) {
 
   }
 
-  private def draw_Up(legality: Int, x: Int, y: Int) : Unit = {
+  private def draw_up(legality: Int, x: Int, y: Int) : Unit = {
     if (!tiles(y)(x).up && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(2) = Line.Placed
@@ -174,7 +209,7 @@ case class Board(fn: String, nr: Int) {
     }
   }
 
-  private def draw_Right(legality: Int, x: Int, y: Int):  Unit = {
+  private def draw_right(legality: Int, x: Int, y: Int):  Unit = {
     if (!tiles(y)(x).right && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(3) = Line.Placed
@@ -291,7 +326,7 @@ case class Board(fn: String, nr: Int) {
   }
   private def set_up_black(x: Int, y: Int): Unit = {
     if(tiles(y)(x).rightMissing() && tiles(y)(x+1).isBlack){
-      draw_Right(-1,x,y)
+      draw_right(-1,x,y)
     }
     if (tiles(y)(x).downMissing() && tiles(y+1)(x).isBlack) {
       draw_down(-1, x, y)
@@ -311,6 +346,7 @@ case class Board(fn: String, nr: Int) {
     }
   }
   private def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
+
     if(tiles(y)(x).downMissing()&&tiles(y)(x).leftMissing()&&tiles(y)(x).rightMissing()){
       if(tiles(y+1)( x-1).isWhite  & tiles(y+1)(x+1).isWhite){
         draw_down(-1,x,y)
@@ -318,21 +354,21 @@ case class Board(fn: String, nr: Int) {
     }
     if (tiles(y)(x).upMissing() && tiles(y)(x).leftMissing() && tiles(y)(x).rightMissing()) {
       if (tiles(y - 1)(x - 1).isWhite & tiles(y - 1)(x + 1).isWhite) {
-        draw_Up(-1, x, y)
+        draw_up(-1, x, y)
       }
     }
     if (tiles(y)(x).leftMissing() && (tiles(y)(x).downMissing() && tiles(y)(x).upMissing())) {
       if (tiles(y + 1)(x - 1).isWhite & tiles(y - 1)(x - 1).isWhite) {
-        draw_Right(-1, x, y)
+        draw_left(-1, x, y)
       }
     }
     if (tiles(y)(x).rightMissing() && (tiles(y)(x).downMissing() && tiles(y)(x).upMissing())) {
       if (tiles(y + 1)(x + 1).isWhite & tiles(y - 1)(x + 1).isWhite) {
-        draw_left(-1, x, y)
+        draw_right(-1, x, y)
       }
     }
   }
-
+  
 
   def set_Up():Unit ={
     for (ii <- 0 until height) {
@@ -346,64 +382,63 @@ case class Board(fn: String, nr: Int) {
 
       }
     }
-
   }
   private def illegal_black_dot(x: Int, y: Int):Unit = {
-    if(tiles(y)(x).downMissing() && (tiles(y+1)(x).downIllegal() | tiles(y+1)(x).left() | tiles(y+1)(x).right())) draw_down(-1,x, y)
-    if(tiles(y)(x).upMissing() && (tiles(y-1)(x).upIllegal() | tiles(y-1)(x).left() | tiles(y-1)(x).right())) draw_Up(-1,x, y)
-    if(tiles(y)(x).leftMissing() && (tiles(y)(x-1).leftIllegal() | tiles(y)(x-1).up() | tiles(y)(x-1).down())) draw_left(-1,x, y)
-    if(tiles(y)(x).rightMissing() && (tiles(y)(x+1).rightIllegal() | tiles(y)(x+1).up() | tiles(y)(x+1).down())) draw_Right(-1,x, y)
+    if((tiles(y)(x).downMissing() && ((tiles(y+1)(x).downIllegal()) | (tiles(y+1)(x).left() | tiles(y+1)(x).right())))) draw_down(-1,x, y)
+    if(tiles(y)(x).upMissing() && (tiles(y-1)(x).upIllegal() | tiles(y-1)(x).left() | tiles(y-1)(x).right())) draw_up(-1,x, y)
+    if((tiles(y)(x).leftMissing() && ((tiles(y)(x-1).leftIllegal()) | (tiles(y)(x-1).up() | tiles(y)(x-1).down())))) draw_left(-1,x, y)
+    if(tiles(y)(x).rightMissing() && (tiles(y)(x+1).rightIllegal() | tiles(y)(x+1).up() | tiles(y)(x+1).down())) draw_right(-1,x, y)
     // check if circle is formed
     if(tiles(y)(x).downMissing()  && circle(x,y+2,x,y,count_dots,2)== -1) draw_down(-1,x, y)
-    if(tiles(y)(x).upMissing()  && circle(x,y-2,x,y,count_dots,1)== -1) draw_Up(-1,x, y)
+    if(tiles(y)(x).upMissing()  && circle(x,y-2,x,y,count_dots,1)== -1) draw_up(-1,x, y)
     if (tiles(y)(x).leftMissing() && circle(x-2, y, x, y, count_dots, 3) == -1) draw_left(-1, x, y)
-    if (tiles(y)(x).rightMissing() && circle(x-2, y, x, y, count_dots, 0) == -1) draw_Right(-1, x, y)
+    if (tiles(y)(x).rightMissing() && circle(x-2, y, x, y, count_dots, 0) == -1) draw_right(-1, x, y)
 
   }
   private def legal_crowded(x: Int, y: Int):Unit = {
 
     if (tiles(y)(x).leftMissing()) draw_left(1, x, y)
     if (tiles(y)(x).downMissing()) draw_down(1, x, y)
-    if (tiles(y)(x).upMissing()) draw_Up(1, x, y)
-    if (tiles(y)(x).rightMissing()) draw_Right(1, x, y)
+    if (tiles(y)(x).upMissing()) draw_up(1, x, y)
+    if (tiles(y)(x).rightMissing()) draw_right(1, x, y)
 
 
   }
   private def illegal_white_dots(x: Int, y: Int):Unit = {
-    if(tiles(y)(x).down() && tiles(y+1)(x).down()) draw_Up(-1,x, y-1)
+    if(tiles(y)(x).down() && tiles(y+1)(x).down()) draw_up(-1,x, y-1)
     if(tiles(y)(x).up() && tiles(y-1)(x).up()) draw_down(-1,x, y+1)
     if(tiles(y)(x).right() && tiles(y)(x+1).right()) draw_left(-1,x-1, y)
-    if(tiles(y)(x).left() && tiles(y)(x-1).left()) draw_Right(-1,x+1, y)
+    if(tiles(y)(x).left() && tiles(y)(x-1).left()) draw_right(-1,x+1, y)
     if(tiles(y)(x).left()) {
-      draw_Up(-1,x, y)
+      draw_up(-1,x, y)
       draw_down(-1,x,y)
 
     }
     if (tiles(y)(x).right()) {
-      draw_Up(-1, x, y)
+      draw_up(-1, x, y)
       draw_down(-1, x, y)
 
     }
     if (tiles(y)(x).up()) {
       draw_left(-1, x, y)
-      draw_Right(-1, x, y)
+      draw_right(-1, x, y)
 
     }
     if (tiles(y)(x).down()) {
       draw_left(-1, x, y)
-      draw_Right(-1, x, y)
+      draw_right(-1, x, y)
 
     }
-    if (tiles(y)(x).leftIllegal()) draw_Right(-1, x, y)
-    if (tiles(y)(x).downIllegal()) draw_Up(-1, x, y)
+    if (tiles(y)(x).leftIllegal()) draw_right(-1, x, y)
+    if (tiles(y)(x).downIllegal()) draw_up(-1, x, y)
     if (tiles(y)(x).upIllegal) draw_down(-1, x, y)
     if (tiles(y)(x).rightIllegal) draw_left(-1, x, y)
     if ( ( !tiles(y)(x).leftIllegal && tiles(y)(x-1).left) && ( !tiles(y)(x).rightIllegal() && tiles(y)(x+1).right)){
       draw_left(-1, x, y)
-      draw_Right(-1, x, y)
+      draw_right(-1, x, y)
     }
     if ((!tiles(y)(x).upIllegal && tiles(y-1)(x).up) && (!tiles(y)(x).downIllegal && tiles(y+1)(x).down)) {
-      draw_Up(-1, x, y)
+      draw_up(-1, x, y)
       draw_down(-1, x, y)
     }
   }
@@ -411,21 +446,21 @@ case class Board(fn: String, nr: Int) {
 
     if(tiles(y)(x).leftMissing()) draw_left(-1,x,y)
     if(tiles(y)(x).downMissing()) draw_down(-1,x,y)
-    if(tiles(y)(x).upMissing()) draw_Up(-1,x,y)
-    if(tiles(y)(x).rightMissing()) draw_Right(-1,x,y)
+    if(tiles(y)(x).upMissing()) draw_up(-1,x,y)
+    if(tiles(y)(x).rightMissing()) draw_right(-1,x,y)
   }
   private def legal_black(x: Int, y: Int):Unit = {
     if(tiles(y)(x).leftIllegal()){
-      draw_Right(1,x,y)
-      draw_Right(1,x+1,y)
+      draw_right(1,x,y)
+      draw_right(1,x+1,y)
     }
     if (tiles(y)(x).rightIllegal()) {
       draw_left(1, x, y)
       draw_left(1, x - 1, y)
     }
     if (tiles(y)(x).downIllegal()) {
-      draw_Up(1, x, y)
-      draw_Up(1, x, y-1)
+      draw_up(1, x, y)
+      draw_up(1, x, y-1)
     }
     if (tiles(y)(x).upIllegal()) {
       draw_down(1, x, y)
@@ -436,12 +471,11 @@ case class Board(fn: String, nr: Int) {
     if(!tiles(current_y)(Current_x).isEmpty) {
 
       if (start_y == current_y && start_x == Current_x) {
-        println(2)
         if (Remaining_dots ==0) {
           return 1
         }
         else{
-          println(Remaining_dots, current_y,Current_x,start_y,start_x)
+
         return -1
         }
       }
@@ -482,9 +516,9 @@ case class Board(fn: String, nr: Int) {
   private def avoid_circle_empty(x: Int, y: Int): Unit={
 
     if (tiles(y)(x).downMissing() && circle(x, y , x, y+1, count_dots, 2) == -1) draw_down(-1, x, y)
-    if (tiles(y)(x).upMissing() && circle(x, y, x, y-1, count_dots, 1) == -1) draw_Up(-1, x, y)
+    if (tiles(y)(x).upMissing() && circle(x, y, x, y-1, count_dots, 1) == -1) draw_up(-1, x, y)
     if (tiles(y)(x).leftMissing() && circle(x, y, x-1, y, count_dots, 3) == -1) draw_left(-1, x, y)
-    if (tiles(y)(x).rightMissing() && circle(x , y, x+1, y, count_dots, 0) == -1) draw_Right(-1, x, y)
+    if (tiles(y)(x).rightMissing() && circle(x , y, x+1, y, count_dots, 0) == -1) draw_right(-1, x, y)
   }
 
 
@@ -511,7 +545,7 @@ case class Board(fn: String, nr: Int) {
     }
   }
 
-  def createAlteredBoard(board: Board, arr:Array[Array[Array[Boolean]]]): Board = {
+  def createAlteredBoard(board: Puzzle, arr:Array[Array[Array[Boolean]]]): Puzzle = {
     val newBoard = board
     for(i<-0 until height){
       for (j<-0 until width){

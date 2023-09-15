@@ -40,7 +40,7 @@ case class Tile (val char: Char, val h: Int, val w: Int) {
 
   def left(): Boolean = {
     if (paths(0) == Line.Placed) {
-      return true
+       return true
     }
     false
   }

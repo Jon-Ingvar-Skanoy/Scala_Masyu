@@ -23,8 +23,14 @@ object PuzzleReaderWriter{
   }
 
   def input(x:Int, y:Int, index:Int): Array[Array[Tile]] = {
+
      val tiles: Array[Array[Tile]] = Array.ofDim[Tile](y, x)
+    iterator(0) = 0
+    iterator(1) = 0
+    iterator(2) = 0
+
     for (line <- lines) {
+
 
       if (line.startsWith("size")) iterator(0) = iterator(0) + 1
       else if (iterator(0) == index + 1) {
@@ -49,7 +55,9 @@ object PuzzleReaderWriter{
     fw.close()
   }
   def getPuzzle(index:Int):Puzzle={
+    lines = Source.fromFile(unsolvedFile).getLines().toList
     val sizeNumbers = lines.filter(_ startsWith("size"))(index).split(" ").last.split("x")
+
     return new Puzzle(sizeNumbers(0).toInt,sizeNumbers.last.toInt, input(sizeNumbers(0).toInt,sizeNumbers.last.toInt,index))
   }
 

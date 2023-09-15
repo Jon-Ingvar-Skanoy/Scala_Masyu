@@ -338,6 +338,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       println(222)
     }
   }
+  private def set_up_black_line(x: Int, y: Int):Unit = {
+    if(tiles(y)(x).rightMissing() && tiles(y)(x+1).rightMissing() &&  tiles(y)(x+2).rightMissing() && (tiles(y)(x+2).isWhite && tiles(y)(x+3).isWhite )) draw_right(-1,x,y)
+  if (tiles(y)(x).leftMissing() && tiles(y)(x - 1).leftMissing() && tiles(y)(x - 2).leftMissing() && (tiles(y)(x - 2).isWhite && tiles(y)(x - 3).isWhite)) draw_left(-1, x, y)
+    if (tiles(y)(x).upMissing() && tiles(y - 1)(x).upMissing() && tiles(y - 2)(x).upMissing() && (tiles(y - 2)(x).isWhite && tiles(y - 3)(x).isWhite)) draw_up(-1, x, y)
+    if (tiles(y)(x).downMissing() && tiles(y + 1)(x).downMissing() && tiles(y + 2)(x).downMissing() && (tiles(y + 2)(x).isWhite && tiles(y + 3)(x).isWhite)) draw_down(-1, x, y)
+  }
 
   private def set_up_white_horizontal(x: Int, y: Int): Unit = {
     if ((tiles(y)(x).leftMissing() && tiles(y)(x-1).isWhite) && (tiles(y)(x-1).leftMissing() && tiles(y)(x-2).isWhite)) {
@@ -368,7 +374,16 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       }
     }
   }
-  
+
+  def won(): Boolean = {
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+        //if(!iles(ii)(j).is)
+      }
+
+    }
+    true
+  }
 
   def set_Up():Unit ={
     for (ii <- 0 until height) {
@@ -376,6 +391,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         if(tiles(ii)(j).isBlack) {
           set_up_black(j,ii)
           set_up_black_diagonal_whites(j,ii)
+          set_up_black_line(j,ii)
         }
         if(tiles(ii)(j).isWhite) set_up_white_vertical(j,ii)
         if(tiles(ii)(j).isWhite) set_up_white_horizontal(j,ii)
@@ -383,6 +399,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       }
     }
   }
+
   private def illegal_black_dot(x: Int, y: Int):Unit = {
     if((tiles(y)(x).downMissing() && ((tiles(y+1)(x).downIllegal()) | (tiles(y+1)(x).left() | tiles(y+1)(x).right())))) draw_down(-1,x, y)
     if(tiles(y)(x).upMissing() && (tiles(y-1)(x).upIllegal() | tiles(y-1)(x).left() | tiles(y-1)(x).right())) draw_up(-1,x, y)

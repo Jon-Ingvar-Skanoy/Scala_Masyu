@@ -38,12 +38,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   def find_random_move():List[Int] = {
     for (i <- 0 until height) {
       for (j <- 0 until width) {
-          if(tiles(i)(j).inn_ring() & (!tiles(i)(j).crowded())){
-            if(tiles(i)(j).downMissing()){
-              return List[Int] (j,i,1)
+          if(tiles(i)(j).inn_ring() ){
+
+            if(tiles(i)(j).upMissing()){
+              return List[Int] (j,i,2)
             }
-            if (tiles(i)(j).upMissing()) {
-              return List[Int](j, i, 2)
+            if (tiles(i)(j).downMissing()) {
+              return List[Int](j, i, 1)
             }
             if (tiles(i)(j).leftMissing()) {
               return List[Int](j, i, 0)
@@ -427,9 +428,15 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
          //   println("w,u")
           //  return true
          // }
+          if (tiles(ii)(j).left() ) {
 
-          if (tiles(ii)(j).left() && circle(j, ii, j-1 , ii, count_dots-1, 3) == 1) {
-            println("w,l")
+          }
+         // if (tiles(ii)(j).left() && circle(j, ii, j+1 , ii, count_dots, 0) == 1) {
+           // println("w,l")
+            //return true
+          //}
+          if (tiles(ii)(j).left() && circle(j-1 , ii, j, ii, count_dots, 0) == 1) {
+            println("w,r")
             return true
           }
         //  if (tiles(ii)(j).right() && circle(j+1, ii, j, ii, count_dots, 0) == 1) {
@@ -572,12 +579,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           return 1
         }
         else{
-          println(Remaining_dots, current_y, Current_x, start_x, start_y)
+
 
           return -1
         }
       }
-      if (!tiles(current_y)(Current_x).crowded()) return 0
+
         if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circle(start_x, start_y , Current_x, current_y-1, Remaining_dots, 1)
         if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y +1, Remaining_dots, 2)
         if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots, 0)

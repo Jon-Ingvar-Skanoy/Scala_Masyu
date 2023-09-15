@@ -10,6 +10,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
    val tiles: Array[Array[Tile]] = sol
 
 
+
   def get_tiles() :Array[Array[Tile]] ={
     val value :Array[Array[Tile]] =Array.ofDim[Tile](height, width)
 
@@ -19,7 +20,11 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   }
 
-
+  def copyTiles(): Array[Array[Tile]] = {
+    for (row <- tiles) yield {
+      for (item <- row) yield item.copyTile()
+    }
+  }
 
 
   def printBoard: Any = {

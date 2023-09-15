@@ -1,7 +1,8 @@
 
 import PuzzleReaderWriter.{closing, getNumPizzles, getPuzzle, initRW, writeAnswer}
+import scala.collection.mutable._
 
-import scala.io.StdIn.readLine
+
 
 object PuzzleSolver {
   def main(args: Array[String]): Unit = {
@@ -11,12 +12,12 @@ object PuzzleSolver {
     initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
     var newBoard: Puzzle =  Puzzle(0,0,Array.ofDim[Tile](0, 0))
     val puzzleCount: Int = getNumPizzles()
-    for (i <- 0 until puzzleCount) {
+    for (i <- 0 until 1) {
 
       newBoard=  getPuzzle(i)
-      newBoard.printBoard
 
 
+      val clones: Array[Array[Tile]] = newBoard.copyTiles()
       //    println(newBoard.til  es(0)(2).ttype)
 
       newBoard.borders()
@@ -28,12 +29,21 @@ object PuzzleSolver {
         newBoard.legal_moves()
       }
 
-
+      val sd:Puzzle= new Puzzle(newBoard.height,newBoard.height,clones)
+      sd.print_ugly
       newBoard.print_ugly
+
+
       //print(newBoard.won())
+
       writeAnswer(board = newBoard)
+
 
     }
     closing()
   }
+
+
+
 }
+

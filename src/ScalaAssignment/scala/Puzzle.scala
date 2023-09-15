@@ -1,5 +1,5 @@
 import scala.io.Source._
-
+import scala.collection.mutable._
 case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   val nr = 5
   private val filename = "src/ScalaAssignment/scala/puzzle_unsolved.txt"

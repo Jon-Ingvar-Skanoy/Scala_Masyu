@@ -25,6 +25,38 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       for (item <- row) yield item.copyTile()
     }
   }
+  def lost():Boolean= {
+    for (i <- 0 until height) {
+      for (j <- 0 until width) {
+        if (tiles(i)(j).inn_ring() && tiles(i)(j).dead_end()) return true
+      }
+
+    }
+    return false
+  }
+
+  def find_random_move():List[Int] = {
+    for (i <- 0 until height) {
+      for (j <- 0 until width) {
+          if(tiles(i)(j).inn_ring() & (!tiles(i)(j).crowded())){
+            if(tiles(i)(j).downMissing()){
+              return List[Int] (j,i,1)
+            }
+            if (tiles(i)(j).upMissing()) {
+              return List[Int](j, i, 2)
+            }
+            if (tiles(i)(j).leftMissing()) {
+              return List[Int](j, i, 0)
+            }
+            if (tiles(i)(j).rightMissing()) {
+              return List[Int](j, i, 3)
+            }
+
+          }
+      }
+    }
+    return List[Int] (-1,-1,-1)
+  }
 
 
   def printBoard: Any = {
@@ -173,7 +205,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
-  private def draw_down(legality: Int, x: Int, y: Int): Unit = {
+   def draw_down(legality: Int, x: Int, y: Int): Unit = {
     if(!tiles(y)(x).down && !tiles(y)(x).crowded && legality == 1){
 
       tiles(y)(x).paths(1)= Line.Placed
@@ -188,7 +220,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   }
 
-  private def draw_up(legality: Int, x: Int, y: Int) : Unit = {
+   def draw_up(legality: Int, x: Int, y: Int) : Unit = {
     if (!tiles(y)(x).up && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(2) = Line.Placed
@@ -201,7 +233,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
 
-  private def draw_left(legality: Int, x: Int, y: Int): Unit = {
+   def draw_left(legality: Int, x: Int, y: Int): Unit = {
     if (!tiles(y)(x).left && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(0) = Line.Placed
@@ -214,7 +246,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
 
-  private def draw_right(legality: Int, x: Int, y: Int):  Unit = {
+   def draw_right(legality: Int, x: Int, y: Int):  Unit = {
     if (!tiles(y)(x).right && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(3) = Line.Placed
@@ -383,11 +415,33 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   def won(): Boolean = {
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
-        //if(!iles(ii)(j).is)
+        if(!tiles(ii)(j).isEmpty){
+
+
+
+          if (tiles(ii)(j).down() && circle(j, ii, j, ii -1, count_dots, 1) == 1) {
+            println("w")
+            return true
+          }
+          if (tiles(ii)(j).upMissing() && circle(j, ii, j, ii + 1, count_dots, 2) == 1)  {
+            println("w")
+            return true
+          }
+          if (tiles(ii)(j).leftMissing() && circle(j, ii, j - 1, ii, count_dots, 0) == 1) {
+            println("w")
+            return true
+          }
+          if (tiles(ii)(j).rightMissing() && circle(j, ii, j - 1, ii, count_dots, 3) == 1) {
+            println("w")
+            return true
+          }
+
+
+        }
       }
 
     }
-    true
+    false
   }
 
   def set_Up():Unit ={

@@ -372,7 +372,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   private def set_up_white_vertical(x: Int, y: Int): Unit = {
     if((tiles(y)(x).downMissing() && tiles(y+1)(x).isWhite)&& (tiles(y+1)(x).downMissing() && tiles(y+2)(x).isWhite)){
       draw_down(-1,x,y)
-      println(222)
+
     }
   }
   private def set_up_black_line(x: Int, y: Int):Unit = {
@@ -385,7 +385,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   private def set_up_white_horizontal(x: Int, y: Int): Unit = {
     if ((tiles(y)(x).leftMissing() && tiles(y)(x-1).isWhite) && (tiles(y)(x-1).leftMissing() && tiles(y)(x-2).isWhite)) {
       draw_left(-1, x, y)
-      println(222)
+
     }
   }
   private def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
@@ -419,22 +419,23 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
 
-          if (tiles(ii)(j).down() && circle(j, ii, j, ii -1, count_dots, 1) == 1) {
-            println("w")
+       //   if (tiles(ii)(j).down() && circle(j, ii+1, j, ii, count_dots, 2) == 1) {
+         //   println("w,d")
+        //    return true
+         // }
+       //   if (tiles(ii)(j).up() && circle(j, ii+1, j, ii , count_dots, 2) == 1)  {
+         //   println("w,u")
+          //  return true
+         // }
+
+          if (tiles(ii)(j).left() && circle(j, ii, j-1 , ii, count_dots-1, 3) == 1) {
+            println("w,l")
             return true
           }
-          if (tiles(ii)(j).upMissing() && circle(j, ii, j, ii + 1, count_dots, 2) == 1)  {
-            println("w")
-            return true
-          }
-          if (tiles(ii)(j).leftMissing() && circle(j, ii, j - 1, ii, count_dots, 0) == 1) {
-            println("w")
-            return true
-          }
-          if (tiles(ii)(j).rightMissing() && circle(j, ii, j - 1, ii, count_dots, 3) == 1) {
-            println("w")
-            return true
-          }
+        //  if (tiles(ii)(j).right() && circle(j+1, ii, j, ii, count_dots, 0) == 1) {
+          //  println("w,r")
+            //return true
+          //}
 
 
         }
@@ -566,7 +567,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
     else {
         if (start_y == current_y & start_x == Current_x) {
-        println(2)
+
         if (Remaining_dots == 0) {
           return 1
         }
@@ -576,7 +577,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           return -1
         }
       }
-
+      if (!tiles(current_y)(Current_x).crowded()) return 0
         if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circle(start_x, start_y , Current_x, current_y-1, Remaining_dots, 1)
         if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y +1, Remaining_dots, 2)
         if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots, 0)

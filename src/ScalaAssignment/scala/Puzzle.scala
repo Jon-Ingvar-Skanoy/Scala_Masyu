@@ -22,7 +22,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   def copyTiles(): Array[Array[Tile]] = {
     // function to deepcopy the class
     for (row <- tiles) yield {
-      for (item <- row) yield item.copyTile()
+      for (item <- row) yield item.copyTile(0)
     }
   }
   def lost():Boolean= {

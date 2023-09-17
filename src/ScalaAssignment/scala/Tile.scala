@@ -38,12 +38,20 @@ case class Tile ( char: Char,  h: Int,  w: Int) {
   val width: Int = w
   val height: Int = h
 
-  def copyTile(): Tile = {
-    val newTile: Tile = Tile(char,h,w)
-    for(i <- 0 until 4){
-      newTile.paths(i) = paths(i)
+  def copyTile(x:Int): Tile = {
+
+
+    if (x >= 3) {
+      val newTile: Tile = Tile(char, h, w)
+      newTile.paths(x) = paths(x)
+      return  newTile
     }
-  newTile
+    val newTile: Tile =  copyTile(x+1)
+
+    newTile.paths(x) = paths(x)
+
+
+  return newTile
   }
   def left(): Boolean = {
     if (paths(0) == Line.Placed) {

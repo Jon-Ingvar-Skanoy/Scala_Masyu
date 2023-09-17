@@ -368,33 +368,44 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   }
 
-  private def border_Bottom(): Unit = {
-    // function that creates the bottom border, tells the bottom tiles that it is illegal to move down
-    for (i <- 0 until width) {
-      tiles(height-1)(i).paths(1) = Line.Illegal
-    }
-  }
-
-  private def border_Left(): Unit = {
+  private def border_Bottom(x:Int): Array[Array[Tile]] = {
     // function that creates the left border, tells the left tiles that it is illegal to move left
-    for (i <- 0 until height) {
-      tiles(i)(0).paths(0) = Line.Illegal
+    if(x >= width){
+      return tiles
     }
+
+
+    tiles(height-1)(x).paths(1) = Line.Illegal
+    return border_Bottom(x+1)
+    }
+
+
+  private def border_Left(x:Int): Array[Array[Tile]] = {
+    // function that creates the left border, tells the left tiles that it is illegal to move left
+    if (x >= height) {
+      return tiles
+    }
+
+
+      tiles(x)(0).paths(0) = Line.Illegal
+    return border_Left(x+1)
   }
 
-  private def border_Right(): Unit = {
+  private def border_Right(x:Int): Array[Array[Tile]] = {
     // function that creates the right border, tells the bottom tiles that it is illegal to move right
-    for (i <- 0 until height) {
-      tiles(i)(width-1).paths(3) = Line.Illegal
+    if (x >= height) {
+      return tiles
     }
+      tiles(x)(width-1).paths(3) = Line.Illegal
+      return border_Right(x+1)
   }
 
   def borders():Unit = {
     // function that creates the borders, calls function that does that
-    border_Left()
-    border_Right()
+    border_Left(0)
+    border_Right(0)
     border_Top(0)
-    border_Bottom()
+    border_Bottom(0)
   }
   private def set_up_black(x: Int, y: Int): Unit = {
     // function that checks if the black dot in the given tile is next to an other black dot

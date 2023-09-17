@@ -403,12 +403,14 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
        border_Right(x+1)
   }
 
-  def borders():Unit = {
+  def borders():Puzzle = {
     // function that creates the borders, calls function that does that
     border_Left(0)
     border_Right(0)
     border_Top(0)
     border_Bottom(0)
+    return Puzzle(width,height,tiles)
+
   }
   private def set_up_black(x: Int, y: Int): Unit = {
     // function that checks if the black dot in the given tile is next to an other black dot

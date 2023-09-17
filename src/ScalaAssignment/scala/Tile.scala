@@ -51,7 +51,7 @@ case class Tile ( char: Char,  h: Int,  w: Int) {
     newTile.paths(x) = paths(x)
 
 
-  return newTile
+   newTile
   }
   def left(): Boolean = {
     if (paths(0) == Line.Placed) {

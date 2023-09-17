@@ -1,8 +1,7 @@
 
 import PuzzleReaderWriter.{closing, getNumPizzles, getPuzzle, initRW, writeAnswer}
 
-import scala.collection.mutable._
-import scala.util.control.Breaks.break
+
 
 
 
@@ -45,7 +44,7 @@ object PuzzleSolver {
     closing()
   }
 
-  def solve(puzzle: Puzzle, dept:Int): Puzzle = {
+  private def solve(puzzle: Puzzle, dept:Int): Puzzle = {
 
     puzzle.printBoard
 
@@ -59,7 +58,7 @@ object PuzzleSolver {
     }
     puzzle.illegal_moves()
 
-    if (dept > 10) {
+    if (dept > 20) {
 
       return puzzle
 
@@ -76,7 +75,7 @@ object PuzzleSolver {
        return puzzle
      }
 
-    var copy:Puzzle = new Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+    var copy:Puzzle =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
     var random_move:Array[Int] = Array(0,2,33)
 
     while(random_move(0) != - 1){

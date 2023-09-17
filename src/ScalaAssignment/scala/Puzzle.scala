@@ -1,8 +1,7 @@
-import scala.io.Source._
-import scala.collection.mutable._
+import scala.annotation.tailrec
+
 case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
-  val nr = 5
-  private val filename = "src/ScalaAssignment/scala/puzzle_unsolved.txt"
+
    val width: Int = x
    val height: Int = y
 
@@ -34,7 +33,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       }
 
     }
-    return false
+     false
   }
 
   def find_move():Array[Int] = {
@@ -70,7 +69,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           }
       }
     }
-    return Array[Int] (-1,-1,-1)
+     Array[Int] (-1,-1,-1)
   }
 
 
@@ -83,26 +82,26 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           print('┼')
         }
         else if (tiles(i)(j).isWhite) {
-          if (tiles(i)(j).left) {
+          if (tiles(i)(j).left()) {
             print('╨')
           }
-          else if (tiles(i)(j).down) {
+          else if (tiles(i)(j).down()) {
             print('╡')
           }
           else {
             print(' ')
           }
         }
-        else if (tiles(i)(j).left) {
-          if (tiles(i)(j).down) {
+        else if (tiles(i)(j).left()) {
+          if (tiles(i)(j).down()) {
             // print left + down
             print('┐')
           }
-          else if (tiles(i)(j).up) {
+          else if (tiles(i)(j).up()) {
             //print left + up
             print('┘')
           }
-          else if (tiles(i)(j).right) {
+          else if (tiles(i)(j).right()) {
             //print left + right
             print('─')
           }
@@ -110,12 +109,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
             print(' ')
           }
         }
-        else if (tiles(i)(j).up) {
-          if (tiles(i)(j).down) {
+        else if (tiles(i)(j).up()) {
+          if (tiles(i)(j).down()) {
             //print up+down
             print('│')
           }
-          else if (tiles(i)(j).right) {
+          else if (tiles(i)(j).right()) {
             //print up + right
             print('└')
           }
@@ -123,7 +122,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
             print(' ')
           }
         }
-        else if (tiles(i)(j).right) {
+        else if (tiles(i)(j).right()) {
           // print down+right
           if(tiles(i)(j).down()) {
             print('┌')
@@ -155,32 +154,32 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     str
   }
 
-  def addCharToBoardString(str: String, i: Int, j: Int): String = {
+  private def addCharToBoardString(str: String, i: Int, j: Int): String = {
     // function that ands a char to the board string that mach the content of the tile
     if (tiles(i)(j).isBlack) {
       str + "┼"
     }
     else if (tiles(i)(j).isWhite) {
-      if (tiles(i)(j).left) {
+      if (tiles(i)(j).left()) {
         str + "╨"
       }
-      else if (tiles(i)(j).down) {
+      else if (tiles(i)(j).down()) {
         str + "╡"
       }
       else {
         str + " "
       }
     }
-    else if (tiles(i)(j).left) {
-      if (tiles(i)(j).down) {
+    else if (tiles(i)(j).left()) {
+      if (tiles(i)(j).down()) {
         // print left + down
         str + "┐"
       }
-      else if (tiles(i)(j).up) {
+      else if (tiles(i)(j).up()) {
         //print left + up
         str + "┘"
       }
-      else if (tiles(i)(j).right) {
+      else if (tiles(i)(j).right()) {
         //print left + right
         str + "─"
       }
@@ -188,12 +187,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         str + " "
       }
     }
-    else if (tiles(i)(j).up) {
-      if (tiles(i)(j).down) {
+    else if (tiles(i)(j).up()) {
+      if (tiles(i)(j).down()) {
         //print up+down
         str + "│"
       }
-      else if (tiles(i)(j).right) {
+      else if (tiles(i)(j).right()) {
         //print up + right
         str + "└"
       }
@@ -201,7 +200,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         str + " "
       }
     }
-    else if (tiles(i)(j).right) {
+    else if (tiles(i)(j).right()) {
       // print down+right
       str + "┌"
     }
@@ -283,7 +282,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
-  def print_ugly: Unit = {
+  def print_ugly(): Unit = {
     // function that print the board for debugging, contains information that is not in the solution string
 
 
@@ -291,13 +290,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
 
-        if(tiles(ii)(j).leftMissing){
+        if(tiles(ii)(j).leftMissing()){
           print(" 0 ")
         }
-        if (tiles(ii)(j).leftIllegal) {
+        if (tiles(ii)(j).leftIllegal()) {
           print(" x ")
         }
-        if (tiles(ii)(j).left) {
+        if (tiles(ii)(j).left()) {
           print(" ─ ")
         }
       }
@@ -307,13 +306,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
 
-        if (tiles(ii)(j).downMissing) {
+        if (tiles(ii)(j).downMissing()) {
           print(" 0 ")
         }
-        if (tiles(ii)(j).downIllegal) {
+        if (tiles(ii)(j).downIllegal()) {
           print(" x ")
         }
-        if (tiles(ii)(j).down) {
+        if (tiles(ii)(j).down()) {
           print(" | ")
         }
       }
@@ -324,13 +323,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
 
-        if (tiles(ii)(j).rightMissing) {
+        if (tiles(ii)(j).rightMissing()) {
           print(" 0 ")
         }
         if (tiles(ii)(j).rightIllegal()) {
           print(" x ")
         }
-        if (tiles(ii)(j).right) {
+        if (tiles(ii)(j).right()) {
           print(" ─ ")
         }
       }
@@ -355,6 +354,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
+  @tailrec
   private def border_Top(x:Int): Array[Array[Tile]] = {
 
     // function that creates the top border, tells the top tiles that it is illegal to move up
@@ -363,11 +363,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
 
     tiles(0)(x).paths(2)=Line.Illegal
-    return border_Top(x+1)
+     border_Top(x+1)
 
 
   }
 
+  @tailrec
   private def border_Bottom(x:Int): Array[Array[Tile]] = {
     // function that creates the left border, tells the left tiles that it is illegal to move left
     if(x >= width){
@@ -376,10 +377,11 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
     tiles(height-1)(x).paths(1) = Line.Illegal
-    return border_Bottom(x+1)
+     border_Bottom(x+1)
     }
 
 
+  @tailrec
   private def border_Left(x:Int): Array[Array[Tile]] = {
     // function that creates the left border, tells the left tiles that it is illegal to move left
     if (x >= height) {
@@ -388,16 +390,17 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
       tiles(x)(0).paths(0) = Line.Illegal
-    return border_Left(x+1)
+     border_Left(x+1)
   }
 
+  @tailrec
   private def border_Right(x:Int): Array[Array[Tile]] = {
     // function that creates the right border, tells the bottom tiles that it is illegal to move right
     if (x >= height) {
       return tiles
     }
       tiles(x)(width-1).paths(3) = Line.Illegal
-      return border_Right(x+1)
+       border_Right(x+1)
   }
 
   def borders():Unit = {
@@ -760,7 +763,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         }
       }
       }
-    return new Puzzle(width, height, tiles)
+      Puzzle(width, height, tiles)
   }
 }
 

@@ -355,11 +355,17 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
-  private def border_Top(): Unit = {
-    // function that creates the top border, tells the top tiles that it is illegal to move up
-    for (i <- 0 until width){
-      tiles(0)(i).paths(2)=Line.Illegal
+  private def border_Top(x:Int): Array[Array[Tile]] = {
+    if(x>=width) {
+      return tiles
     }
+    // function that creates the top border, tells the top tiles that it is illegal to move up
+      val newtiles = tiles
+
+    newtiles(0)(x).paths(2)=Line.Illegal
+    return border_Top(x+1)
+
+
   }
 
   private def border_Bottom(): Unit = {
@@ -387,7 +393,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     // function that creates the borders, calls function that does that
     border_Left()
     border_Right()
-    border_Top()
+    border_Top(0)
     border_Bottom()
   }
   private def set_up_black(x: Int, y: Int): Unit = {

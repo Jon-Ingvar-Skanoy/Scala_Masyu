@@ -622,6 +622,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
   private def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
     // recursive function that determine of from start position one there is a line to the current position and if so if it passes trough every dot
+    if(Remaining_dots <0) return 0
     if(!tiles(current_y)(Current_x).isEmpty) {
 
       if (start_y == current_y && start_x == Current_x) {
@@ -633,6 +634,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         return -1
         }
       }
+
 
 
         if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circle(start_x, start_y, Current_x, current_y-1, Remaining_dots-1, 1)

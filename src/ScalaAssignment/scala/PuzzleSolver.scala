@@ -22,7 +22,7 @@ object PuzzleSolver {
       //    println(newBoard.til  es(0)(2).ttype)
 
       newBoard = newBoard.borders()
-      newBoard.set_Up()
+      newBoard = newBoard.set_Up()
 
 
      newBoard = solve(newBoard,0)

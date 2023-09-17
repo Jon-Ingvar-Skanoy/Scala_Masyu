@@ -409,7 +409,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     border_Right(0)
     border_Top(0)
     border_Bottom(0)
-    return Puzzle(width,height,tiles)
+     Puzzle(width,height,tiles)
 
   }
   private def set_up_black(x: Int, y: Int): Unit = {
@@ -513,7 +513,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     false
   }
 
-  def set_Up():Unit ={
+  def set_Up():Puzzle ={
     // calls all set_up functions in the relevant tiles
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
@@ -527,13 +527,14 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
       }
     }
+     Puzzle(width, height, tiles)
   }
 
   private def illegal_black_dot(x: Int, y: Int):Unit = {
     // checks if any move is illegal for a black dot
-    if((tiles(y)(x).downMissing() && ((tiles(y+1)(x).downIllegal()) | (tiles(y+1)(x).left() | tiles(y+1)(x).right())))) draw_down(-1,x, y)
+    if(tiles(y)(x).downMissing() && (tiles(y+1)(x).downIllegal() | (tiles(y+1)(x).left() | tiles(y+1)(x).right()))) draw_down(-1,x, y)
     if(tiles(y)(x).upMissing() && (tiles(y-1)(x).upIllegal() | tiles(y-1)(x).left() | tiles(y-1)(x).right())) draw_up(-1,x, y)
-    if((tiles(y)(x).leftMissing() && ((tiles(y)(x-1).leftIllegal()) | (tiles(y)(x-1).up() | tiles(y)(x-1).down())))) draw_left(-1,x, y)
+    if(tiles(y)(x).leftMissing() && (tiles(y)(x-1).leftIllegal() | (tiles(y)(x-1).up() | tiles(y)(x-1).down()))) draw_left(-1,x, y)
     if(tiles(y)(x).rightMissing() && (tiles(y)(x+1).rightIllegal() | tiles(y)(x+1).up() | tiles(y)(x+1).down())) draw_right(-1,x, y)
     // check if circle is formed
     if(tiles(y)(x).downMissing()  && circle(x,y+2,x,y,count_dots,2)== -1) draw_down(-1,x, y)
@@ -581,8 +582,8 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
     if (tiles(y)(x).leftIllegal()) draw_right(-1, x, y)
     if (tiles(y)(x).downIllegal()) draw_up(-1, x, y)
-    if (tiles(y)(x).upIllegal) draw_down(-1, x, y)
-    if (tiles(y)(x).rightIllegal) draw_left(-1, x, y)
+    if (tiles(y)(x).upIllegal()) draw_down(-1, x, y)
+    if (tiles(y)(x).rightIllegal()) draw_left(-1, x, y)
     if ( ( !tiles(y)(x).leftIllegal && tiles(y)(x-1).left) && ( !tiles(y)(x).rightIllegal() && tiles(y)(x+1).right)){
       draw_left(-1, x, y)
       draw_right(-1, x, y)

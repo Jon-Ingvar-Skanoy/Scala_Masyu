@@ -89,7 +89,7 @@ object PuzzleSolver {
       }
       print(dept)
       copy.illegal_moves()
-      random_move = copy.find_random_move()
+      random_move = copy.find_move()
 
 
       if(random_move(0)== -1) {

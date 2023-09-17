@@ -21,11 +21,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def copyTiles(): Array[Array[Tile]] = {
+    // function to deepcopy the class
     for (row <- tiles) yield {
       for (item <- row) yield item.copyTile()
     }
   }
   def lost():Boolean= {
+    // function to evaluate if the board is wrong
     for (i <- 0 until height) {
       for (j <- 0 until width) {
         if (tiles(i)(j).inn_ring() && tiles(i)(j).dead_end()) return true
@@ -35,7 +37,8 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     return false
   }
 
-  def find_random_move():Array[Int] = {
+  def find_move():Array[Int] = {
+    // function to find a legal move that can be made
 
           for (i <- 0 until height) {
             for (j <- 0 until width) {
@@ -72,6 +75,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
   def printBoard: Any = {
+    // function to print the board with correct syntax
     println
     for (i <- 0 until height) {
       for (j <- 0 until width) {
@@ -139,6 +143,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def boardString: String = {
+    // function that return a string of the board to be delivered in file
     var str: String = ""
     for (i <- 0 until height) {
       for (j <- 0 until width) {
@@ -151,6 +156,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def addCharToBoardString(str: String, i: Int, j: Int): String = {
+    // function that ands a char to the board string that mach the content of the tile
     if (tiles(i)(j).isBlack) {
       str + "┼"
     }
@@ -205,6 +211,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
   private def count_dots: Int = {
+    // function who count the dots on the board
     var count = 0
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
@@ -218,6 +225,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
    def draw_down(legality: Int, x: Int, y: Int): Unit = {
+     // function that draws a line from a tile to the tile below
     if(!tiles(y)(x).down && !tiles(y)(x).crowded && legality == 1){
 
       tiles(y)(x).paths(1)= Line.Placed
@@ -233,6 +241,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
    def draw_up(legality: Int, x: Int, y: Int) : Unit = {
+     // function that draws a line from a tile to the tile above
     if (!tiles(y)(x).up && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(2) = Line.Placed
@@ -246,6 +255,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
    def draw_left(legality: Int, x: Int, y: Int): Unit = {
+     // function that draws a line from a tile to the tile to the left
     if (!tiles(y)(x).left && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(0) = Line.Placed
@@ -259,6 +269,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
    def draw_right(legality: Int, x: Int, y: Int):  Unit = {
+     // function that draws a line from a tile to the tile to the left
     if (!tiles(y)(x).right && !tiles(y)(x).crowded && legality == 1) {
 
       tiles(y)(x).paths(3) = Line.Placed
@@ -273,6 +284,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
   def print_ugly: Unit = {
+    // function that print the board for debugging, contains information that is not in the solution string
 
 
     println("Left")
@@ -344,36 +356,43 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
   private def border_Top(): Unit = {
+    // function that creates the top border, tells the top tiles that it is illegal to move up
     for (i <- 0 until width){
       tiles(0)(i).paths(2)=Line.Illegal
     }
   }
 
   private def border_Bottom(): Unit = {
+    // function that creates the bottom border, tells the bottom tiles that it is illegal to move down
     for (i <- 0 until width) {
       tiles(height-1)(i).paths(1) = Line.Illegal
     }
   }
 
   private def border_Left(): Unit = {
+    // function that creates the left border, tells the left tiles that it is illegal to move left
     for (i <- 0 until height) {
       tiles(i)(0).paths(0) = Line.Illegal
     }
   }
 
   private def border_Right(): Unit = {
+    // function that creates the right border, tells the bottom tiles that it is illegal to move right
     for (i <- 0 until height) {
       tiles(i)(width-1).paths(3) = Line.Illegal
     }
   }
 
   def borders():Unit = {
+    // function that creates the borders, calls function that does that
     border_Left()
     border_Right()
     border_Top()
     border_Bottom()
   }
   private def set_up_black(x: Int, y: Int): Unit = {
+    // function that checks if the black dot in the given tile is next to an other black dot
+    // if so defines it illegal to move between them.
     if(tiles(y)(x).rightMissing() && tiles(y)(x+1).isBlack){
       draw_right(-1,x,y)
     }
@@ -382,25 +401,33 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
   private def set_up_white_vertical(x: Int, y: Int): Unit = {
+    // checks if there is 3 white dots next to each other vertical
     if((tiles(y)(x).downMissing() && tiles(y+1)(x).isWhite)&& (tiles(y+1)(x).downMissing() && tiles(y+2)(x).isWhite)){
       draw_down(-1,x,y)
+    }
+  }
+
+  private def set_up_white_horizontal(x: Int, y: Int): Unit = {
+ // checks if there is 3 white dots next to each other horizontaly
+    if ((tiles(y)(x).leftMissing() && tiles(y)(x - 1).isWhite) && (tiles(y)(x - 1).leftMissing() && tiles(y)(x - 2).isWhite)) {
+      draw_left(-1, x, y)
 
     }
   }
   private def set_up_black_line(x: Int, y: Int):Unit = {
+    // checks if there are the following pattern in any direction * _ o o  from this black dot, in that case defines the move it that direction illegal
     if(tiles(y)(x).rightMissing() && tiles(y)(x+1).rightMissing() &&  tiles(y)(x+2).rightMissing() && (tiles(y)(x+2).isWhite && tiles(y)(x+3).isWhite )) draw_right(-1,x,y)
   if (tiles(y)(x).leftMissing() && tiles(y)(x - 1).leftMissing() && tiles(y)(x - 2).leftMissing() && (tiles(y)(x - 2).isWhite && tiles(y)(x - 3).isWhite)) draw_left(-1, x, y)
     if (tiles(y)(x).upMissing() && tiles(y - 1)(x).upMissing() && tiles(y - 2)(x).upMissing() && (tiles(y - 2)(x).isWhite && tiles(y - 3)(x).isWhite)) draw_up(-1, x, y)
     if (tiles(y)(x).downMissing() && tiles(y + 1)(x).downMissing() && tiles(y + 2)(x).downMissing() && (tiles(y + 2)(x).isWhite && tiles(y + 3)(x).isWhite)) draw_down(-1, x, y)
   }
 
-  private def set_up_white_horizontal(x: Int, y: Int): Unit = {
-    if ((tiles(y)(x).leftMissing() && tiles(y)(x-1).isWhite) && (tiles(y)(x-1).leftMissing() && tiles(y)(x-2).isWhite)) {
-      draw_left(-1, x, y)
 
-    }
-  }
   private def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
+    // check for
+    //    *
+    //  o _ o
+    // if so defines the move in that direction illegal
 
     if(tiles(y)(x).downMissing()&&tiles(y)(x).leftMissing()&&tiles(y)(x).rightMissing()){
       if(tiles(y+1)( x-1).isWhite  & tiles(y+1)(x+1).isWhite){
@@ -425,6 +452,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def won(): Boolean = {
+    // checks if the board is completed
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
         if(!tiles(ii)(j).isEmpty){
@@ -464,6 +492,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def set_Up():Unit ={
+    // calls all set_up functions in the relevant tiles
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
         if(tiles(ii)(j).isBlack) {
@@ -479,6 +508,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   private def illegal_black_dot(x: Int, y: Int):Unit = {
+    // checks if any move is illegal for a black dot
     if((tiles(y)(x).downMissing() && ((tiles(y+1)(x).downIllegal()) | (tiles(y+1)(x).left() | tiles(y+1)(x).right())))) draw_down(-1,x, y)
     if(tiles(y)(x).upMissing() && (tiles(y-1)(x).upIllegal() | tiles(y-1)(x).left() | tiles(y-1)(x).right())) draw_up(-1,x, y)
     if((tiles(y)(x).leftMissing() && ((tiles(y)(x-1).leftIllegal()) | (tiles(y)(x-1).up() | tiles(y)(x-1).down())))) draw_left(-1,x, y)
@@ -491,6 +521,8 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   }
   private def legal_crowded(x: Int, y: Int):Unit = {
+    // called when there are two illegal moves in the tile and one placed, this function setts the last move to placed
+
 
     if (tiles(y)(x).leftMissing()) draw_left(1, x, y)
     if (tiles(y)(x).downMissing()) draw_down(1, x, y)
@@ -500,6 +532,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   }
   private def illegal_white_dots(x: Int, y: Int):Unit = {
+    // checks if any move is illegal for a white dot
     if(tiles(y)(x).down() && tiles(y+1)(x).down()) draw_up(-1,x, y-1)
     if(tiles(y)(x).up() && tiles(y-1)(x).up()) draw_down(-1,x, y+1)
     if(tiles(y)(x).right() && tiles(y)(x+1).right()) draw_left(-1,x-1, y)
@@ -538,6 +571,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
   private def illegal_crowded(x: Int, y: Int):Unit = {
+     // called when a tile has two placed moves this function defines remaining moves to illegal.
 
     if(tiles(y)(x).leftMissing()) draw_left(-1,x,y)
     if(tiles(y)(x).downMissing()) draw_down(-1,x,y)
@@ -545,6 +579,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if(tiles(y)(x).rightMissing()) draw_right(-1,x,y)
   }
   private def legal_black(x: Int, y: Int):Unit = {
+    // called for every black dot, checks if a move is illegal that makes an other move forced
     if(tiles(y)(x).leftIllegal()){
       draw_right(1,x,y)
       draw_right(1,x+1,y)
@@ -563,6 +598,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
   private def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
+    // recursive function that determine of from start position one there is a line to the current position and if so if it passes trough every dot
     if(!tiles(current_y)(Current_x).isEmpty) {
 
       if (start_y == current_y && start_x == Current_x) {
@@ -608,7 +644,8 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
      0
   }
-  private def avoid_circle_empty(x: Int, y: Int): Unit={
+  private def avoid_circle_one_move(x: Int, y: Int): Unit={
+    // called in tiles if any move results in an mini circle if so sets this move to illegal
 
     if (tiles(y)(x).downMissing() && circle(x, y , x, y+1, count_dots, 2) == -1) draw_down(-1, x, y)
     if (tiles(y)(x).upMissing() && circle(x, y, x, y-1, count_dots, 1) == -1) draw_up(-1, x, y)
@@ -618,12 +655,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
   def illegal_moves():Boolean={
+    // calls functions in relevant tiles to determine if any moves are illegal
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
         if(tiles(ii)(j).isBlack) illegal_black_dot(j,ii)
         if(tiles(ii)(j).isWhite) illegal_white_dots(j,ii)
         if( tiles(ii)(j).crowded() | tiles(ii)(j).dead_end()) illegal_crowded(j,ii)
-        if(!tiles(ii)(j).crowded() && tiles(ii)(j).inn_ring()) avoid_circle_empty(j,ii)
+        if(!tiles(ii)(j).crowded() && tiles(ii)(j).inn_ring()) avoid_circle_one_move(j,ii)
 
       }
 
@@ -631,6 +669,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      true
   }
   def legal_moves():Unit= {
+    // calls functions in relevant tiles to determine if any moves are forced
     for (ii <- 0 until height) {
       for (j <- 0 until width) {
         if(tiles(ii)(j).isBlack) legal_black(j,ii)
@@ -695,6 +734,8 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
   def illegalize(): Puzzle = {
+    // called in search when there are no moves possible
+    // this function sett all moves to illegal to tel the lower function call that this path is illegal or the move possible due to depth
     for (i <- 0 until height) {
       for (j <- 0 until width) {
         for (h <- 0 until 4){

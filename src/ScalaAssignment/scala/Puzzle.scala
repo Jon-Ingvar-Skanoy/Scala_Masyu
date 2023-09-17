@@ -356,13 +356,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
   private def border_Top(x:Int): Array[Array[Tile]] = {
-    if(x>=width) {
+
+    // function that creates the top border, tells the top tiles that it is illegal to move up
+    if (x >= width) {
       return tiles
     }
-    // function that creates the top border, tells the top tiles that it is illegal to move up
-      val newtiles = tiles
 
-    newtiles(0)(x).paths(2)=Line.Illegal
+    tiles(0)(x).paths(2)=Line.Illegal
     return border_Top(x+1)
 
 

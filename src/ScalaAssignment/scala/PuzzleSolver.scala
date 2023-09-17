@@ -59,7 +59,7 @@ object PuzzleSolver {
     }
     puzzle.illegal_moves()
 
-    if (dept > 100) {
+    if (dept > 10) {
 
       return puzzle
 

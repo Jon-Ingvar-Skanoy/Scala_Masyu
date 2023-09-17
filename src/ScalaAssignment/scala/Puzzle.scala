@@ -703,7 +703,14 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       }
     }
   }
-
+def get_black_squares(): Array[Tile] = {
+  val blackTiles = tiles.flatMap(_.filter(_.isBlack))
+  return blackTiles
+}
+  def get_white_squares(): Array[Tile] = {
+    val whiteTiles = tiles.flatMap(_.filter(_.isWhite))
+    return whiteTiles
+  }
   def createAlteredBoard(board: Puzzle, arr:Array[Array[Array[Boolean]]]): Puzzle = {
     val newBoard = board
     for(i<-0 until height){

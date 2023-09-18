@@ -682,19 +682,16 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
-  def illegal_moves():Boolean={
-    // calls functions in relevant tiles to determine if any moves are illegal
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-        if(tiles(ii)(j).isBlack) illegal_black_dot(j,ii)
-        if(tiles(ii)(j).isWhite) illegal_white_dots(j,ii)
-        if( tiles(ii)(j).crowded() | tiles(ii)(j).dead_end()) illegal_crowded(j,ii)
-        if(!tiles(ii)(j).crowded() && tiles(ii)(j).inn_ring()) avoid_circle_one_move(j,ii)
-
-      }
-
-      }
-     true
+  def illegal_moves(): Boolean = {
+   val blackTiles = get_black_squares()
+    blackTiles.foreach(blackTile => illegal_black_dot(blackTile.width,blackTile.height))
+    val whiteTiles = get_white_squares()
+    whiteTiles.foreach(whiteTile => illegal_white_dots(whiteTile.width, whiteTile.height))
+    val crowded_or_deadend = get_crowded_or_deadend_squares()
+    crowded_or_deadend.foreach(cdTile => illegal_crowded(cdTile.width,cdTile.height))
+    val not_crowded_innring = get_not_crowded_innring_squares()
+    not_crowded_innring.foreach(nciTile => avoid_circle_one_move(nciTile.width,nciTile.height))
+    true
   }
   def legal_moves():Unit= {
     // calls functions in relevant tiles to determine if any moves are forced
@@ -714,7 +711,19 @@ def get_black_squares(): Array[Tile] = {
     val whiteTiles = tiles.flatMap(_.filter(_.isWhite))
     return whiteTiles
   }
-  def createAlteredBoard(board: Puzzle, arr:Array[Array[Array[Boolean]]]): Puzzle = {
+
+  def get_crowded_or_deadend_squares(): Array[Tile] = {
+    val crowded_deadend_Tiles = tiles.flatMap(_.filter(tile => tile.crowded()|tile.dead_end()))
+    return crowded_deadend_Tiles
+  }
+
+  def get_not_crowded_innring_squares(): Array[Tile] = {
+    val crowded_innring_Tiles = tiles.flatMap(_.filter(tile => !tile.crowded() && tile.inn_ring()))
+    return crowded_innring_Tiles
+  }
+
+
+    def createAlteredBoard(board: Puzzle, arr:Array[Array[Array[Boolean]]]): Puzzle = {
     val newBoard = board
     for(i<-0 until height){
       for (j<-0 until width){

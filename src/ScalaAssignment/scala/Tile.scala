@@ -196,6 +196,23 @@ case class Tile ( char: Char,  h: Int,  w: Int) {
     }
     false
   }
-
-
+def placedCount: Int = {
+  val placed = {
+  for(i <- paths if i==Line.Placed) yield i
+  }
+  return placed.length
 }
+
+  def illegalCount: Int = {
+    val placed = {
+      for(i <- paths if i==Line.Illegal) yield i
+    }
+    return placed.length
+  }
+
+  def missingCount: Int = {
+    val placed = {
+      for(i <- paths if i==Line.Missing) yield i
+    }
+    return placed.length
+  }}

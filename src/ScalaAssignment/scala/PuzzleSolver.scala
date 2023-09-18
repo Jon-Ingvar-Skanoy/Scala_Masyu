@@ -53,11 +53,11 @@ object PuzzleSolver {
 
     for (i <- 0 until 100) {
 
-      puzzle.illegal_moves()
+      puzzle.func_illegal_moves()
       puzzle.legal_moves()
 
     }
-    puzzle.illegal_moves()
+    puzzle.func_illegal_moves()
 
     if (dept > 20) {
 
@@ -83,12 +83,12 @@ object PuzzleSolver {
       copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
       for (i <- 0 until 100) {
 
-        copy.illegal_moves()
+        copy.func_illegal_moves()
         copy.legal_moves()
 
       }
       print(dept)
-      copy.illegal_moves()
+      copy.func_illegal_moves()
       random_move = copy.find_move()
 
 

@@ -29,6 +29,7 @@ object PuzzleSolver {
      newBoard = solve(newBoard,0)
 
 
+
       val solutionstring: String = newBoard.boardString
 
 
@@ -47,11 +48,11 @@ object PuzzleSolver {
 
   private def solve(puzzle: Puzzle, dept:Int): Puzzle = {
 
-    puzzle.printBoard
 
 
 
-    for (i <- 0 until 100) {
+
+    for (i <- 0 until 20) {
 
       puzzle.illegal_moves()
       puzzle.legal_moves()
@@ -59,7 +60,7 @@ object PuzzleSolver {
     }
     puzzle.illegal_moves()
 
-    if (dept > 20) {
+    if (dept > 15) {
 
       return puzzle
 
@@ -70,9 +71,9 @@ object PuzzleSolver {
       return puzzle
     }
 
-    println(dept)
+
      if(puzzle.lost()) {
-       println("LOST")
+
        return puzzle
      }
 
@@ -81,37 +82,35 @@ object PuzzleSolver {
 
     while(random_move(0) != - 1){
       copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-      for (i <- 0 until 100) {
+      for (i <- 0 until 20) {
 
         copy.illegal_moves()
         copy.legal_moves()
 
       }
-      print(dept)
+
       copy.illegal_moves()
+
       random_move = copy.find_move()
 
 
-      if(random_move(0)== -1) {
-        return puzzle.illegalize()
 
-      }
 
       if (random_move(2) == 0) {
-        println(0)
+
         copy.draw_left(1, random_move(1), random_move(0))
       }
       if (random_move(2) == 3) {
-        println(3)
+
         copy.draw_right(1, random_move(1), random_move(0))
       }
       if (random_move(2) == 1) {
 
-        println(1)
+
         copy.draw_down(1, random_move(1), random_move(0))
       }
       if (random_move(2) == 2) {
-        println(2)
+
         copy.draw_up(1, random_move(1), random_move(0))
       }
 
@@ -121,11 +120,12 @@ object PuzzleSolver {
       copy= solve(copy,dept+1)
 
       if (copy.won()) {
+        println("won")
         return copy
       }
       if (copy.lost()){
 
-        println("LOSR")
+
         if (random_move(2) == 0) {
           puzzle.draw_right(-1, random_move(1), random_move(0))
         }
@@ -146,7 +146,8 @@ object PuzzleSolver {
     }
 
 
-    copy
+     puzzle.illegalize()
+
 
   }
 

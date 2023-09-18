@@ -37,38 +37,41 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def find_move():Array[Int] = {
+
     // function to find a legal move that can be made
 
           for (i <- 0 until height) {
             for (j <- 0 until width) {
-              if (!tiles(i)(j).crowded())
+              if (!tiles(i)(j).crowded()) {
 
-          if(tiles(i)(j).inn_ring()){
+                if (tiles(i)(j).inn_ring() | !tiles(i)(j).isEmpty ) {
 
 
-            if(!tiles(i)(j).up()&& !tiles(i)(j).upIllegal()){
-              println(tiles(i)(j).paths(2))
-              return Array[Int] (i,j,2)
+                  if (!tiles(i)(j).up() && !tiles(i)(j).upIllegal()) {
+
+                    return Array[Int](i, j, 2)
+                  }
+                  if (tiles(i)(j).downMissing()) {
+
+                    return Array[Int](i, j, 1)
+                  }
+                  if (tiles(i)(j).leftMissing()) {
+
+
+                    return Array[Int](i, j, 0)
+                  }
+                  if (tiles(i)(j).rightMissing()) {
+
+
+                    return Array[Int](i, j, 3)
+                  }
+
+
+                }
+              }
             }
-            if (tiles(i)(j).downMissing()) {
-              println(tiles(i)(j).paths(1))
-              return Array[Int](i, j, 1)
-            }
-            if (tiles(i)(j).leftMissing()) {
-              println(tiles(i)(j).paths(0))
-
-              return Array[Int](i, j, 0)
-            }
-            if (tiles(i)(j).rightMissing()) {
-              println(tiles(i)(j).paths(3))
-
-              return Array[Int](i, j, 3)
-            }
-
-
-          }
-      }
     }
+
      Array[Int] (-1,-1,-1)
   }
 

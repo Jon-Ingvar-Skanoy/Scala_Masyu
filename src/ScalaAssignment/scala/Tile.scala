@@ -33,7 +33,7 @@ case class Tile ( char: Char,  h: Int,  w: Int) {
     Array[Line](Line.Missing, Line.Missing, Line.Missing, Line.Missing)
   }
 
-  val ttype: TileType = returnTileType(char)
+private  val ttype: TileType = returnTileType(char)
   val paths: Array[Line] = initializeLine()
   val width: Int = w
   val height: Int = h

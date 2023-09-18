@@ -685,13 +685,14 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   def illegal_moves(): Boolean = {
    val blackTiles = get_black_squares()
     blackTiles.foreach(blackTile => illegal_black_dot(blackTile.width,blackTile.height))
-    val whiteTiles = get_white_squares()
-    whiteTiles.foreach(whiteTile => illegal_white_dots(whiteTile.width, whiteTile.height))
     val crowded_or_deadend = get_crowded_or_deadend_squares()
     crowded_or_deadend.foreach(cdTile => illegal_crowded(cdTile.width,cdTile.height))
     val not_crowded_innring = get_not_crowded_innring_squares()
     not_crowded_innring.foreach(nciTile => avoid_circle_one_move(nciTile.width,nciTile.height))
+    val whiteTiles = get_white_squares()
+    whiteTiles.foreach(whiteTile => illegal_white_dots(whiteTile.width, whiteTile.height))
     true
+
   }
   def legal_moves():Unit= {
     // calls functions in relevant tiles to determine if any moves are forced

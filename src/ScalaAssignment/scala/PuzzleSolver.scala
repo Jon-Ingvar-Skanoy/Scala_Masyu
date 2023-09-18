@@ -30,8 +30,6 @@ object PuzzleSolver {
 
 
 
-      val solutionstring: String = newBoard.boardString
-
 
 
 
@@ -78,9 +76,9 @@ object PuzzleSolver {
      }
 
     var copy:Puzzle =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-    var random_move:Array[Int] = Array(0,2,33)
+    var move:Array[Int] = Array(0,2,33)
 
-    while(random_move(0) != - 1){
+    while(move(0) != - 1){
       copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
       for (i <- 0 until 20) {
 
@@ -91,27 +89,27 @@ object PuzzleSolver {
 
       copy.illegal_moves()
 
-      random_move = copy.find_move()
+      move = copy.find_move()
 
 
 
 
-      if (random_move(2) == 0) {
+      if (move(2) == 0) {
 
-        copy.draw_left(1, random_move(1), random_move(0))
+        copy.draw_left(1, move(1), move(0))
       }
-      if (random_move(2) == 3) {
+      if (move(2) == 3) {
 
-        copy.draw_right(1, random_move(1), random_move(0))
+        copy.draw_right(1, move(1), move(0))
       }
-      if (random_move(2) == 1) {
+      if (move(2) == 1) {
 
 
-        copy.draw_down(1, random_move(1), random_move(0))
+        copy.draw_down(1, move(1), move(0))
       }
-      if (random_move(2) == 2) {
+      if (move(2) == 2) {
 
-        copy.draw_up(1, random_move(1), random_move(0))
+        copy.draw_up(1, move(1), move(0))
       }
 
 
@@ -126,17 +124,17 @@ object PuzzleSolver {
       if (copy.lost()){
 
 
-        if (random_move(2) == 0) {
-          puzzle.draw_right(-1, random_move(1), random_move(0))
+        if (move(2) == 0) {
+          puzzle.draw_right(-1, move(1), move(0))
         }
-        if (random_move(2) == 3) {
-          puzzle.draw_right(-1, random_move(1), random_move(0))
+        if (move(2) == 3) {
+          puzzle.draw_right(-1, move(1), move(0))
         }
-        if (random_move(2) == 1) {
-          puzzle.draw_down(-1, random_move(1), random_move(0))
+        if (move(2) == 1) {
+          puzzle.draw_down(-1, move(1), move(0))
         }
-        if (random_move(2) == 2) {
-          puzzle.draw_up(-1, random_move(1), random_move(0))
+        if (move(2) == 2) {
+          puzzle.draw_up(-1, move(1), move(0))
         }
 
 

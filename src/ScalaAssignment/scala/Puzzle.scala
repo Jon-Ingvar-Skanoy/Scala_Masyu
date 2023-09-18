@@ -679,22 +679,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
-  def illegal_moves():Boolean={
-    // calls functions in relevant tiles to determine if any moves are illegal
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-        if(tiles(ii)(j).isBlack) illegal_black_dot(j,ii)
-        if(tiles(ii)(j).isWhite) illegal_white_dots(j,ii)
-        if( tiles(ii)(j).crowded() | tiles(ii)(j).dead_end()) illegal_crowded(j,ii)
-        if(!tiles(ii)(j).crowded() && tiles(ii)(j).inn_ring()) avoid_circle_one_move(j,ii)
-
-      }
-
-      }
-     true
-  }
-
-  def func_illegal_moves(): Boolean = {
+  def illegal_moves(): Boolean = {
    val blackTiles = get_black_squares()
     blackTiles.foreach(blackTile => illegal_black_dot(blackTile.width,blackTile.height))
     val whiteTiles = get_white_squares()

@@ -625,19 +625,19 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   private def legal_black(x: Int, y: Int): Boolean = {
     // called for every black dot, checks if a move is illegal that makes an other move forced
     val priorCount = tiles(y)(x).placedCount
-    if(tiles(y)(x).leftIllegal() && tiles(y)(x).rightMissing()){
+    if(tiles(y)(x).leftIllegal()){
       draw_right(1,x,y)
       draw_right(1,x+1,y)
     }
-    if (tiles(y)(x).rightIllegal()&& tiles(y)(x).leftMissing()) {
+    if (tiles(y)(x).rightIllegal()) {
       draw_left(1, x, y)
       draw_left(1, x - 1, y)
     }
-    if (tiles(y)(x).downIllegal()&& tiles(y)(x).upMissing()) {
+    if (tiles(y)(x).downIllegal()) {
       draw_up(1, x, y)
       draw_up(1, x, y-1)
     }
-    if (tiles(y)(x).upIllegal()&& tiles(y)(x).downMissing()) {
+    if (tiles(y)(x).upIllegal()) {
       draw_down(1, x, y)
       draw_down(1, x, y + 1)
     }
@@ -720,13 +720,6 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   def legal_moves():Unit= {
     // calls functions in relevant tiles to determine if any moves are
 
-  for(ii<-0 until height){
-    for(j<-0 until width){
-
-      if (tiles(ii)(j).isBlack) legal_black(j, ii)
-      if (tiles(ii)(j).Illegal_crowded() && tiles(ii)(j).inn_ring()) legal_crowded(j, ii)
-    }
-  }
    val flatTiles = tiles.flatMap(tile=>tile)
     flatTiles.foreach(tile => {
     if (tile.isBlack) legal_black(tile.width, tile.height)

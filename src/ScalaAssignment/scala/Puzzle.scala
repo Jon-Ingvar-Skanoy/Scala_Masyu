@@ -691,27 +691,32 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   def illegal_moves(): Boolean = {
    val blackTiles = get_black_squares()
     blackTiles.foreach(blackTile => illegal_black_dot(blackTile.width,blackTile.height))
-    val whiteTiles = get_white_squares()
-    whiteTiles.foreach(whiteTile => illegal_white_dots(whiteTile.width, whiteTile.height))
     val crowded_or_deadend = get_crowded_or_deadend_squares()
     crowded_or_deadend.foreach(cdTile => illegal_crowded(cdTile.width,cdTile.height))
     val not_crowded_innring = get_not_crowded_innring_squares()
     not_crowded_innring.foreach(nciTile => avoid_circle_one_move(nciTile.width,nciTile.height))
+
+    val whiteTiles = get_white_squares()
+    whiteTiles.foreach(whiteTile => illegal_white_dots(whiteTile.width, whiteTile.height))
     true
 
   }
   def legal_moves():Unit= {
     // calls functions in relevant tiles to determine if any moves are
 
+  for(ii<-0 until height){
+    for(j<-0 until width){
 
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-        if(tiles(ii)(j).isBlack) legal_black(j,ii)
-        if(tiles(ii)(j).Illegal_crowded() && tiles(ii)(j).inn_ring()) legal_crowded(j,ii)
-
-      }
+      if (tiles(ii)(j).isBlack) legal_black(j, ii)
+      if (tiles(ii)(j).Illegal_crowded() && tiles(ii)(j).inn_ring()) legal_crowded(j, ii)
     }
   }
+   val flatTiles = tiles.flatMap(tile=>tile)
+    flatTiles.foreach(tile => {
+    if (tile.isBlack) legal_black(tile.width, tile.height)
+    if (tile.Illegal_crowded() && tile.inn_ring()) legal_crowded(tile.width, tile.height)
+  })
+      }
 private def get_black_squares(): Array[Tile] = {
   val blackTiles = tiles.flatMap(_.filter(_.isBlack))
    blackTiles

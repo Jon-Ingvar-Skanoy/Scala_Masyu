@@ -498,9 +498,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
          //   println("w,u")
           //  return true
          // }
-          if (tile.left() ) {
 
-          }
          // if (tiles(ii)(j).left() && circle(j, ii, j+1 , ii, count_dots, 0) == 1) {
            // println("w,l")
             //return true
@@ -811,13 +809,13 @@ private def get_black_squares(): Array[Tile] = {
   def illegalize(): Puzzle = {
     // called in search when there are no moves possible
     // this function sett all moves to illegal to tel the lower function call that this path is illegal or the move possible due to depth
-    for (i <- 0 until height) {
-      for (j <- 0 until width) {
+    val flatTiles = tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
         for (h <- 0 until 4){
-          if(tiles(i)(j).paths(h)==Line.Missing) tiles(i)(j).paths(h)= Line.Illegal
+          if(tile.paths(h)==Line.Missing) tile.paths(h)= Line.Illegal
         }
-      }
-      }
+      })
+
       Puzzle(width, height, tiles)
   }
 }

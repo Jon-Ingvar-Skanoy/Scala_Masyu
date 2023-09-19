@@ -40,37 +40,37 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
     // function to find a legal move that can be made
 
-          for (i <- 0 until height) {
-            for (j <- 0 until width) {
-              if (!tiles(i)(j).crowded()) {
+    val flatTiles = tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
+              if (!tile.crowded()) {
 
-                if (tiles(i)(j).inn_ring() | !tiles(i)(j).isEmpty ) {
+                if (tile.inn_ring() | !tile.isEmpty ) {
 
 
-                  if (!tiles(i)(j).up() && !tiles(i)(j).upIllegal()) {
+                  if (!tile.up() && !tile.upIllegal()) {
 
-                    return Array[Int](i, j, 2)
+                    return Array[Int](tile.height, tile.width, 2)
                   }
-                  if (tiles(i)(j).downMissing()) {
+                  if (tile.downMissing()) {
 
-                    return Array[Int](i, j, 1)
+                    return Array[Int](tile.height, tile.width, 1)
                   }
-                  if (tiles(i)(j).leftMissing()) {
+                  if (tile.leftMissing()) {
 
 
-                    return Array[Int](i, j, 0)
+                    return Array[Int](tile.height, tile.width, 0)
                   }
-                  if (tiles(i)(j).rightMissing()) {
+                  if (tile.rightMissing()) {
 
 
-                    return Array[Int](i, j, 3)
+                    return Array[Int](tile.height, tile.width, 3)
                   }
 
 
                 }
               }
-            }
-    }
+            })
+
 
      Array[Int] (-1,-1,-1)
   }

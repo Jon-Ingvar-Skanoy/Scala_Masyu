@@ -23,7 +23,7 @@ object PuzzleSolver {
       //    println(newBoard.til  es(0)(2).ttype)
 
       newBoard = newBoard.borders()
-      newBoard = newBoard.set_Up()
+      newBoard = set_Up(newBoard)
 
 
      newBoard = solve(newBoard,0)
@@ -146,6 +146,22 @@ object PuzzleSolver {
     puzzle.illegalize()
 
 
+  }
+
+  def set_Up(puzzle: Puzzle): Puzzle = {
+    // calls all set_up functions in the relevant tiles
+    val flatTiles = puzzle.tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
+      if (tile.isWhite) puzzle.set_up_white_vertical(tile.width, tile.height)
+      if (tile.isWhite) puzzle.set_up_white_horizontal(tile.width, tile.height)
+      if (tile.isBlack) {
+        puzzle.set_up_black(tile.width, tile.height)
+        puzzle.set_up_black_diagonal_whites(tile.width, tile.height)
+        puzzle.set_up_black_line(tile.width, tile.height)
+      }
+
+    })
+    Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
   }
 
 

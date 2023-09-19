@@ -420,7 +420,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      Puzzle(width,height,tiles)
 
   }
-  private def set_up_black(x: Int, y: Int): Unit = {
+   def set_up_black(x: Int, y: Int): Unit = {
     // function that checks if the black dot in the given tile is next to an other black dot
     // if so defines it illegal to move between them.
     if(tiles(y)(x).rightMissing() && tiles(y)(x+1).isBlack){
@@ -430,21 +430,21 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       draw_down(-1, x, y)
     }
   }
-  private def set_up_white_vertical(x: Int, y: Int): Unit = {
+   def set_up_white_vertical(x: Int, y: Int): Unit = {
     // checks if there is 3 white dots next to each other vertical
     if((tiles(y)(x).downMissing() && tiles(y+1)(x).isWhite)&& (tiles(y+1)(x).downMissing() && tiles(y+2)(x).isWhite)){
       draw_down(-1,x,y)
     }
   }
 
-  private def set_up_white_horizontal(x: Int, y: Int): Unit = {
+   def set_up_white_horizontal(x: Int, y: Int): Unit = {
  // checks if there is 3 white dots next to each other horizontaly
     if ((tiles(y)(x).leftMissing() && tiles(y)(x - 1).isWhite) && (tiles(y)(x - 1).leftMissing() && tiles(y)(x - 2).isWhite)) {
       draw_left(-1, x, y)
 
     }
   }
-  private def set_up_black_line(x: Int, y: Int):Unit = {
+   def set_up_black_line(x: Int, y: Int):Unit = {
     // checks if there are the following pattern in any direction * _ o o  from this black dot, in that case defines the move it that direction illegal
     if(tiles(y)(x).rightMissing() && tiles(y)(x+1).rightMissing() &&  tiles(y)(x+2).rightMissing() && (tiles(y)(x+2).isWhite && tiles(y)(x+3).isWhite )) draw_right(-1,x,y)
   if (tiles(y)(x).leftMissing() && tiles(y)(x - 1).leftMissing() && tiles(y)(x - 2).leftMissing() && (tiles(y)(x - 2).isWhite && tiles(y)(x - 3).isWhite)) draw_left(-1, x, y)
@@ -453,7 +453,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
-  private def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
+   def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
     // check for
     //    *
     //  o _ o
@@ -520,21 +520,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     false
   }
 
-  def set_Up():Puzzle ={
-    // calls all set_up functions in the relevant tiles
-    val flatTiles = tiles.flatMap(tile => tile)
-    flatTiles.foreach(tile => {
-      if (tile.isWhite) set_up_white_vertical(tile.width, tile.height)
-      if (tile.isWhite) set_up_white_horizontal(tile.width, tile.height)
-      if (tile.isBlack){
-        set_up_black(tile.width, tile.height)
-        set_up_black_diagonal_whites(tile.width, tile.height)
-        set_up_black_line(tile.width, tile.height)
-      }
 
-    })
-        Puzzle(width, height, tiles)
-  }
 
   private def illegal_black_dot(x: Int, y: Int):Boolean = {
 

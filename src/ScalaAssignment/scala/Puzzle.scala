@@ -483,9 +483,10 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   def won(): Boolean = {
     // checks if the board is completed
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-        if(!tiles(ii)(j).isEmpty){
+    val flatTiles = tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
+
+        if(tile.isEmpty){
 
 
 
@@ -497,14 +498,14 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
          //   println("w,u")
           //  return true
          // }
-          if (tiles(ii)(j).left() ) {
+          if (tile.left() ) {
 
           }
          // if (tiles(ii)(j).left() && circle(j, ii, j+1 , ii, count_dots, 0) == 1) {
            // println("w,l")
             //return true
-          //}
-          if (tiles(ii)(j).left() && circle(j-1 , ii, j, ii, count_dots, 0) == 1) {
+          //}tile.width, tile.height
+          if (tile.left() && circle(tile.width-1 , tile.height, tile.width, tile.height, count_dots, 0) == 1) {
             println("w,r")
             return true
           }
@@ -515,9 +516,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
         }
-      }
+      })
 
-    }
+
     false
   }
 

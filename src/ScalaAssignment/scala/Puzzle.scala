@@ -421,12 +421,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   }
 
-   def set_up_white_vertical(x: Int, y: Int): Unit = {
-    // checks if there is 3 white dots next to each other vertical
-    if((tiles(y)(x).downMissing() && tiles(y+1)(x).isWhite)&& (tiles(y+1)(x).downMissing() && tiles(y+2)(x).isWhite)){
-      draw_down(-1,x,y)
-    }
-  }
+
 
    def set_up_white_horizontal(x: Int, y: Int): Unit = {
  // checks if there is 3 white dots next to each other horizontaly

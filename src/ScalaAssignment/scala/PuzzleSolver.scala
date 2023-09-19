@@ -153,7 +153,9 @@ object PuzzleSolver {
     // calls all set_up functions in the relevant tiles
     val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
     flatTiles.foreach(tile => {
-      if (tile.isWhite) newpuzzle.set_up_white_vertical(tile.width, tile.height)
+      if (tile.isWhite) {
+        newpuzzle = set_up_white_vertical(tile.width, tile.height,newpuzzle)
+      }
       if (tile.isWhite) newpuzzle.set_up_white_horizontal(tile.width, tile.height)
       if (tile.isBlack) {
         newpuzzle = set_up_black(tile.width, tile.height, puzzle)
@@ -172,6 +174,14 @@ object PuzzleSolver {
       puzzle.draw_right(-1, x, y)
     }
     if (puzzle.tiles(y)(x).downMissing() && puzzle.tiles(y + 1)(x).isBlack) {
+      puzzle.draw_down(-1, x, y)
+    }
+    Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
+  }
+
+  def set_up_white_vertical(x: Int, y: Int, puzzle: Puzzle): Puzzle = {
+    // checks if there is 3 white dots next to each other vertical
+    if ((puzzle.tiles(y)(x).downMissing() && puzzle.tiles(y + 1)(x).isWhite) && (puzzle.tiles(y + 1)(x).downMissing() && puzzle.tiles(y + 2)(x).isWhite)) {
       puzzle.draw_down(-1, x, y)
     }
     Puzzle(puzzle.width, puzzle.height, puzzle.tiles)

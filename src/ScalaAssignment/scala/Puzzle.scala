@@ -548,7 +548,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if(tiles(y)(x).downMissing()  && circle(x,y+2,x,y,count_dots,2)== -1) draw_down(-1,x, y)
     if(tiles(y)(x).upMissing()  && circle(x,y-2,x,y,count_dots,1)== -1) draw_up(-1,x, y)
     if (tiles(y)(x).leftMissing() && circle(x-2, y, x, y, count_dots, 3) == -1) draw_left(-1, x, y)
-    if (tiles(y)(x).rightMissing() && circle(x-2, y, x, y, count_dots, 0) == -1) draw_right(-1, x, y)
+    if (tiles(y)(x).rightMissing() && circle(x+2, y, x, y, count_dots, 0) == -1) draw_right(-1, x, y)
     val posteriorCount = tiles(y)(x).missingCount
     if (posteriorCount != priorCount) {
       return true

@@ -420,16 +420,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      Puzzle(width,height,tiles)
 
   }
-   def set_up_black(x: Int, y: Int): Unit = {
-    // function that checks if the black dot in the given tile is next to an other black dot
-    // if so defines it illegal to move between them.
-    if(tiles(y)(x).rightMissing() && tiles(y)(x+1).isBlack){
-      draw_right(-1,x,y)
-    }
-    if (tiles(y)(x).downMissing() && tiles(y+1)(x).isBlack) {
-      draw_down(-1, x, y)
-    }
-  }
+
    def set_up_white_vertical(x: Int, y: Int): Unit = {
     // checks if there is 3 white dots next to each other vertical
     if((tiles(y)(x).downMissing() && tiles(y+1)(x).isWhite)&& (tiles(y+1)(x).downMissing() && tiles(y+2)(x).isWhite)){

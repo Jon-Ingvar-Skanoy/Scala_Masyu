@@ -50,7 +50,7 @@ object PuzzleSolver {
 
 
 
-    for (i <- 0 until 20) {
+    for (i <- 0 until 10) {
 
       puzzle.illegal_moves()
       puzzle.legal_moves()
@@ -58,7 +58,7 @@ object PuzzleSolver {
     }
     puzzle.illegal_moves()
 
-    if (dept > 15) {
+    if (dept > 20) {
 
       return puzzle
 
@@ -88,7 +88,6 @@ object PuzzleSolver {
       }
 
       copy.illegal_moves()
-
       move = copy.find_move()
 
 
@@ -144,7 +143,7 @@ object PuzzleSolver {
     }
 
 
-     puzzle.illegalize()
+    puzzle.illegalize()
 
 
   }

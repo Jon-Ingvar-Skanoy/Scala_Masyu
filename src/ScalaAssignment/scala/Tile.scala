@@ -47,7 +47,6 @@ private  val ttype: TileType = returnTileType(char)
       return  newTile
     }
     val newTile: Tile =  copyTile(x+1)
-
     newTile.paths(x) = paths(x)
 
 

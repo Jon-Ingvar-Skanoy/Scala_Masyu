@@ -523,19 +523,18 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   def set_Up():Puzzle ={
     // calls all set_up functions in the relevant tiles
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-        if(tiles(ii)(j).isBlack) {
-          set_up_black(j,ii)
-          set_up_black_diagonal_whites(j,ii)
-          set_up_black_line(j,ii)
-        }
-        if(tiles(ii)(j).isWhite) set_up_white_vertical(j,ii)
-        if(tiles(ii)(j).isWhite) set_up_white_horizontal(j,ii)
-
+    val flatTiles = tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
+      if (tile.isWhite) set_up_white_vertical(tile.width, tile.height)
+      if (tile.isWhite) set_up_white_horizontal(tile.width, tile.height)
+      if (tile.isBlack){
+        set_up_black(tile.width, tile.height)
+        set_up_black_diagonal_whites(tile.width, tile.height)
+        set_up_black_line(tile.width, tile.height)
       }
-    }
-     Puzzle(width, height, tiles)
+
+    })
+        Puzzle(width, height, tiles)
   }
 
   private def illegal_black_dot(x: Int, y: Int):Boolean = {
@@ -555,7 +554,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (posteriorCount != priorCount) {
       return true
     }
-    return false
+     false
   }
   private def legal_crowded(x: Int, y: Int):Unit = {
     // called when there are two illegal moves in the tile and one placed, this function setts the last move to placed
@@ -611,7 +610,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (posteriorCount != priorCount) {
       return true
     }
-    return false
+     false
 
   }
   private def illegal_crowded(x: Int, y: Int):Unit = {
@@ -645,7 +644,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (posteriorCount!=priorCount){
       return true
     }
-    return false
+     false
   }
   private def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
     // recursive function that determine of from start position one there is a line to the current position and if so if it passes trough every dot

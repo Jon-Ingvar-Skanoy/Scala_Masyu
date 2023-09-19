@@ -533,7 +533,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      Puzzle(width, height, tiles)
   }
 
-  private def illegal_black_dot(x: Int, y: Int):Unit = {
+  private def illegal_black_dot(x: Int, y: Int):Boolean = {
+
+    val priorCount = tiles(y)(x).missingCount
     // checks if any move is illegal for a black dot
     if(tiles(y)(x).downMissing() && (tiles(y+1)(x).downIllegal() | (tiles(y+1)(x).left() | tiles(y+1)(x).right()))) draw_down(-1,x, y)
     if(tiles(y)(x).upMissing() && (tiles(y-1)(x).upIllegal() | tiles(y-1)(x).left() | tiles(y-1)(x).right())) draw_up(-1,x, y)
@@ -544,7 +546,11 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if(tiles(y)(x).upMissing()  && circle(x,y-2,x,y,count_dots,1)== -1) draw_up(-1,x, y)
     if (tiles(y)(x).leftMissing() && circle(x-2, y, x, y, count_dots, 3) == -1) draw_left(-1, x, y)
     if (tiles(y)(x).rightMissing() && circle(x-2, y, x, y, count_dots, 0) == -1) draw_right(-1, x, y)
-
+    val posteriorCount = tiles(y)(x).missingCount
+    if (posteriorCount != priorCount) {
+      return true
+    }
+    return false
   }
   private def legal_crowded(x: Int, y: Int):Unit = {
     // called when there are two illegal moves in the tile and one placed, this function setts the last move to placed
@@ -557,7 +563,8 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
   }
-  private def illegal_white_dots(x: Int, y: Int):Unit = {
+  private def illegal_white_dots(x: Int, y: Int):Boolean = {
+    val priorCount = tiles(y)(x).missingCount
     // checks if any move is illegal for a white dot
     if(tiles(y)(x).down() && tiles(y+1)(x).down()) draw_up(-1,x, y-1)
     if(tiles(y)(x).up() && tiles(y-1)(x).up()) draw_down(-1,x, y+1)
@@ -595,6 +602,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       draw_up(-1, x, y)
       draw_down(-1, x, y)
     }
+    val posteriorCount = tiles(y)(x).missingCount
+    if (posteriorCount != priorCount) {
+      return true
+    }
+    return false
+
   }
   private def illegal_crowded(x: Int, y: Int):Unit = {
      // called when a tile has two placed moves this function defines remaining moves to illegal.

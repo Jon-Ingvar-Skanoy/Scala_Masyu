@@ -27,12 +27,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
   def lost():Boolean= {
     // function to evaluate if the board is wrong
-    for (i <- 0 until height) {
-      for (j <- 0 until width) {
-        if (tiles(i)(j).inn_ring() && tiles(i)(j).dead_end()) return true
-      }
+    val flatTiles = tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
+        if (tile.inn_ring() && tile.dead_end()) return true
+      })
 
-    }
+
      false
   }
 

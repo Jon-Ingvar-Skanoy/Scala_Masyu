@@ -412,12 +412,13 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def borders():Puzzle = {
+    var newpuzzle = Puzzle(width, height, copyTiles())
     // function that creates the borders, calls function that does that
-    border_Left(0)
-    border_Right(0)
-    border_Top(0)
-    border_Bottom(0)
-     Puzzle(width,height,tiles)
+    newpuzzle.border_Left(0)
+    newpuzzle.border_Right(0)
+    newpuzzle.border_Top(0)
+    newpuzzle.border_Bottom(0)
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
 
   }
 

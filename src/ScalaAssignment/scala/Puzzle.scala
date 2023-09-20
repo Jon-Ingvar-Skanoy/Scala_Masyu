@@ -493,6 +493,10 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
             println("w,r")
             return true
           }
+          if (tile.right() && circle(tile.width + 1, tile.height, tile.width, tile.height, count_dots, 0) == 1) {
+            println("w,r")
+            return true
+          }
         //  if (tiles(ii)(j).right() && circle(j+1, ii, j, ii, count_dots, 0) == 1) {
           //  println("w,r")
             //return true

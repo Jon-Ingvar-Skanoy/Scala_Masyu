@@ -181,26 +181,7 @@ object PuzzleSolver {
 
   }
 
-  def set_Up(puzzle: Puzzle): Puzzle = {
-    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.tiles)
-    // calls all set_up functions in the relevant tiles
-    val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
-    flatTiles.foreach(tile => {
-      if (tile.isWhite) {
-        newpuzzle = set_up_white_vertical(tile.width, tile.height,newpuzzle)
-      }
-      if (tile.isWhite) newpuzzle.set_up_white_horizontal(tile.width, tile.height)
-      if (tile.isBlack) {
-        newpuzzle = set_up_black(tile.width, tile.height, puzzle)
-        newpuzzle.set_up_black_diagonal_whites(tile.width, tile.height)
-        newpuzzle.set_up_black_line(tile.width, tile.height)
-      }
-
-    })
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
-  }
-
-  def set_up_black(x: Int, y: Int,puzzle: Puzzle): Puzzle = {
+  def set_up_black(x: Int, y: Int, puzzle: Puzzle): Puzzle = {
     // function that checks if the black dot in the given tile is next to an other black dot
     // if so defines it illegal to move between them.
     if (puzzle.tiles(y)(x).rightMissing() && puzzle.tiles(y)(x + 1).isBlack) {
@@ -211,6 +192,27 @@ object PuzzleSolver {
     }
     Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
   }
+
+
+  def set_Up(puzzle: Puzzle): Puzzle = {
+    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+    // calls all set_up functions in the relevant tiles
+    val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
+      if (tile.isWhite) {
+        newpuzzle = set_up_white_vertical(tile.width, tile.height,newpuzzle)
+      }
+      if (tile.isWhite) newpuzzle =newpuzzle.set_up_white_horizontal(tile.width, tile.height)
+      if (tile.isBlack) {
+        newpuzzle = set_up_black(tile.width, tile.height, newpuzzle)
+        newpuzzle = newpuzzle.set_up_black_diagonal_whites(tile.width, tile.height)
+        newpuzzle = newpuzzle.set_up_black_line(tile.width, tile.height)
+      }
+
+    })
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+  }
+
 
   def set_up_white_vertical(x: Int, y: Int, puzzle: Puzzle): Puzzle = {
     // checks if there is 3 white dots next to each other vertical
@@ -225,7 +227,7 @@ object PuzzleSolver {
    val newTilesFlat = newPuzzle.tiles.flatMap(_.flatMap(_.paths))
    (oldTilesFlat.sameElements(newTilesFlat))
  }
-  def legal_moves(puzzle: Puzzle): Puzzle = {
+  private def legal_moves(puzzle: Puzzle): Puzzle = {
     // calls functions in relevant tiles to determine if any moves are
     var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
 
@@ -243,10 +245,10 @@ object PuzzleSolver {
 
     val flatTiles = newpuzzle.tiles.flatten
     flatTiles.foreach(tile => {
-      if (tile.isBlack) newpuzzle.illegal_black_dot(tile.width, tile.height)
-      if (tile.isWhite) newpuzzle.illegal_white_dots(tile.width, tile.height)
-      if (tile.crowded() | tile.dead_end()) newpuzzle.illegal_crowded(tile.width, tile.height)
-      if (!tile.crowded() && tile.inn_ring()) newpuzzle.avoid_circle_one_move(tile.width, tile.height)
+      if (tile.isBlack) newpuzzle = newpuzzle.illegal_black_dot(tile.width, tile.height)
+      if (tile.isWhite) newpuzzle = newpuzzle.illegal_white_dots(tile.width, tile.height)
+      if (tile.crowded() | tile.dead_end()) newpuzzle = newpuzzle.illegal_crowded(tile.width, tile.height)
+      if (!tile.crowded() && tile.inn_ring()) newpuzzle = newpuzzle.avoid_circle_one_move(tile.width, tile.height)
     })
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
 

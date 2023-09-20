@@ -146,75 +146,132 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   def boardString: String = {
     // function that return a string of the board to be delivered in file
-    var str: String = ""
-    for (i <- 0 until height) {
-      for (j <- 0 until width) {
-
-        str = addCharToBoardString(str, i, j)
-      }
-      str = str + "\n"
-    }
-    str
+    val str: String = ""
+    val strArray = for(row<-tiles) yield addCharToBoardString(str,0,row)
+    strArray.mkString
   }
+  private def addCharToBoardString(str: String, i: Int, flatTiles: Array[Tile]): String = {
 
-  private def addCharToBoardString(str: String, i: Int, j: Int): String = {
-    // function that ands a char to the board string that mach the content of the tile
-    if (tiles(i)(j).isBlack) {
-      str + "┼"
-    }
-    else if (tiles(i)(j).isWhite) {
-      if (tiles(i)(j).left()) {
-        str + "╨"
+    if (str.length == width-1) {
+      // function that ands a char to the board string that mach the content of the tile
+      if (flatTiles(i).isBlack) {
+        str + "┼\n"
       }
-      else if (tiles(i)(j).down()) {
-        str + "╡"
+      else if (flatTiles(i).isWhite) {
+        if (flatTiles(i).left()) {
+          str + "╨\n"
+        }
+        else if (flatTiles(i).down()) {
+          str + "╡\n"
+        }
+        else {
+          str + " \n"
+        }
+      }
+      else if (flatTiles(i).left()) {
+        if (flatTiles(i).down()) {
+          // print left + down
+          str + "┐\n"
+        }
+        else if (flatTiles(i).up()) {
+          //print left + up
+          str + "┘\n"
+        }
+        else if (flatTiles(i).right()) {
+          //print left + right
+          str + "─\n"
+        }
+        else {
+          str + " \n"
+        }
+      }
+      else if (flatTiles(i).up()) {
+        if (flatTiles(i).down()) {
+          //print up+down
+          str + "│\n"
+        }
+        else if (flatTiles(i).right()) {
+          //print up + right
+          str + "└\n"
+        }
+        else {
+          str + " \n"
+        }
+      }
+      else if (flatTiles(i).right()) {
+        // print down+right
+        if (flatTiles(i).down()) {
+          str + "┌\n"
+        }
+        else {
+          str + " \n"
+        }
       }
       else {
-        str + " "
-      }
-    }
-    else if (tiles(i)(j).left()) {
-      if (tiles(i)(j).down()) {
-        // print left + down
-        str + "┐"
-      }
-      else if (tiles(i)(j).up()) {
-        //print left + up
-        str + "┘"
-      }
-      else if (tiles(i)(j).right()) {
-        //print left + right
-        str + "─"
-      }
-      else {
-        str + " "
-      }
-    }
-    else if (tiles(i)(j).up()) {
-      if (tiles(i)(j).down()) {
-        //print up+down
-        str + "│"
-      }
-      else if (tiles(i)(j).right()) {
-        //print up + right
-        str + "└"
-      }
-      else {
-        str + " "
-      }
-    }
-    else if (tiles(i)(j).right()) {
-      // print down+right
-      if(tiles(i)(j).down()) {
-        str + "┌"
-      }
-      else{
-        str + " "
-      }
-    }
-    else {
-      str + " "
+        str + " \n"
 
+      }
+    }
+
+    else{
+
+      if (flatTiles(i).isBlack) {
+        addCharToBoardString(str + "┼",i+1,flatTiles)
+      }
+      else if (flatTiles(i).isWhite) {
+        if (flatTiles(i).left()) {
+          addCharToBoardString( str + "╨",i+1,flatTiles)
+        }
+        else if (flatTiles(i).down()) {
+          addCharToBoardString(str + "╡",i+1,flatTiles)
+        }
+        else {
+          addCharToBoardString(str + " ",i+1,flatTiles)
+        }
+      }
+      else if (flatTiles(i).left()) {
+        if (flatTiles(i).down()) {
+          // print left + down
+          addCharToBoardString(str + "┐",i+1,flatTiles)
+        }
+        else if (flatTiles(i).up()) {
+          //print left + up
+          addCharToBoardString(str + "┘",i+1,flatTiles)
+        }
+        else if (flatTiles(i).right()) {
+          //print left + right
+          addCharToBoardString(str + "─",i+1,flatTiles)
+        }
+        else {
+          addCharToBoardString(str + " ",i+1,flatTiles)
+        }
+      }
+      else if (flatTiles(i).up()) {
+        if (flatTiles(i).down()) {
+          //print up+down
+          addCharToBoardString(str + "│",i+1,flatTiles)
+        }
+        else if (flatTiles(i).right()) {
+          //print up + right
+          addCharToBoardString(str + "└",i+1,flatTiles)
+        }
+        else {
+          addCharToBoardString(str + " ",i+1,flatTiles)
+        }
+      }
+      else if (flatTiles(i).right()) {
+        // print down+right
+        if (flatTiles(i).down()) {
+          addCharToBoardString(str + "┌",i+1,flatTiles)
+        }
+        else {
+          addCharToBoardString(str + " ",i+1,flatTiles)
+        }
+      }
+      else {
+        addCharToBoardString( str + " ",i+1,flatTiles)
+
+      }
     }
   }
   private def count_dots: Int = {

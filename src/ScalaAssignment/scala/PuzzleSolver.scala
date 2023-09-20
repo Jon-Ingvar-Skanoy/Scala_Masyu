@@ -72,49 +72,49 @@ object PuzzleSolver {
 
 
   private def solve(puzzle: Puzzle, dept:Int): Puzzle = {
-
+    var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
 
 
 
 
     for (i <- 0 until 10) {
 
-      puzzle.illegal_moves()
-      puzzle.legal_moves()
+      newpuzzle = illegal_moves(newpuzzle)
+      newpuzzle = legal_moves(newpuzzle)
 
     }
-    puzzle.illegal_moves()
+    newpuzzle = illegal_moves(newpuzzle)
 
     if (dept > 15) {
 
-      return puzzle
+      return newpuzzle
 
     }
 
-    if(puzzle.won()){
+    if(newpuzzle.won()){
       print("WON32")
-      return puzzle
+      return newpuzzle
     }
 
 
-     if(puzzle.lost()) {
+     if(newpuzzle.lost()) {
 
-       return puzzle
+       return newpuzzle
      }
 
-    var copy:Puzzle =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+    var copy:Puzzle =  Puzzle(newpuzzle.width,newpuzzle.height,newpuzzle.copyTiles())
     var move:Array[Int] = Array(0,2,33)
 
     while(move(0) != - 1){
       copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
       for (i <- 0 until 20) {
 
-        copy.illegal_moves()
-        copy.legal_moves()
+        copy= illegal_moves(copy)
+        copy= legal_moves(copy)
 
       }
 
-      copy.illegal_moves()
+      copy = illegal_moves(copy)
       move = copy.find_move()
 
 
@@ -212,6 +212,32 @@ object PuzzleSolver {
       puzzle.draw_down(-1, x, y)
     }
     Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
+  }
+
+  def legal_moves(puzzle: Puzzle): Puzzle = {
+    // calls functions in relevant tiles to determine if any moves are
+    var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
+
+    val flatTiles = newpuzzle.tiles.flatten
+    flatTiles.foreach(tile => {
+      if (tile.isBlack) newpuzzle.legal_black(tile.width, tile.height)
+      if (tile.Illegal_crowded() && tile.inn_ring()) newpuzzle.legal_crowded(tile.width, tile.height)
+    })
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+  }
+
+  def illegal_moves(puzzle: Puzzle): Puzzle = {
+    var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
+
+    val flatTiles = newpuzzle.tiles.flatten
+    flatTiles.foreach(tile => {
+      if (tile.isBlack) newpuzzle.illegal_black_dot(tile.width, tile.height)
+      if (tile.isWhite) newpuzzle.illegal_white_dots(tile.width, tile.height)
+      if (tile.crowded() | tile.dead_end()) newpuzzle.illegal_crowded(tile.width, tile.height)
+      if (!tile.crowded() && tile.inn_ring()) newpuzzle.avoid_circle_one_move(tile.width, tile.height)
+    })
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+
   }
 
 

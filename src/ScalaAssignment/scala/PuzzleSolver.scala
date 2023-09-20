@@ -76,12 +76,13 @@ object PuzzleSolver {
 
 
 
-
+    var oldPuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
     for (i <- 0 until 10) {
 
       puzzle.illegal_moves()
       puzzle.legal_moves()
-
+      println(i,compare(oldPuzzle,puzzle))
+      oldPuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
     }
     puzzle.illegal_moves()
 
@@ -214,7 +215,11 @@ object PuzzleSolver {
     Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
   }
 
-
+ def compare(oldPuzzle:Puzzle,newPuzzle:Puzzle) = {
+   val oldTilesFlat = oldPuzzle.tiles.flatMap(_.flatMap(_.paths))
+   val newTilesFlat = newPuzzle.tiles.flatMap(_.flatMap(_.paths))
+   (oldTilesFlat.sameElements(newTilesFlat))
+ }
 
 }
 

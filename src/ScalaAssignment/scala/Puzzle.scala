@@ -443,32 +443,33 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
    }
 
 
-   def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {
+   def set_up_black_diagonal_whites(x: Int, y: Int): Puzzle = {
     // check for
     //    *
     //  o _ o
     // if so defines the move in that direction illegal
-
-    if(tiles(y)(x).downMissing()&&tiles(y)(x).leftMissing()&&tiles(y)(x).rightMissing()){
-      if(tiles(y+1)( x-1).isWhite  & tiles(y+1)(x+1).isWhite){
+    var newpuzzle = Puzzle(width, height, copyTiles())
+    if(newpuzzle.tiles(y)(x).downMissing()&&newpuzzle.tiles(y)(x).leftMissing()&&newpuzzle.tiles(y)(x).rightMissing()){
+      if(newpuzzle.tiles(y+1)( x-1).isWhite  & newpuzzle.tiles(y+1)(x+1).isWhite){
         draw_down(-1,x,y)
       }
     }
-    if (tiles(y)(x).upMissing() && tiles(y)(x).leftMissing() && tiles(y)(x).rightMissing()) {
-      if (tiles(y - 1)(x - 1).isWhite & tiles(y - 1)(x + 1).isWhite) {
-        draw_up(-1, x, y)
+    if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.tiles(y)(x).rightMissing()) {
+      if (newpuzzle.tiles(y - 1)(x - 1).isWhite & newpuzzle.tiles(y - 1)(x + 1).isWhite) {
+        newpuzzle.draw_up(-1, x, y)
       }
     }
-    if (tiles(y)(x).leftMissing() && (tiles(y)(x).downMissing() && tiles(y)(x).upMissing())) {
-      if (tiles(y + 1)(x - 1).isWhite & tiles(y - 1)(x - 1).isWhite) {
+    if (newpuzzle.tiles(y)(x).leftMissing() && (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.tiles(y)(x).upMissing())) {
+      if (newpuzzle.tiles(y + 1)(x - 1).isWhite & newpuzzle.tiles(y - 1)(x - 1).isWhite) {
         draw_left(-1, x, y)
       }
     }
     if (tiles(y)(x).rightMissing() && (tiles(y)(x).downMissing() && tiles(y)(x).upMissing())) {
       if (tiles(y + 1)(x + 1).isWhite & tiles(y - 1)(x + 1).isWhite) {
-        draw_right(-1, x, y)
+        newpuzzle.draw_right(-1, x, y)
       }
     }
+     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
 
   def won(): Boolean = {

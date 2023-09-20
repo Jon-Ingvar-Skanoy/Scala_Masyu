@@ -28,10 +28,15 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
     // function to find a legal move that can be made
 
-    val flatTiles = tiles.flatten
+    val flatTiles = tiles.flatten.sortBy {
+      tile=>
+        val prox1 = Math.abs((height/4)^2-(tile.height/2)^2)
+        val prox2 = Math.abs((width/4)^2-(tile.width/2)^2)
+        0.1*prox1+0.1*prox2
+    }
     flatTiles.foreach(tile => {
               if (!tile.crowded()) {
-                if (tile.inn_ring() | !tile.isEmpty ) {
+                //if (tile.inn_ring() | !tile.isEmpty ) {
                   if (!tile.up() && !tile.upIllegal()) {
                     return Array[Int](tile.height, tile.width, 2)
                   }
@@ -43,7 +48,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
                   }
                   if (tile.rightMissing()) {
                     return Array[Int](tile.height, tile.width, 3)
-                  }
+                  //}
                 }
               }
             })

@@ -422,13 +422,15 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
 
-
-   def set_up_white_horizontal(x: Int, y: Int): Unit = {
- // checks if there is 3 white dots next to each other horizontaly
-    if ((tiles(y)(x).leftMissing() && tiles(y)(x - 1).isWhite) && (tiles(y)(x - 1).leftMissing() && tiles(y)(x - 2).isWhite)) {
-      draw_left(-1, x, y)
+  def set_up_white_horizontal(x: Int, y: Int): Puzzle = {
+    var newpuzzle = Puzzle(width, height, copyTiles())
+    // checks if there is 3 white dots next to each other horizontaly
+    if ((newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.tiles(y)(x - 1).isWhite) && (newpuzzle.tiles(y)(x - 1).leftMissing() && newpuzzle.tiles(y)(x - 2).isWhite)) {
+      newpuzzle.draw_left(-1, x, y)
 
     }
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+
   }
    def set_up_black_line(x: Int, y: Int):Unit = {
     // checks if there are the following pattern in any direction * _ o o  from this black dot, in that case defines the move it that direction illegal

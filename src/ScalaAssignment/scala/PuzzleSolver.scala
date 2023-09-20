@@ -181,26 +181,7 @@ object PuzzleSolver {
 
   }
 
-  def set_Up(puzzle: Puzzle): Puzzle = {
-    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.tiles)
-    // calls all set_up functions in the relevant tiles
-    val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
-    flatTiles.foreach(tile => {
-      if (tile.isWhite) {
-        newpuzzle = set_up_white_vertical(tile.width, tile.height,newpuzzle)
-      }
-      if (tile.isWhite) newpuzzle.set_up_white_horizontal(tile.width, tile.height)
-      if (tile.isBlack) {
-        newpuzzle = set_up_black(tile.width, tile.height, puzzle)
-        newpuzzle.set_up_black_diagonal_whites(tile.width, tile.height)
-        newpuzzle.set_up_black_line(tile.width, tile.height)
-      }
-
-    })
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
-  }
-
-  def set_up_black(x: Int, y: Int,puzzle: Puzzle): Puzzle = {
+  def set_up_black(x: Int, y: Int, puzzle: Puzzle): Puzzle = {
     // function that checks if the black dot in the given tile is next to an other black dot
     // if so defines it illegal to move between them.
     if (puzzle.tiles(y)(x).rightMissing() && puzzle.tiles(y)(x + 1).isBlack) {
@@ -211,6 +192,27 @@ object PuzzleSolver {
     }
     Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
   }
+
+
+  def set_Up(puzzle: Puzzle): Puzzle = {
+    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+    // calls all set_up functions in the relevant tiles
+    val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
+    flatTiles.foreach(tile => {
+      if (tile.isWhite) {
+        newpuzzle = set_up_white_vertical(tile.width, tile.height,newpuzzle)
+      }
+      if (tile.isWhite) newpuzzle =newpuzzle.set_up_white_horizontal(tile.width, tile.height)
+      if (tile.isBlack) {
+        newpuzzle = set_up_black(tile.width, tile.height, newpuzzle)
+        newpuzzle.set_up_black_diagonal_whites(tile.width, tile.height)
+        newpuzzle.set_up_black_line(tile.width, tile.height)
+      }
+
+    })
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+  }
+
 
   def set_up_white_vertical(x: Int, y: Int, puzzle: Puzzle): Puzzle = {
     // checks if there is 3 white dots next to each other vertical

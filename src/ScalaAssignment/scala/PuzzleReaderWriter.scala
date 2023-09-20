@@ -32,6 +32,7 @@ object PuzzleReaderWriter{
     for (line <- lines) {
 
 
+
       if (line.startsWith("size")) iterator(0) = iterator(0) + 1
       else if (iterator(0) == index + 1) {
         for (i <- line if ' ' != i) {

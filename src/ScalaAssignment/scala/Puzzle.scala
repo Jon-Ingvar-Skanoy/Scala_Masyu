@@ -537,7 +537,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def legal_crowded(x: Int, y: Int): Puzzle = {
-    var newpuzzle = Puzzle(width, height, copyTiles())
+    var newpuzzle = Puzzle(width, height,tiles)
     // called when there are two illegal moves in the tile and one placed, this function setts the last move to placed
 
 
@@ -546,11 +546,11 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (newpuzzle.tiles(y)(x).upMissing()) newpuzzle.draw_up(1, x, y)
     if (newpuzzle.tiles(y)(x).rightMissing()) newpuzzle.draw_right(1, x, y)
 
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.copyTiles())
   }
 
   def illegal_white_dots(x: Int, y: Int): Puzzle = {
-    var newpuzzle = Puzzle(width, height, copyTiles())
+    val newpuzzle = Puzzle(width, height, copyTiles())
 
     // checks if any move is illegal for a white dot
     if (newpuzzle.tiles(y)(x).down() && newpuzzle.tiles(y + 1)(x).down()) newpuzzle.draw_up(-1, x, y - 1)
@@ -594,7 +594,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def illegal_crowded(x: Int, y: Int): Puzzle = {
-    var newpuzzle = Puzzle(width, height, copyTiles())
+    val newpuzzle = Puzzle(width, height, copyTiles())
     // called when a tile has two placed moves this function defines remaining moves to illegal.
 
     if (newpuzzle.tiles(y)(x).leftMissing()) newpuzzle.draw_left(-1, x, y)

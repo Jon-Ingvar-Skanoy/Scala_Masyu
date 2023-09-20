@@ -542,51 +542,49 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
-   def illegal_white_dots(x: Int, y: Int):Boolean = {
-    val priorCount = tiles(y)(x).missingCount
+
+  def illegal_white_dots(x: Int, y: Int): Puzzle = {
+    var newpuzzle = Puzzle(width, height, copyTiles())
+
     // checks if any move is illegal for a white dot
-    if(tiles(y)(x).down() && tiles(y+1)(x).down()) draw_up(-1,x, y-1)
-    if(tiles(y)(x).up() && tiles(y-1)(x).up()) draw_down(-1,x, y+1)
-    if(tiles(y)(x).right() && tiles(y)(x+1).right()) draw_left(-1,x-1, y)
-    if(tiles(y)(x).left() && tiles(y)(x-1).left()) draw_right(-1,x+1, y)
-    if(tiles(y)(x).left()) {
-      draw_up(-1,x, y)
-      draw_down(-1,x,y)
+    if (newpuzzle.tiles(y)(x).down() && newpuzzle.tiles(y + 1)(x).down()) newpuzzle.draw_up(-1, x, y - 1)
+    if (newpuzzle.tiles(y)(x).up() && newpuzzle.tiles(y - 1)(x).up()) newpuzzle.draw_down(-1, x, y + 1)
+    if (newpuzzle.tiles(y)(x).right() && newpuzzle.tiles(y)(x + 1).right()) newpuzzle.draw_left(-1, x - 1, y)
+    if (newpuzzle.tiles(y)(x).left() && newpuzzle.tiles(y)(x - 1).left()) newpuzzle.draw_right(-1, x + 1, y)
+    if (newpuzzle.tiles(y)(x).left()) {
+      newpuzzle.draw_up(-1, x, y)
+      newpuzzle.draw_down(-1, x, y)
 
     }
-    if (tiles(y)(x).right()) {
-      draw_up(-1, x, y)
-      draw_down(-1, x, y)
+    if (newpuzzle.tiles(y)(x).right()) {
+      newpuzzle.draw_up(-1, x, y)
+      newpuzzle.draw_down(-1, x, y)
 
     }
-    if (tiles(y)(x).up()) {
-      draw_left(-1, x, y)
-      draw_right(-1, x, y)
+    if (newpuzzle.tiles(y)(x).up()) {
+      newpuzzle.draw_left(-1, x, y)
+      newpuzzle.draw_right(-1, x, y)
 
     }
-    if (tiles(y)(x).down()) {
-      draw_left(-1, x, y)
-      draw_right(-1, x, y)
+    if (newpuzzle.tiles(y)(x).down()) {
+      newpuzzle.draw_left(-1, x, y)
+      newpuzzle.draw_right(-1, x, y)
 
     }
-    if (tiles(y)(x).leftIllegal()) draw_right(-1, x, y)
-    if (tiles(y)(x).downIllegal()) draw_up(-1, x, y)
-    if (tiles(y)(x).upIllegal()) draw_down(-1, x, y)
-    if (tiles(y)(x).rightIllegal()) draw_left(-1, x, y)
-    if ( ( !tiles(y)(x).leftIllegal && tiles(y)(x-1).left) && ( !tiles(y)(x).rightIllegal() && tiles(y)(x+1).right)){
-      draw_left(-1, x, y)
-      draw_right(-1, x, y)
+    if (newpuzzle.tiles(y)(x).leftIllegal()) newpuzzle.draw_right(-1, x, y)
+    if (newpuzzle.tiles(y)(x).downIllegal()) newpuzzle.draw_up(-1, x, y)
+    if (newpuzzle.tiles(y)(x).upIllegal()) newpuzzle.draw_down(-1, x, y)
+    if (newpuzzle.tiles(y)(x).rightIllegal()) newpuzzle.draw_left(-1, x, y)
+    if ((!newpuzzle.tiles(y)(x).leftIllegal && newpuzzle.tiles(y)(x - 1).left) && (!newpuzzle.tiles(y)(x).rightIllegal() && newpuzzle.tiles(y)(x + 1).right)) {
+      newpuzzle.draw_left(-1, x, y)
+      newpuzzle.draw_right(-1, x, y)
     }
-    if ((!tiles(y)(x).upIllegal && tiles(y-1)(x).up) && (!tiles(y)(x).downIllegal && tiles(y+1)(x).down)) {
-      draw_up(-1, x, y)
-      draw_down(-1, x, y)
+    if ((!newpuzzle.tiles(y)(x).upIllegal && newpuzzle.tiles(y - 1)(x).up) && (!newpuzzle.tiles(y)(x).downIllegal && newpuzzle.tiles(y + 1)(x).down)) {
+      newpuzzle.draw_up(-1, x, y)
+      newpuzzle.draw_down(-1, x, y)
     }
-    val posteriorCount = tiles(y)(x).missingCount
-    if (posteriorCount != priorCount) {
-      return true
-    }
-     false
 
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
    def illegal_crowded(x: Int, y: Int):Unit = {
      // called when a tile has two placed moves this function defines remaining moves to illegal.

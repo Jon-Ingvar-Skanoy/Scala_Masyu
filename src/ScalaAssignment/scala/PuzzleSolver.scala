@@ -76,14 +76,15 @@ object PuzzleSolver {
 
 
 
-    var oldPuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-    for (i <- 0 until 10) {
+    var oldPuzzle = Puzzle(newpuzzle.width,newpuzzle.height,newpuzzle.copyTiles())
+    while(!compare(oldPuzzle,newpuzzle)) {
+      oldPuzzle = Puzzle(newpuzzle.width,newpuzzle.height,newpuzzle.copyTiles())
 
-      newpuzzle = illegal_moves(newpuzzle)
+    newpuzzle = illegal_moves(newpuzzle)
       newpuzzle = legal_moves(newpuzzle)
-      println(i,compare(oldPuzzle,puzzle))
-      oldPuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+
     }
+
     newpuzzle = illegal_moves(newpuzzle)
 
     if (dept > 15) {
@@ -108,14 +109,18 @@ object PuzzleSolver {
 
     while(move(0) != - 1){
       copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-      for (i <- 0 until 20) {
+      copy = illegal_moves(copy)
+      copy = legal_moves(copy)
+      while (!compare(oldPuzzle, copy)) {
+        oldPuzzle = Puzzle(copy.width, copy.height, copy.copyTiles())
+        copy = illegal_moves(copy)
+        copy = legal_moves(copy)
 
-        copy= illegal_moves(copy)
-        copy= legal_moves(copy)
+
 
       }
 
-      copy = illegal_moves(copy)
+
       move = copy.find_move()
 
 

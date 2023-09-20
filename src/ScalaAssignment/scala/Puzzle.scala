@@ -27,7 +27,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
   def lost():Boolean= {
     // function to evaluate if the board is wrong
-    val flatTiles = tiles.flatMap(tile => tile)
+    val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
         if (tile.inn_ring() && tile.dead_end()) return true
       })
@@ -40,7 +40,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
     // function to find a legal move that can be made
 
-    val flatTiles = tiles.flatMap(tile => tile)
+    val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
               if (!tile.crowded()) {
 
@@ -469,7 +469,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   def won(): Boolean = {
     // checks if the board is completed
-    val flatTiles = tiles.flatMap(tile => tile)
+    val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
 
         if(tile.isEmpty){
@@ -689,7 +689,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
   def illegal_moves(): Boolean = {
 
-    val flatTiles = tiles.flatMap(tile => tile)
+    val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
       if(tile.isBlack) illegal_black_dot(tile.width,tile.height)
       if(tile.isWhite) illegal_white_dots(tile.width,tile.height)
@@ -697,15 +697,17 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       if(!tile.crowded()&&tile.inn_ring()) avoid_circle_one_move(tile.width,tile.height)
     })
     true
+
   }
-  def legal_moves():Unit= {
+  def legal_moves():Puzzle= {
     // calls functions in relevant tiles to determine if any moves are
 
-   val flatTiles = tiles.flatMap(tile=>tile)
+   val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
     if (tile.isBlack) legal_black(tile.width, tile.height)
     if (tile.Illegal_crowded() && tile.inn_ring()) legal_crowded(tile.width, tile.height)
   })
+    Puzzle(width,height,tiles)
       }
 private def get_black_squares(): Array[Tile] = {
   val blackTiles = tiles.flatMap(_.filter(_.isBlack))

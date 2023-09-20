@@ -432,13 +432,15 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
 
   }
-   def set_up_black_line(x: Int, y: Int):Unit = {
+   def set_up_black_line(x: Int, y: Int):Puzzle = {
+     var newpuzzle = Puzzle(width, height, copyTiles())
     // checks if there are the following pattern in any direction * _ o o  from this black dot, in that case defines the move it that direction illegal
-    if(tiles(y)(x).rightMissing() && tiles(y)(x+1).rightMissing() &&  tiles(y)(x+2).rightMissing() && (tiles(y)(x+2).isWhite && tiles(y)(x+3).isWhite )) draw_right(-1,x,y)
-  if (tiles(y)(x).leftMissing() && tiles(y)(x - 1).leftMissing() && tiles(y)(x - 2).leftMissing() && (tiles(y)(x - 2).isWhite && tiles(y)(x - 3).isWhite)) draw_left(-1, x, y)
-    if (tiles(y)(x).upMissing() && tiles(y - 1)(x).upMissing() && tiles(y - 2)(x).upMissing() && (tiles(y - 2)(x).isWhite && tiles(y - 3)(x).isWhite)) draw_up(-1, x, y)
-    if (tiles(y)(x).downMissing() && tiles(y + 1)(x).downMissing() && tiles(y + 2)(x).downMissing() && (tiles(y + 2)(x).isWhite && tiles(y + 3)(x).isWhite)) draw_down(-1, x, y)
-  }
+    if(newpuzzle.tiles(y)(x).rightMissing() && newpuzzle.tiles(y)(x+1).rightMissing() &&  newpuzzle.tiles(y)(x+2).rightMissing() && (newpuzzle.tiles(y)(x+2).isWhite && newpuzzle.tiles(y)(x+3).isWhite )) draw_right(-1,x,y)
+  if (newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.tiles(y)(x - 1).leftMissing() && newpuzzle.tiles(y)(x - 2).leftMissing() && (newpuzzle.tiles(y)(x - 2).isWhite && newpuzzle.tiles(y)(x - 3).isWhite)) draw_left(-1, x, y)
+    if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.tiles(y - 1)(x).upMissing() && newpuzzle.tiles(y - 2)(x).upMissing() && (newpuzzle.tiles(y - 2)(x).isWhite && newpuzzle.tiles(y - 3)(x).isWhite)) draw_up(-1, x, y)
+    if (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.tiles(y + 1)(x).downMissing() && newpuzzle.tiles(y + 2)(x).downMissing() && (newpuzzle.tiles(y + 2)(x).isWhite && newpuzzle.tiles(y + 3)(x).isWhite)) draw_down(-1, x, y)
+     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+   }
 
 
    def set_up_black_diagonal_whites(x: Int, y: Int): Unit = {

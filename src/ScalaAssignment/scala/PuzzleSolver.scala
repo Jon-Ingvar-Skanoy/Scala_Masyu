@@ -206,7 +206,7 @@ object PuzzleSolver {
       if (tile.isBlack) {
         newpuzzle = set_up_black(tile.width, tile.height, newpuzzle)
         newpuzzle.set_up_black_diagonal_whites(tile.width, tile.height)
-        newpuzzle.set_up_black_line(tile.width, tile.height)
+        newpuzzle = newpuzzle.set_up_black_line(tile.width, tile.height)
       }
 
     })

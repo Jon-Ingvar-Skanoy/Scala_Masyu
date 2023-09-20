@@ -670,19 +670,15 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      0
   }
 
-   def avoid_circle_one_move(x: Int, y: Int): Boolean = {
-    // called in tiles if any move can results in an mini circle if so sets this move to illegal
-    val priorCount = tiles(y)(x).placedCount
+   def avoid_circle_one_move(x: Int, y: Int): Puzzle = {
+     // called in tiles if any move can results in an mini circle if so sets this move to illegal
+    var newpuzzle = Puzzle(width, height, copyTiles())
+    if (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.circle(x, y, x, y + 1, count_dots, 2) == -1) newpuzzle.draw_down(-1, x, y)
+    if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.circle(x, y, x, y - 1, count_dots, 1) == -1) newpuzzle.draw_up(-1, x, y)
+    if (newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.circle(x, y, x - 1, y, count_dots, 3) == -1) newpuzzle.draw_left(-1, x, y)
+    if (newpuzzle.tiles(y)(x).rightMissing() && newpuzzle.circle(x, y, x + 1, y, count_dots, 0) == -1) newpuzzle.draw_right(-1, x, y)
 
-    if (tiles(y)(x).downMissing() && circle(x, y, x, y + 1, count_dots, 2) == -1) draw_down(-1, x, y)
-    if (tiles(y)(x).upMissing() && circle(x, y, x, y - 1, count_dots, 1) == -1) draw_up(-1, x, y)
-    if (tiles(y)(x).leftMissing() && circle(x, y, x - 1, y, count_dots, 3) == -1) draw_left(-1, x, y)
-    if (tiles(y)(x).rightMissing() && circle(x, y, x + 1, y, count_dots, 0) == -1) draw_right(-1, x, y)
-    val posteriorCount = tiles(y)(x).placedCount
-    if (posteriorCount != priorCount) {
-      return true
-    }
-    false
+     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
 
 

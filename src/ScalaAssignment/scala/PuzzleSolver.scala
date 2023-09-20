@@ -231,7 +231,7 @@ object PuzzleSolver {
 
     val flatTiles = newpuzzle.tiles.flatten
     flatTiles.foreach(tile => {
-      if (tile.isBlack) newpuzzle.legal_black(tile.width, tile.height)
+      if (tile.isBlack) newpuzzle = newpuzzle.legal_black(tile.width, tile.height)
       if (tile.Illegal_crowded() && tile.inn_ring()) newpuzzle.legal_crowded(tile.width, tile.height)
     })
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)

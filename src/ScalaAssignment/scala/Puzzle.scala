@@ -597,25 +597,26 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if(tiles(y)(x).rightMissing()) draw_right(-1,x,y)
   }
 
-   def legal_black(x: Int, y: Int): Unit = {
+   def legal_black(x: Int, y: Int): Puzzle = {
     // called for every black dot, checks if a move is illegal that makes an other move forced
-
-    if (tiles(y)(x).leftIllegal()) {
-      draw_right(1, x, y)
-      draw_right(1, x + 1, y)
+    var newpuzzle = Puzzle(width, height, copyTiles())
+    if (newpuzzle.tiles(y)(x).leftIllegal()) {
+      newpuzzle.draw_right(1, x, y)
+      newpuzzle.draw_right(1, x + 1, y)
     }
-    if (tiles(y)(x).rightIllegal()) {
-      draw_left(1, x, y)
-      draw_left(1, x - 1, y)
+    if (newpuzzle.tiles(y)(x).rightIllegal()) {
+      newpuzzle.draw_left(1, x, y)
+      newpuzzle.draw_left(1, x - 1, y)
     }
-    if (tiles(y)(x).downIllegal()) {
-      draw_up(1, x, y)
-      draw_up(1, x, y - 1)
+    if (newpuzzle.tiles(y)(x).downIllegal()) {
+      newpuzzle.draw_up(1, x, y)
+      newpuzzle.draw_up(1, x, y - 1)
     }
-    if (tiles(y)(x).upIllegal()) {
-      draw_down(1, x, y)
-      draw_down(1, x, y + 1)
+    if (newpuzzle.tiles(y)(x).upIllegal()) {
+      newpuzzle.draw_down(1, x, y)
+      newpuzzle.draw_down(1, x, y + 1)
     }
+     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
 
   }
    def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={

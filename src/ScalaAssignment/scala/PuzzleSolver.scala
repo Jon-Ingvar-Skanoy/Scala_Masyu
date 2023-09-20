@@ -195,10 +195,11 @@ object PuzzleSolver {
   }
 
   def set_up_black(x: Int, y: Int,puzzle: Puzzle): Puzzle = {
-    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+
 
     // function that checks if the black dot in the given tile is next to an other black dot
     // if so defines it illegal to move between them.
+    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
     if (newpuzzle.tiles(y)(x).rightMissing() && newpuzzle.tiles(y)(x + 1).isBlack) {
       newpuzzle.draw_right(-1, x, y)
     }
@@ -210,10 +211,11 @@ object PuzzleSolver {
 
   def set_up_white_vertical(x: Int, y: Int, puzzle: Puzzle): Puzzle = {
     // checks if there is 3 white dots next to each other vertical
-    if ((puzzle.tiles(y)(x).downMissing() && puzzle.tiles(y + 1)(x).isWhite) && (puzzle.tiles(y + 1)(x).downMissing() && puzzle.tiles(y + 2)(x).isWhite)) {
-      puzzle.draw_down(-1, x, y)
+    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+    if ((newpuzzle.tiles(y)(x).downMissing() && newpuzzle.tiles(y + 1)(x).isWhite) && (newpuzzle.tiles(y + 1)(x).downMissing() && newpuzzle.tiles(y + 2)(x).isWhite)) {
+      newpuzzle.draw_down(-1, x, y)
     }
-    Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
 
 

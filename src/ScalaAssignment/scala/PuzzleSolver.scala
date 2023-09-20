@@ -47,7 +47,7 @@ object PuzzleSolver {
 
       newBoard = newBoard.borders()
       newBoard = set_Up(newBoard)
-      val result = withTimeLimit(Duration(10,"seconds")) {
+      val result = withTimeLimit(Duration(100,"seconds")) {
         newBoard = solve(newBoard,0)
       }
 
@@ -77,7 +77,7 @@ object PuzzleSolver {
 
 
 
-    for (i <- 0 until 10) {
+    for (i <- 0 until 20) {
 
       puzzle.illegal_moves()
       puzzle.legal_moves()
@@ -85,7 +85,7 @@ object PuzzleSolver {
     }
     puzzle.illegal_moves()
 
-    if (dept > 15) {
+    if (dept > 25) {
 
       return puzzle
 
@@ -107,7 +107,7 @@ object PuzzleSolver {
 
     while(move(0) != - 1){
       copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-      for (i <- 0 until 20) {
+      for (i <- 0 until 30) {
 
         copy.illegal_moves()
         copy.legal_moves()
@@ -176,7 +176,7 @@ object PuzzleSolver {
   }
 
   def set_Up(puzzle: Puzzle): Puzzle = {
-    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.tiles)
+    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
     // calls all set_up functions in the relevant tiles
     val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
     flatTiles.foreach(tile => {
@@ -195,15 +195,17 @@ object PuzzleSolver {
   }
 
   def set_up_black(x: Int, y: Int,puzzle: Puzzle): Puzzle = {
+    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+
     // function that checks if the black dot in the given tile is next to an other black dot
     // if so defines it illegal to move between them.
-    if (puzzle.tiles(y)(x).rightMissing() && puzzle.tiles(y)(x + 1).isBlack) {
-      puzzle.draw_right(-1, x, y)
+    if (newpuzzle.tiles(y)(x).rightMissing() && newpuzzle.tiles(y)(x + 1).isBlack) {
+      newpuzzle.draw_right(-1, x, y)
     }
-    if (puzzle.tiles(y)(x).downMissing() && puzzle.tiles(y + 1)(x).isBlack) {
-      puzzle.draw_down(-1, x, y)
+    if (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.tiles(y + 1)(x).isBlack) {
+      newpuzzle.draw_down(-1, x, y)
     }
-    Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
 
   def set_up_white_vertical(x: Int, y: Int, puzzle: Puzzle): Puzzle = {

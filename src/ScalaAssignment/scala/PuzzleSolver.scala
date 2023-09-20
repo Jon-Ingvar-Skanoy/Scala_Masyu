@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object PuzzleSolver {
 
 
-  def withTimeLimit[T](timeout: Duration)(block: => T):Any = {
+  def withTimeLimit[T](timeout: Duration)(block: => T): Any = {
     val promise = Promise[T]()
     val future = Future {
       val result = block
@@ -29,26 +29,22 @@ object PuzzleSolver {
     }
   }
 
-    def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
     //val line1: String = args(0)
     //val line2: String = args(1)
     //initRW(line1, line2)
     initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
-    var newBoard: Puzzle =  Puzzle(0,0,Array.ofDim[Tile](0, 0))
+    var newBoard: Puzzle = Puzzle(0, 0, Array.ofDim[Tile](0, 0))
     val puzzleCount: Int = getNumPizzles()
     for (i <- 0 until puzzleCount) {
 
-      newBoard=  getPuzzle(i)
-
-
-
-
+      newBoard = getPuzzle(i)
 
 
       newBoard = newBoard.borders()
       newBoard = set_Up(newBoard)
-      val result = withTimeLimit(Duration(10,"seconds")) {
-        newBoard = solve(newBoard,0)
+      val result = withTimeLimit(Duration(50, "seconds")) {
+        newBoard = solve(newBoard, 0)
       }
 
 
@@ -70,18 +66,15 @@ object PuzzleSolver {
   }
 
 
+  private def solve(puzzle: Puzzle, dept: Int): Puzzle = {
 
-  private def solve(puzzle: Puzzle, dept:Int): Puzzle = {
-
-
-
-
-
+    var oldPuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
     for (i <- 0 until 10) {
 
       puzzle.illegal_moves()
       puzzle.legal_moves()
-
+      println(i,compare(oldPuzzle,puzzle))
+      oldPuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
     }
     puzzle.illegal_moves()
 
@@ -91,22 +84,22 @@ object PuzzleSolver {
 
     }
 
-    if(puzzle.won()){
+    if (puzzle.won()) {
       print("WON32")
       return puzzle
     }
 
 
-     if(puzzle.lost()) {
+    if (puzzle.lost()) {
 
-       return puzzle
-     }
+      return puzzle
+    }
 
-    var copy:Puzzle =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-    var move:Array[Int] = Array(0,2,33)
+    var copy: Puzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
+    var move: Array[Int] = Array(0, 2, 33)
 
-    while(move(0) != - 1){
-      copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
+    while (move(0) != -1) {
+      copy = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
       for (i <- 0 until 20) {
 
         copy.illegal_moves()
@@ -116,8 +109,6 @@ object PuzzleSolver {
 
       copy.illegal_moves()
       move = copy.find_move()
-
-
 
 
       if (move(2) == 0) {
@@ -139,15 +130,13 @@ object PuzzleSolver {
       }
 
 
-
-
-      copy= solve(copy,dept+1)
+      copy = solve(copy, dept + 1)
 
       if (copy.won()) {
         println("won")
         return copy
       }
-      if (copy.lost()){
+      if (copy.lost()) {
 
 
         if (move(2) == 0) {
@@ -176,12 +165,12 @@ object PuzzleSolver {
   }
 
   def set_Up(puzzle: Puzzle): Puzzle = {
-    var newpuzzle = Puzzle(puzzle.width,puzzle.height,puzzle.tiles)
+    var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.tiles)
     // calls all set_up functions in the relevant tiles
     val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
     flatTiles.foreach(tile => {
       if (tile.isWhite) {
-        newpuzzle = set_up_white_vertical(tile.width, tile.height,newpuzzle)
+        newpuzzle = set_up_white_vertical(tile.width, tile.height, newpuzzle)
       }
       if (tile.isWhite) newpuzzle.set_up_white_horizontal(tile.width, tile.height)
       if (tile.isBlack) {
@@ -194,7 +183,7 @@ object PuzzleSolver {
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
 
-  def set_up_black(x: Int, y: Int,puzzle: Puzzle): Puzzle = {
+  def set_up_black(x: Int, y: Int, puzzle: Puzzle): Puzzle = {
     // function that checks if the black dot in the given tile is next to an other black dot
     // if so defines it illegal to move between them.
     if (puzzle.tiles(y)(x).rightMissing() && puzzle.tiles(y)(x + 1).isBlack) {
@@ -215,6 +204,20 @@ object PuzzleSolver {
   }
 
 
+  def compare(oldPuzzle: Puzzle, newPuzzle: Puzzle): Boolean = {
+   val flatOld = oldPuzzle.tiles.flatMap(_.flatMap(_.paths))
+    val flatNew = newPuzzle.tiles.flatMap(_.flatMap(_.paths))
+    val flatPathsOld = for(paths <- flatOld) yield paths
+    val flatPathsNew = for(path<-flatNew) yield path
+    if(flatPathsOld.sameElements(flatPathsNew)){
+      return true
+    }
+    false
+  }
+
+
 
 }
+
+
 

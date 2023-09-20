@@ -225,7 +225,7 @@ object PuzzleSolver {
    val newTilesFlat = newPuzzle.tiles.flatMap(_.flatMap(_.paths))
    (oldTilesFlat.sameElements(newTilesFlat))
  }
-  def legal_moves(puzzle: Puzzle): Puzzle = {
+  private def legal_moves(puzzle: Puzzle): Puzzle = {
     // calls functions in relevant tiles to determine if any moves are
     var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
 
@@ -243,7 +243,7 @@ object PuzzleSolver {
 
     val flatTiles = newpuzzle.tiles.flatten
     flatTiles.foreach(tile => {
-      if (tile.isBlack) newpuzzle.illegal_black_dot(tile.width, tile.height)
+      if (tile.isBlack) newpuzzle = newpuzzle.illegal_black_dot(tile.width, tile.height)
       if (tile.isWhite) newpuzzle.illegal_white_dots(tile.width, tile.height)
       if (tile.crowded() | tile.dead_end()) newpuzzle.illegal_crowded(tile.width, tile.height)
       if (!tile.crowded() && tile.inn_ring()) newpuzzle.avoid_circle_one_move(tile.width, tile.height)

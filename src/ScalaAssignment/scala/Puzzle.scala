@@ -787,7 +787,7 @@ private def get_black_squares(): Array[Tile] = {
   def illegalize(): Puzzle = {
     // called in search when there are no moves possible
     // this function sett all moves to illegal to tel the lower function call that this path is illegal or the move possible due to depth
-    val flatTiles = tiles.flatMap(tile => tile)
+    val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
         for (h <- 0 until 4){
           if(tile.paths(h)==Line.Missing) tile.paths(h)= Line.Illegal

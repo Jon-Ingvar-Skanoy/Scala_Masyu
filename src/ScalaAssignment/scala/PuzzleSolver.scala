@@ -36,36 +36,17 @@ object PuzzleSolver {
     initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
     var newBoard: Puzzle =  Puzzle(0,0,Array.ofDim[Tile](0, 0))
     val puzzleCount: Int = getNumPizzles()
-    for (i <- 0 until puzzleCount) {
+      val counter = 0 until puzzleCount
+    counter.foreach(i=>{
 
       newBoard=  getPuzzle(i)
-
-
-
-
-
-
       newBoard = newBoard.borders()
       newBoard = set_Up(newBoard)
       val result = withTimeLimit(Duration(10,"seconds")) {
         newBoard = solve(newBoard,0)
       }
-
-
-
-
-
-
-
-
-
-
       //print(newBoard.won())
-
-      writeAnswer(board = newBoard)
-
-
-    }
+      writeAnswer(board = newBoard)})
     closing()
   }
 

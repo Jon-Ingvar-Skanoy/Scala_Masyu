@@ -1,12 +1,35 @@
 
 import PuzzleReaderWriter.{closing, getNumPizzles, getPuzzle, initRW, writeAnswer}
-
-
-
+import scala.concurrent._
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future, TimeoutException}
+import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object PuzzleSolver {
-  def main(args: Array[String]): Unit = {
+
+
+  def withTimeLimit[T](timeout: Duration)(block: => T):Any = {
+    val promise = Promise[T]()
+    val future = Future {
+      val result = block
+      if (!promise.isCompleted) {
+        promise.success(result)
+      }
+    }
+
+    try {
+      Some(Await.result(future, timeout))
+    } catch {
+      case ex: TimeoutException =>
+        promise.tryFailure(new TimeoutException)
+        None
+    }
+  }
+
+    def main(args: Array[String]): Unit = {
     //val line1: String = args(0)
     //val line2: String = args(1)
     //initRW(line1, line2)
@@ -24,9 +47,11 @@ object PuzzleSolver {
 
       newBoard = newBoard.borders()
       newBoard = set_Up(newBoard)
+      val result = withTimeLimit(Duration(50,"seconds")) {
+        newBoard = solve(newBoard,0)
+      }
 
 
-     newBoard = solve(newBoard,0)
 
 
 
@@ -44,6 +69,8 @@ object PuzzleSolver {
     closing()
   }
 
+
+
   private def solve(puzzle: Puzzle, dept:Int): Puzzle = {
 
 
@@ -58,7 +85,7 @@ object PuzzleSolver {
     }
     puzzle.illegal_moves()
 
-    if (dept > 20) {
+    if (dept > 15) {
 
       return puzzle
 

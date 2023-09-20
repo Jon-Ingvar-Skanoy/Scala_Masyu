@@ -245,7 +245,7 @@ object PuzzleSolver {
     flatTiles.foreach(tile => {
       if (tile.isBlack) newpuzzle = newpuzzle.illegal_black_dot(tile.width, tile.height)
       if (tile.isWhite) newpuzzle = newpuzzle.illegal_white_dots(tile.width, tile.height)
-      if (tile.crowded() | tile.dead_end()) newpuzzle.illegal_crowded(tile.width, tile.height)
+      if (tile.crowded() | tile.dead_end()) newpuzzle = newpuzzle.illegal_crowded(tile.width, tile.height)
       if (!tile.crowded() && tile.inn_ring()) newpuzzle.avoid_circle_one_move(tile.width, tile.height)
     })
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)

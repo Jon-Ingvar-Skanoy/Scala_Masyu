@@ -586,13 +586,16 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
-   def illegal_crowded(x: Int, y: Int):Unit = {
-     // called when a tile has two placed moves this function defines remaining moves to illegal.
 
-    if(tiles(y)(x).leftMissing()) draw_left(-1,x,y)
-    if(tiles(y)(x).downMissing()) draw_down(-1,x,y)
-    if(tiles(y)(x).upMissing()) draw_up(-1,x,y)
-    if(tiles(y)(x).rightMissing()) draw_right(-1,x,y)
+  def illegal_crowded(x: Int, y: Int): Puzzle = {
+    var newpuzzle = Puzzle(width, height, copyTiles())
+    // called when a tile has two placed moves this function defines remaining moves to illegal.
+
+    if (newpuzzle.tiles(y)(x).leftMissing()) newpuzzle.draw_left(-1, x, y)
+    if (newpuzzle.tiles(y)(x).downMissing()) newpuzzle.draw_down(-1, x, y)
+    if (newpuzzle.tiles(y)(x).upMissing()) newpuzzle.draw_up(-1, x, y)
+    if (newpuzzle.tiles(y)(x).rightMissing()) newpuzzle.draw_right(-1, x, y)
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
 
    def legal_black(x: Int, y: Int): Puzzle = {

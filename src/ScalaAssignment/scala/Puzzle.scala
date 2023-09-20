@@ -5,19 +5,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
    val width: Int = x
    val height: Int = y
 
-
    val tiles: Array[Array[Tile]] = sol
-
-
-
-  def get_tiles() :Array[Array[Tile]] ={
-    val value :Array[Array[Tile]] =Array.ofDim[Tile](height, width)
-
-
-
-     value
-
-  }
 
   def copyTiles(): Array[Array[Tile]] = {
     // function to deepcopy the class
@@ -43,105 +31,23 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
               if (!tile.crowded()) {
-
                 if (tile.inn_ring() | !tile.isEmpty ) {
-
-
                   if (!tile.up() && !tile.upIllegal()) {
-
                     return Array[Int](tile.height, tile.width, 2)
                   }
                   if (tile.downMissing()) {
-
                     return Array[Int](tile.height, tile.width, 1)
                   }
                   if (tile.leftMissing()) {
-
-
                     return Array[Int](tile.height, tile.width, 0)
                   }
                   if (tile.rightMissing()) {
-
-
                     return Array[Int](tile.height, tile.width, 3)
                   }
-
-
                 }
               }
             })
-
-
      Array[Int] (-1,-1,-1)
-  }
-
-
-  def printBoard: Any = {
-    // function to print the board with correct syntax
-    println
-    for (i <- 0 until height) {
-      for (j <- 0 until width) {
-        if (tiles(i)(j).isBlack) {
-          print('┼')
-        }
-        else if (tiles(i)(j).isWhite) {
-          if (tiles(i)(j).left()) {
-            print('╨')
-          }
-          else if (tiles(i)(j).down()) {
-            print('╡')
-          }
-          else {
-            print(' ')
-          }
-        }
-        else if (tiles(i)(j).left()) {
-          if (tiles(i)(j).down()) {
-            // print left + down
-            print('┐')
-          }
-          else if (tiles(i)(j).up()) {
-            //print left + up
-            print('┘')
-          }
-          else if (tiles(i)(j).right()) {
-            //print left + right
-            print('─')
-          }
-          else{
-            print(' ')
-          }
-        }
-        else if (tiles(i)(j).up()) {
-          if (tiles(i)(j).down()) {
-            //print up+down
-            print('│')
-          }
-          else if (tiles(i)(j).right()) {
-            //print up + right
-            print('└')
-          }
-          else {
-            print(' ')
-          }
-        }
-        else if (tiles(i)(j).right()) {
-          // print down+right
-          if(tiles(i)(j).down()) {
-            print('┌')
-          }
-          else{
-            print(' ')
-          }
-        }
-        else {
-          print(' ')
-        }
-
-      }
-      println
-    }
-
   }
 
   def boardString: String = {
@@ -287,32 +193,25 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     count
   }
 
-
    def draw_down(legality: Int, x: Int, y: Int): Unit = {
      // function that draws a line from a tile to the tile below
-    if(!tiles(y)(x).down && !tiles(y)(x).crowded && legality == 1){
-
-      tiles(y)(x).paths(1)= Line.Placed
-      tiles(y+1)(x).paths(2)=Line.Placed
-    }
-    if (!tiles(y)(x).downIllegal  && legality == -1) {
-
-      tiles(y)(x).paths(1) = Line.Illegal
-      tiles(y + 1)(x).paths(2) = Line.Illegal
-    }
-
-
-  }
+     if (!tiles(y)(x).down && !tiles(y)(x).crowded && legality == 1) {
+       tiles(y)(x).paths(1) = Line.Placed
+       tiles(y + 1)(x).paths(2) = Line.Placed
+     }
+     if (!tiles(y)(x).downIllegal && legality == -1) {
+       tiles(y)(x).paths(1) = Line.Illegal
+       tiles(y + 1)(x).paths(2) = Line.Illegal
+     }
+   }
 
    def draw_up(legality: Int, x: Int, y: Int) : Unit = {
      // function that draws a line from a tile to the tile above
     if (!tiles(y)(x).up && !tiles(y)(x).crowded && legality == 1) {
-
       tiles(y)(x).paths(2) = Line.Placed
       tiles(y - 1)(x).paths(1) = Line.Placed
     }
     if (!tiles(y)(x).upIllegal && legality == -1) {
-
       tiles(y)(x).paths(2) = Line.Illegal
       tiles(y - 1)(x).paths(1) = Line.Illegal
     }
@@ -321,12 +220,10 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
    def draw_left(legality: Int, x: Int, y: Int): Unit = {
      // function that draws a line from a tile to the tile to the left
     if (!tiles(y)(x).left && !tiles(y)(x).crowded && legality == 1) {
-
       tiles(y)(x).paths(0) = Line.Placed
       tiles(y)(x - 1).paths(3) = Line.Placed
     }
     if (!tiles(y)(x).leftIllegal && legality == -1) {
-
       tiles(y)(x).paths(0) = Line.Illegal
       tiles(y)(x - 1).paths(3) = Line.Illegal
     }
@@ -335,89 +232,14 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
    def draw_right(legality: Int, x: Int, y: Int):  Unit = {
      // function that draws a line from a tile to the tile to the left
     if (!tiles(y)(x).right && !tiles(y)(x).crowded && legality == 1) {
-
       tiles(y)(x).paths(3) = Line.Placed
       tiles(y)(x +1 ).paths(0) = Line.Placed
     }
     if (!tiles(y)(x).rightIllegal && legality == -1) {
-
       tiles(y)(x).paths(3) = Line.Illegal
       tiles(y)(x + 1).paths(0) = Line.Illegal
     }
   }
-
-
-  def print_ugly(): Unit = {
-    // function that print the board for debugging, contains information that is not in the solution string
-
-
-    println("Left")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if(tiles(ii)(j).leftMissing()){
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).leftIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).left()) {
-          print(" ─ ")
-        }
-      }
-      println
-    }
-    println("Down")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if (tiles(ii)(j).downMissing()) {
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).downIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).down()) {
-          print(" | ")
-        }
-      }
-      println
-    }
-
-    println("Right")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if (tiles(ii)(j).rightMissing()) {
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).rightIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).right()) {
-          print(" ─ ")
-        }
-      }
-      println()
-    }
-    println("UP")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if (tiles(ii)(j).upMissing()) {
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).upIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).up()) {
-          print(" | ")
-        }
-      }
-      println()
-    }
-  }
-
 
   @tailrec
   private def border_Top(x:Int): Array[Array[Tile]] = {
@@ -426,11 +248,8 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (x >= width) {
       return tiles
     }
-
     tiles(0)(x).paths(2)=Line.Illegal
      border_Top(x+1)
-
-
   }
 
   @tailrec
@@ -439,12 +258,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if(x >= width){
       return tiles
     }
-
-
     tiles(height-1)(x).paths(1) = Line.Illegal
      border_Bottom(x+1)
     }
-
 
   @tailrec
   private def border_Left(x:Int): Array[Array[Tile]] = {
@@ -572,7 +388,6 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
     false
   }
-
 
   def illegal_black_dot(x: Int, y: Int): Puzzle = {
     var newpuzzle = Puzzle(width, height, copyTiles())
@@ -728,8 +543,6 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
     }
-
-
      0
   }
 
@@ -744,84 +557,6 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
 
-
-
-
-private def get_black_squares(): Array[Tile] = {
-  val blackTiles = tiles.flatMap(_.filter(_.isBlack))
-   blackTiles
-}
-  private def get_white_squares(): Array[Tile] = {
-    val whiteTiles = tiles.flatMap(_.filter(_.isWhite))
-     whiteTiles
-
-  }
-
- private def get_crowded_or_deadend_squares(): Array[Tile] = {
-    val crowded_deadend_Tiles = tiles.flatMap(_.filter(tile => tile.crowded()|tile.dead_end()))
-     crowded_deadend_Tiles
-  }
-
-  private def get_not_crowded_innring_squares(): Array[Tile] = {
-    val crowded_innring_Tiles = tiles.flatMap(_.filter(tile => !tile.crowded() && tile.inn_ring()))
-     crowded_innring_Tiles
-  }
-
-
-    def createAlteredBoard(board: Puzzle, arr:Array[Array[Array[Boolean]]]): Puzzle = {
-    val newBoard = board
-    for(i<-0 until height){
-      for (j<-0 until width){
-        for (d<-0 until 4){
-          if(arr(i)(j)(d)){
-            if(newBoard.tiles(i)(j).paths(d) != Line.Illegal && !newBoard.tiles(i)(j).crowded()){
-              newBoard.tiles(i)(j).paths(d) = Line.Placed
-            }
-          }
-        }
-      }
-    }
-     newBoard
-  }
-
-  def createPathCombination(combination: Int): Array[Boolean] = {
-    if(combination==0){
-       Array[Boolean](false,false,false,false)
-   }
-    else if(combination==1){
-       Array[Boolean](true,false,false,false)
-    }
-    else if(combination==2){
-       Array[Boolean](false,true,false,false)
-    }
-    else if(combination==3){
-       Array[Boolean](false,false,true,false)
-    }
-    else if (combination == 4) {
-       Array[Boolean](false, false, false, true)
-    }
-    else if (combination == 5) {
-       Array[Boolean](true, true, false, false)
-    }
-    else if (combination == 6) {
-       Array[Boolean](true, false, true, false)
-    }
-    else if (combination == 7) {
-       Array[Boolean](true, false, false, true)
-    }
-    else if (combination == 8) {
-       Array[Boolean](false, true, true, false)
-    }
-    else if (combination == 9) {
-       Array[Boolean](false, true, false, true)
-    }
-    else if (combination == 10) {
-       Array[Boolean](false, false, true, true)
-    }
-    else{
-       Array[Boolean](true, true, true, true)
-    }
-  }
   def illegalize(): Puzzle = {
     // called in search when there are no moves possible
     // this function sett all moves to illegal to tel the lower function call that this path is illegal or the move possible due to depth

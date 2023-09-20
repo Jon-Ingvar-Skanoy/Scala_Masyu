@@ -531,16 +531,18 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
      false
   }
-   def legal_crowded(x: Int, y: Int):Unit = {
+
+  def legal_crowded(x: Int, y: Int): Puzzle = {
+    var newpuzzle = Puzzle(width, height, copyTiles())
     // called when there are two illegal moves in the tile and one placed, this function setts the last move to placed
 
 
-    if (tiles(y)(x).leftMissing()) draw_left(1, x, y)
-    if (tiles(y)(x).downMissing()) draw_down(1, x, y)
-    if (tiles(y)(x).upMissing()) draw_up(1, x, y)
-    if (tiles(y)(x).rightMissing()) draw_right(1, x, y)
+    if (newpuzzle.tiles(y)(x).leftMissing()) newpuzzle.draw_left(1, x, y)
+    if (newpuzzle.tiles(y)(x).downMissing()) newpuzzle.draw_down(1, x, y)
+    if (newpuzzle.tiles(y)(x).upMissing()) newpuzzle.draw_up(1, x, y)
+    if (newpuzzle.tiles(y)(x).rightMissing()) newpuzzle.draw_right(1, x, y)
 
-
+    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
   }
    def illegal_white_dots(x: Int, y: Int):Boolean = {
     val priorCount = tiles(y)(x).missingCount

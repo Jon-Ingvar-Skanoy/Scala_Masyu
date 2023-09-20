@@ -47,7 +47,7 @@ object PuzzleSolver {
 
       newBoard = newBoard.borders()
       newBoard = set_Up(newBoard)
-      val result = withTimeLimit(Duration(50,"seconds")) {
+      val result = withTimeLimit(Duration(10,"seconds")) {
         newBoard = solve(newBoard,0)
       }
 

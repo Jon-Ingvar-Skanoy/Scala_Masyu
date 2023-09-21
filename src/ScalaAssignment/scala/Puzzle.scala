@@ -200,7 +200,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
    def draw_down(legality: Int, x: Int, y: Int): Unit = {
      // function that draws a line from a tile to the tile below
-     if (!tiles(y)(x).down && !tiles(y)(x).crowded && legality == 1) {
+     if (tiles(y)(x).downMissing() && !tiles(y)(x).crowded&& !tiles(y+1)(x).crowded  && legality == 1) {
        tiles(y)(x).paths(1) = Line.Placed
        tiles(y + 1)(x).paths(2) = Line.Placed
      }
@@ -212,7 +212,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
    def draw_up(legality: Int, x: Int, y: Int) : Unit = {
      // function that draws a line from a tile to the tile above
-    if (!tiles(y)(x).up && !tiles(y)(x).crowded && legality == 1) {
+    if (tiles(y)(x).upMissing() && !tiles(y)(x).crowded && !tiles(y-1)(x).crowded&& legality == 1) {
       tiles(y)(x).paths(2) = Line.Placed
       tiles(y - 1)(x).paths(1) = Line.Placed
     }
@@ -224,7 +224,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
    def draw_left(legality: Int, x: Int, y: Int): Unit = {
      // function that draws a line from a tile to the tile to the left
-    if (!tiles(y)(x).left && !tiles(y)(x).crowded && legality == 1) {
+    if (tiles(y)(x).leftMissing() && !tiles(y)(x).crowded && !tiles(y)(x-1).crowded && legality == 1) {
       tiles(y)(x).paths(0) = Line.Placed
       tiles(y)(x - 1).paths(3) = Line.Placed
     }
@@ -236,7 +236,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
    def draw_right(legality: Int, x: Int, y: Int):  Unit = {
      // function that draws a line from a tile to the tile to the left
-    if (!tiles(y)(x).right && !tiles(y)(x).crowded && legality == 1) {
+    if (tiles(y)(x).rightMissing() && !tiles(y)(x).crowded&& !tiles(y)(x+1).crowded  && legality == 1) {
       tiles(y)(x).paths(3) = Line.Placed
       tiles(y)(x +1 ).paths(0) = Line.Placed
     }
@@ -349,6 +349,77 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       }
     }
      Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+  }
+
+  def print_ugly(): Unit = {
+    // function that print the board for debugging, contains information that is not in the solution string
+
+
+    println("Left")
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+
+        if (tiles(ii)(j).leftMissing()) {
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).leftIllegal()) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).left()) {
+          print(" ─ ")
+        }
+      }
+      println
+    }
+    println("Down")
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+
+        if (tiles(ii)(j).downMissing()) {
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).downIllegal()) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).down()) {
+          print(" | ")
+        }
+      }
+      println
+    }
+
+    println("Right")
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+
+        if (tiles(ii)(j).rightMissing()) {
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).rightIllegal()) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).right()) {
+          print(" ─ ")
+        }
+      }
+      println()
+    }
+    println("UP")
+    for (ii <- 0 until height) {
+      for (j <- 0 until width) {
+
+        if (tiles(ii)(j).upMissing()) {
+          print(" 0 ")
+        }
+        if (tiles(ii)(j).upIllegal()) {
+          print(" x ")
+        }
+        if (tiles(ii)(j).up()) {
+          print(" | ")
+        }
+      }
+      println()
+    }
   }
 
   def won(): Boolean = {

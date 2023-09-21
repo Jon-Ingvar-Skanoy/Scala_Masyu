@@ -630,7 +630,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
       if (start_y == current_y && start_x == Current_x) {
 
-        return visited
+        return visited :+ currentTileSet
 
 
       }
@@ -644,10 +644,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
     else {
       if (start_y == current_y & start_x == Current_x) {
-
-
-        return visited
-
+        return visited :+ currentTileSet
       }
 
       if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots, 1, visited :+ currentTileSet)
@@ -658,17 +655,14 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       else {
         val fullListErrorBackup = for (tile <- tiles.flatten) yield Tuple2(tile.height, tile.width)
         List.empty[Tuple2[Int, Int]]
-
       }
-
-
     }
   }
 def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Puzzle = {
     val newPuzzle = Puzzle(width,height,copyTiles())
     val startList: List[Tuple2[Int, Int]] = List.empty[Tuple2[Int, Int]]
     val mainLoop = newPuzzle.circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, startList)
-    val messyTiles: Array[Tile] = newPuzzle.tiles.flatMap(_.filterNot(tile => mainLoop.contains(((tile.height, tile.width)))))
+    val messyTiles: Array[Tile] = newPuzzle.tiles.flatMap(_.filter(tile => !mainLoop.contains((Tuple2(tile.height, tile.width)))))
     println(messyTiles.length)
     messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(0) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(1) = Line.Illegal)

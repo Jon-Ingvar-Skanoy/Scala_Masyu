@@ -6,6 +6,7 @@ import scala.concurrent.duration.Duration
 
 
 
+
 object PuzzleSolver {
 
 
@@ -30,10 +31,11 @@ object PuzzleSolver {
 
     def main(args: Array[String]): Unit = {
       val startTime: Long = System.currentTimeMillis()
-    //val line1: String = args(0)
-    //val line2: String = args(1)
-    //initRW(line1, line2)
-    initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
+    //initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
+    val line1: String = args(0)
+    val line2: String = args(1)
+    initRW(line1, line2)
+    //initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
     var newBoard: Puzzle =  Puzzle(0,0,Array.ofDim[Tile](0, 0))
     val puzzleCount: Int = getNumPuzzles
       val counter = 0 until puzzleCount
@@ -42,9 +44,9 @@ object PuzzleSolver {
       newBoard=  getPuzzle(i)
       newBoard = newBoard.borders
       newBoard = setUp(newBoard)
-      withTimeLimit(Duration(30,"seconds")) {
+
         newBoard = solve(newBoard,0)
-      }
+
 
       writeAnswer(board = newBoard)})
     closing
@@ -68,7 +70,7 @@ object PuzzleSolver {
 
     }
 
-    newpuzzle = illegalMoves(newpuzzle)
+
 
     if (depth > 12 | newpuzzle.won.head._1 | newpuzzle.lost) return newpuzzle
 

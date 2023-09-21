@@ -41,7 +41,7 @@ object PuzzleSolver {
       newBoard=  getPuzzle(i)
       newBoard = newBoard.borders
       newBoard = setUp(newBoard)
-      withTimeLimit(Duration(15,"seconds")) {
+      withTimeLimit(Duration(30,"seconds")) {
         newBoard = solve(newBoard,0)
       }
 
@@ -51,7 +51,7 @@ object PuzzleSolver {
 
 
 
-  private def solve(puzzle: Puzzle, dept:Int): Puzzle = {
+  private def solve(puzzle: Puzzle, depth:Int): Puzzle = {
     // recursive function to solve the puzzle
     var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles)
 
@@ -68,7 +68,7 @@ object PuzzleSolver {
 
     newpuzzle = illegalMoves(newpuzzle)
 
-    if (dept > 15 | newpuzzle.won.head._1 | newpuzzle.lost) return newpuzzle
+    if (depth > 15 | newpuzzle.won.head._1 | newpuzzle.lost) return newpuzzle
 
     var copy:Puzzle =  Puzzle(newpuzzle.width,newpuzzle.height,newpuzzle.copyTiles)
     var move:Array[Int] = Array(0,2,33)
@@ -113,7 +113,7 @@ object PuzzleSolver {
 
 
 
-      copy= solve(copy,dept+1)
+      copy= solve(copy,depth+1)
       val wonResults = copy.won
       if (wonResults.head._1) {
         return copy.cleanUp(wonResults.head._2, wonResults.head._3, wonResults.head._4, wonResults.head._5, copy.countDots, wonResults.head._6)

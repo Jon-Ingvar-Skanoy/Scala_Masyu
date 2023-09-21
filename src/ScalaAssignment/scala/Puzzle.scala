@@ -292,7 +292,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     newPuzzle.borderRight(0)
     newPuzzle.borderTop(0)
     newPuzzle.borderBottom(0)
-    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
+    newPuzzle
 
   }
 
@@ -305,7 +305,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       newPuzzle.drawLeft(-1, x, y)
 
     }
-    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
+    newPuzzle
 
   }
    def setUpBlackLine(x: Int, y: Int):Puzzle = {
@@ -317,7 +317,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   if (newPuzzle.tiles(y)(x).leftMissing && newPuzzle.tiles(y)(x - 1).leftMissing && newPuzzle.tiles(y)(x - 2).leftMissing && (newPuzzle.tiles(y)(x - 2).isWhite && newPuzzle.tiles(y)(x - 3).isWhite)) drawLeft(-1, x, y)
     if (newPuzzle.tiles(y)(x).upMissing && newPuzzle.tiles(y - 1)(x).upMissing && newPuzzle.tiles(y - 2)(x).upMissing && (newPuzzle.tiles(y - 2)(x).isWhite && newPuzzle.tiles(y - 3)(x).isWhite)) drawUp(-1, x, y)
     if (newPuzzle.tiles(y)(x).downMissing && newPuzzle.tiles(y + 1)(x).downMissing && newPuzzle.tiles(y + 2)(x).downMissing && (newPuzzle.tiles(y + 2)(x).isWhite && newPuzzle.tiles(y + 3)(x).isWhite)) drawDown(-1, x, y)
-     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
+     newPuzzle
    }
 
 
@@ -347,7 +347,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         newPuzzle.drawRight(-1, x, y)
       }
     }
-     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
+     newPuzzle
   }
 
   def won: Set[(Boolean,Int,Int,Int,Int,Int)] = {
@@ -385,7 +385,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (newPuzzle.tiles(y)(x).leftMissing && newPuzzle.circle(x - 2, y, x, y, newPuzzle.countDots, 3) == -1) newPuzzle.drawLeft(-1, x, y)
     if (newPuzzle.tiles(y)(x).rightMissing && newPuzzle.circle(x + 2, y, x, y, newPuzzle.countDots, 0) == -1) newPuzzle.drawRight(-1, x, y)
 
-    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
+    newPuzzle
   }
 
   def legalCrowded(x: Int, y: Int): Puzzle = {
@@ -397,7 +397,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (newPuzzle.tiles(y)(x).upMissing) newPuzzle.drawUp(1, x, y)
     if (newPuzzle.tiles(y)(x).rightMissing) newPuzzle.drawRight(1, x, y)
 
-    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.copyTiles)
+    newPuzzle
   }
 
   def illegalWhiteDot(x: Int, y: Int): Puzzle = {
@@ -442,7 +442,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       newPuzzle.drawDown(-1, x, y)
     }
 
-    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
+    newPuzzle
   }
 
   def illegalCrowded(x: Int, y: Int): Puzzle = {
@@ -454,7 +454,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     if (newPuzzle.tiles(y)(x).downMissing) newPuzzle.drawDown(-1, x, y)
     if (newPuzzle.tiles(y)(x).upMissing) newPuzzle.drawUp(-1, x, y)
     if (newPuzzle.tiles(y)(x).rightMissing) newPuzzle.drawRight(-1, x, y)
-    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
+    newPuzzle
   }
 
    def legalBlack(x: Int, y: Int): Puzzle = {
@@ -476,7 +476,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       newPuzzle.drawDown(1, x, y)
       newPuzzle.drawDown(1, x, y + 1)
     }
-     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.copyTiles)
+     newPuzzle
 
   }
    private def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
@@ -574,7 +574,7 @@ def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remainin
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(1) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(2) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(3) = Line.Illegal)
-   Puzzle(newPuzzle.width,newPuzzle.height,newPuzzle.copyTiles)
+   newPuzzle
 }
    def avoidCircleOneMove(x: Int, y: Int): Puzzle = {
      // called in tiles if any move can results in an mini circle if so sets this move to illegal
@@ -584,7 +584,7 @@ def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remainin
     if (newPuzzle.tiles(y)(x).leftMissing && newPuzzle.circle(x, y, x - 1, y, countDots, 3) == -1) newPuzzle.drawLeft(-1, x, y)
     if (newPuzzle.tiles(y)(x).rightMissing && newPuzzle.circle(x, y, x + 1, y, countDots, 0) == -1) newPuzzle.drawRight(-1, x, y)
 
-     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.copyTiles)
+     newPuzzle
   }
 
   def illegalize: Puzzle = {
@@ -597,7 +597,7 @@ def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remainin
       if(tile.paths(1)==Line.Missing) tile.paths(1)= Line.Illegal
       if(tile.paths(2)==Line.Missing) tile.paths(2)= Line.Illegal
       if(tile.paths(3)==Line.Missing) tile.paths(3)= Line.Illegal})
-      Puzzle(width, height, newPuzzle.copyTiles)
+      newPuzzle
   }
 }
 

@@ -33,7 +33,7 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       tile=>
         val prox1 = Math.abs((height/2)^2-(tile.height)^2)
         val prox2 = Math.abs((width/16)^4-(tile.width/8)^4)
-        prox1^2-prox2
+        prox1-prox2
     }
     flatTiles.foreach(tile => {
               if (!tile.crowded) {

@@ -587,10 +587,11 @@ def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remainin
      Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.copyTiles)
   }
 
-  def illegalize(): Puzzle = {
+  def illegalize: Puzzle = {
     // called in search when there are no moves possible
     // this function sett all moves to illegal to tel the lower function call that this path is illegal or the move possible due to depth
-    val flatTiles = tiles.flatten
+    val newPuzzle = Puzzle(width,height,copyTiles)
+    val flatTiles = newPuzzle.tiles.flatten
     flatTiles.foreach(tile => {
       if(tile.paths(0)==Line.Missing) tile.paths(0)= Line.Illegal
       if(tile.paths(1)==Line.Missing) tile.paths(1)= Line.Illegal

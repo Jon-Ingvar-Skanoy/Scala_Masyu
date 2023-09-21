@@ -1,16 +1,15 @@
 import java.io.FileWriter
-import scala.io.Source.fromFile
 import scala.io._
 
 object PuzzleReaderWriter{
 
-  var unsolvedFile: String = ""
-  var SolvedFile: String = ""
-  var lines: List[String] = Nil
-  var fw: FileWriter = null
+  private var unsolvedFile: String = ""
+  private var SolvedFile: String = ""
+  private var lines: List[String] = Nil
+  private var fw: FileWriter = null
   private val iterator: Array[Int] = Array.ofDim[Int](3)
 
-  def initRW(infile: String, outfile: String) = {
+  def initRW(infile: String, outfile: String): Unit = {
     unsolvedFile = infile
     SolvedFile = outfile
     lines = Source.fromFile(unsolvedFile).getLines().toList
@@ -19,10 +18,11 @@ object PuzzleReaderWriter{
   def getNumPuzzles:Int={
     val count = lines.head.split(" ").last.toInt
     fw.write("puzzles "+ count.toString + "\n")
-    return count
+     count
   }
 
-  def input(x:Int, y:Int, index:Int): Array[Array[Tile]] = {
+  private def input(x:Int, y:Int, index:Int): Array[Array[Tile]] = {
+    // function that converts a input string to an array
 
      val tiles: Array[Array[Tile]] = Array.ofDim[Tile](y, x)
     iterator(0) = 0
@@ -62,9 +62,9 @@ object PuzzleReaderWriter{
   }
   def getPuzzle(index:Int):Puzzle={
     lines = Source.fromFile(unsolvedFile).getLines().toList
-    val sizeNumbers = lines.filter(_ startsWith("size"))(index).split(" ").last.split("x")
+    val sizeNumbers = lines.filter(_ startsWith "size")(index).split(" ").last.split("x")
 
-    return new Puzzle(sizeNumbers(0).toInt,sizeNumbers.last.toInt, input(sizeNumbers(0).toInt,sizeNumbers.last.toInt,index))
+    Puzzle(sizeNumbers(0).toInt,sizeNumbers.last.toInt, input(sizeNumbers(0).toInt,sizeNumbers.last.toInt,index))
   }
 
 

@@ -42,7 +42,7 @@ object PuzzleSolver {
       newBoard=  getPuzzle(i)
       newBoard = newBoard.borders()
       newBoard = set_Up(newBoard)
-      val result = withTimeLimit(Duration(60,"seconds")) {
+      val result = withTimeLimit(Duration(10,"seconds")) {
         newBoard = solve(newBoard,0)
       }
       //print(newBoard.won())
@@ -73,8 +73,7 @@ object PuzzleSolver {
       return newpuzzle
 
     }
-
-    if(newpuzzle.won()){
+    if(newpuzzle.won().head._1){
       print("WON32")
       return newpuzzle
     }
@@ -129,10 +128,10 @@ object PuzzleSolver {
 
 
       copy= solve(copy,dept+1)
-
-      if (copy.won()) {
+      val wonResults = copy.won()
+      if (wonResults.head._1) {
         println("won")
-        return copy
+        return copy.cleanUp(wonResults.head._2,wonResults.head._3,wonResults.head._4,wonResults.head._5,copy.count_dots,wonResults.head._6)
       }
       if (copy.lost()){
 

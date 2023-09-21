@@ -667,16 +667,16 @@ def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remainin
     val newPuzzle = Puzzle(width,height,copyTiles())
     val startList: List[Tuple2[Int, Int]] = List.empty[Tuple2[Int, Int]]
     val mainLoop = newPuzzle.circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, startList)
-    val messyTiles: Array[Tile] =newPuzzle.tiles.flatMap(_.filterNot(tile => mainLoop.contains(((tile.height, tile.width)))))
+    val messyTiles: Array[Tile] = tiles.flatMap(_.filterNot(tile => mainLoop.contains(((tile.height, tile.width)))))
     println(mainLoop.length)
-    messyTiles.foreach(tile=>newPuzzle.tiles(tile.height)(tile.width).paths(0) = Line.Illegal)
-  messyTiles.foreach(tile=>newPuzzle.tiles(tile.height)(tile.width).paths(1) = Line.Illegal)
-  messyTiles.foreach(tile=>newPuzzle.tiles(tile.height)(tile.width).paths(2) = Line.Illegal)
-  messyTiles.foreach(tile=>newPuzzle.tiles(tile.height)(tile.width).paths(3) = Line.Illegal)
+    messyTiles.foreach(tile=> tiles(tile.height)(tile.width).paths(0) = Line.Illegal)
+  messyTiles.foreach(tile=> tiles(tile.height)(tile.width).paths(1) = Line.Illegal)
+  messyTiles.foreach(tile=> tiles(tile.height)(tile.width).paths(2) = Line.Illegal)
+  messyTiles.foreach(tile=> tiles(tile.height)(tile.width).paths(3) = Line.Illegal)
   return Puzzle(newPuzzle.width,newPuzzle.height,newPuzzle.copyTiles)
 }
    def avoid_circle_one_move(x: Int, y: Int): Puzzle = {
-     // called innewPuzzle.tiles if any move can results in an mini circle if so sets this move to illegal
+     // called in tiles if any move can results in an mini circle if so sets this move to illegal
     var newpuzzle = Puzzle(width, height, copyTiles())
     if (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.circle(x, y, x, y + 1, count_dots, 2) == -1) newpuzzle.draw_down(-1, x, y)
     if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.circle(x, y, x, y - 1, count_dots, 1) == -1) newpuzzle.draw_up(-1, x, y)

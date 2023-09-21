@@ -42,7 +42,7 @@ object PuzzleSolver {
       newBoard=  getPuzzle(i)
       newBoard = newBoard.borders()
       newBoard = set_Up(newBoard)
-      val result = withTimeLimit(Duration(10,"seconds")) {
+      val result = withTimeLimit(Duration(120,"seconds")) {
         newBoard = solve(newBoard,0)
       }
       //print(newBoard.won())

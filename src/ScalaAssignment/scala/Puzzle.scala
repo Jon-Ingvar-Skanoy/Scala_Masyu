@@ -28,12 +28,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
     // function to find a legal move that can be made
 
-    //Sort tiles by proximity to middle square. Just using (height/2)^2 - tile.height^2 caused a stack overflow somehow
+    //Sort tiles by proximity to middle square and some fancy math.
     val flatTiles = tiles.flatten.sortBy {
       tile=>
         val prox1 = Math.abs((height/2)^2-(tile.height)^2)
-        val prox2 = Math.abs((width/16)^3-(tile.width/8)^3)
-        prox1-prox2
+        val prox2 = Math.abs((width/16)^4-(tile.width/8)^4)
+        prox1^2-prox2
     }
     flatTiles.foreach(tile => {
               if (!tile.crowded) {

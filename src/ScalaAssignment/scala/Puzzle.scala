@@ -7,27 +7,28 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
    val tiles: Array[Array[Tile]] = sol
 
-  def copyTiles(): Array[Array[Tile]] = {
+  def copyTiles: Array[Array[Tile]] = {
     // function to deepcopy the class
     for (row <- tiles) yield {
       for (item <- row) yield item.copyTile(0)
     }
   }
-  def lost():Boolean= {
+  def lost:Boolean= {
     // function to evaluate if the board is wrong
     val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
-        if (tile.inn_ring() && tile.dead_end()) return true
+        if (tile.inRing && tile.deadEnd) return true
       })
 
 
      false
   }
 
-  def find_move():Array[Int] = {
+  def findMove:Array[Int] = {
 
     // function to find a legal move that can be made
 
+    //Sort tiles by proximity to middle square. Just using (height/2)^2 - tile.height^2 caused a stack overflow somehow
     val flatTiles = tiles.flatten.sortBy {
       tile=>
         val prox1 = Math.abs((height/4)^2-(tile.height/2)^2)
@@ -35,20 +36,19 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         0.1*prox1+0.1*prox2
     }
     flatTiles.foreach(tile => {
-              if (!tile.crowded()) {
-                //if (tile.inn_ring() | !tile.isEmpty ) {
-                  if (!tile.up() && !tile.upIllegal()) {
+              if (!tile.crowded) {
+                  if (!tile.up && !tile.upIllegal) {
                     return Array[Int](tile.height, tile.width, 2)
                   }
-                  if (tile.downMissing()) {
+                  if (tile.downMissing) {
                     return Array[Int](tile.height, tile.width, 1)
                   }
-                  if (tile.leftMissing()) {
+                  if (tile.leftMissing) {
                     return Array[Int](tile.height, tile.width, 0)
                   }
-                  if (tile.rightMissing()) {
+                  if (tile.rightMissing) {
                     return Array[Int](tile.height, tile.width, 3)
-                  //}
+
                 }
               }
             })
@@ -56,39 +56,40 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   def boardString: String = {
-    // function that return a string of the board to be delivered in file
+    // function that returns a string of the board to be delivered in file
     val str: String = ""
     val strArray = for(row<-tiles) yield addCharToBoardString(str,0,row)
     strArray.mkString
   }
+  @tailrec
   private def addCharToBoardString(str: String, i: Int, flatTiles: Array[Tile]): String = {
 
     if (str.length == width-1) {
-      // function that ands a char to the board string that mach the content of the tile
+      // function that recursively adds a char to the board string that mach the content of the tile
       if (flatTiles(i).isBlack) {
         str + "┼\n"
       }
       else if (flatTiles(i).isWhite) {
-        if (flatTiles(i).left()) {
+        if (flatTiles(i).left) {
           str + "╨\n"
         }
-        else if (flatTiles(i).down()) {
+        else if (flatTiles(i).down) {
           str + "╡\n"
         }
         else {
           str + " \n"
         }
       }
-      else if (flatTiles(i).left()) {
-        if (flatTiles(i).down()) {
+      else if (flatTiles(i).left) {
+        if (flatTiles(i).down) {
           // print left + down
           str + "┐\n"
         }
-        else if (flatTiles(i).up()) {
+        else if (flatTiles(i).up) {
           //print left + up
           str + "┘\n"
         }
-        else if (flatTiles(i).right()) {
+        else if (flatTiles(i).right) {
           //print left + right
           str + "─\n"
         }
@@ -96,12 +97,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           str + " \n"
         }
       }
-      else if (flatTiles(i).up()) {
-        if (flatTiles(i).down()) {
+      else if (flatTiles(i).up) {
+        if (flatTiles(i).down) {
           //print up+down
           str + "│\n"
         }
-        else if (flatTiles(i).right()) {
+        else if (flatTiles(i).right) {
           //print up + right
           str + "└\n"
         }
@@ -109,9 +110,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           str + " \n"
         }
       }
-      else if (flatTiles(i).right()) {
+      else if (flatTiles(i).right) {
         // print down+right
-        if (flatTiles(i).down()) {
+        if (flatTiles(i).down) {
           str + "┌\n"
         }
         else {
@@ -130,26 +131,26 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         addCharToBoardString(str + "┼",i+1,flatTiles)
       }
       else if (flatTiles(i).isWhite) {
-        if (flatTiles(i).left()) {
+        if (flatTiles(i).left) {
           addCharToBoardString( str + "╨",i+1,flatTiles)
         }
-        else if (flatTiles(i).down()) {
+        else if (flatTiles(i).down) {
           addCharToBoardString(str + "╡",i+1,flatTiles)
         }
         else {
           addCharToBoardString(str + " ",i+1,flatTiles)
         }
       }
-      else if (flatTiles(i).left()) {
-        if (flatTiles(i).down()) {
+      else if (flatTiles(i).left) {
+        if (flatTiles(i).down) {
           // print left + down
           addCharToBoardString(str + "┐",i+1,flatTiles)
         }
-        else if (flatTiles(i).up()) {
+        else if (flatTiles(i).up) {
           //print left + up
           addCharToBoardString(str + "┘",i+1,flatTiles)
         }
-        else if (flatTiles(i).right()) {
+        else if (flatTiles(i).right) {
           //print left + right
           addCharToBoardString(str + "─",i+1,flatTiles)
         }
@@ -157,12 +158,12 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           addCharToBoardString(str + " ",i+1,flatTiles)
         }
       }
-      else if (flatTiles(i).up()) {
-        if (flatTiles(i).down()) {
+      else if (flatTiles(i).up) {
+        if (flatTiles(i).down) {
           //print up+down
           addCharToBoardString(str + "│",i+1,flatTiles)
         }
-        else if (flatTiles(i).right()) {
+        else if (flatTiles(i).right) {
           //print up + right
           addCharToBoardString(str + "└",i+1,flatTiles)
         }
@@ -170,9 +171,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
           addCharToBoardString(str + " ",i+1,flatTiles)
         }
       }
-      else if (flatTiles(i).right()) {
+      else if (flatTiles(i).right) {
         // print down+right
-        if (flatTiles(i).down()) {
+        if (flatTiles(i).down) {
           addCharToBoardString(str + "┌",i+1,flatTiles)
         }
         else {
@@ -185,22 +186,16 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
       }
     }
   }
-  def count_dots: Int = {
-    // function who count the dots on the board
-    var count = 0
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-        if (!tiles(ii)(j).isEmpty) {
-          count = count + 1
-        }
-      }
-    }
-    count
+  def countDots: Int = {
+    // function that counts the black and white dots on the board
+    val flatTiles = tiles.flatten
+    val flatBWTiles = for(tile<-flatTiles if !tile.isEmpty) yield tile
+    flatBWTiles.length
   }
 
-   def draw_down(legality: Int, x: Int, y: Int): Unit = {
+   def drawDown(legality: Int, x: Int, y: Int): Unit = {
      // function that draws a line from a tile to the tile below
-     if (tiles(y)(x).downMissing() && !tiles(y)(x).crowded&& !tiles(y+1)(x).crowded  && legality == 1) {
+     if (tiles(y)(x).downMissing && !tiles(y)(x).crowded&& !tiles(y+1)(x).crowded  && legality == 1) {
        tiles(y)(x).paths(1) = Line.Placed
        tiles(y + 1)(x).paths(2) = Line.Placed
      }
@@ -210,9 +205,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      }
    }
 
-   def draw_up(legality: Int, x: Int, y: Int) : Unit = {
+   def drawUp(legality: Int, x: Int, y: Int) : Unit = {
      // function that draws a line from a tile to the tile above
-    if (tiles(y)(x).upMissing() && !tiles(y)(x).crowded && !tiles(y-1)(x).crowded&& legality == 1) {
+    if (tiles(y)(x).upMissing && !tiles(y)(x).crowded && !tiles(y-1)(x).crowded&& legality == 1) {
       tiles(y)(x).paths(2) = Line.Placed
       tiles(y - 1)(x).paths(1) = Line.Placed
     }
@@ -222,9 +217,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
 
-   def draw_left(legality: Int, x: Int, y: Int): Unit = {
+   def drawLeft(legality: Int, x: Int, y: Int): Unit = {
      // function that draws a line from a tile to the tile to the left
-    if (tiles(y)(x).leftMissing() && !tiles(y)(x).crowded && !tiles(y)(x-1).crowded && legality == 1) {
+    if (tiles(y)(x).leftMissing && !tiles(y)(x).crowded && !tiles(y)(x-1).crowded && legality == 1) {
       tiles(y)(x).paths(0) = Line.Placed
       tiles(y)(x - 1).paths(3) = Line.Placed
     }
@@ -234,9 +229,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     }
   }
 
-   def draw_right(legality: Int, x: Int, y: Int):  Unit = {
+   def drawRight(legality: Int, x: Int, y: Int):  Unit = {
      // function that draws a line from a tile to the tile to the left
-    if (tiles(y)(x).rightMissing() && !tiles(y)(x).crowded&& !tiles(y)(x+1).crowded  && legality == 1) {
+    if (tiles(y)(x).rightMissing && !tiles(y)(x).crowded&& !tiles(y)(x+1).crowded  && legality == 1) {
       tiles(y)(x).paths(3) = Line.Placed
       tiles(y)(x +1 ).paths(0) = Line.Placed
     }
@@ -247,28 +242,28 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 
   @tailrec
-  private def border_Top(x:Int): Array[Array[Tile]] = {
+  private def borderTop(x:Int): Array[Array[Tile]] = {
 
     // function that creates the top border, tells the top tiles that it is illegal to move up
     if (x >= width) {
       return tiles
     }
     tiles(0)(x).paths(2)=Line.Illegal
-     border_Top(x+1)
+     borderTop(x+1)
   }
 
   @tailrec
-  private def border_Bottom(x:Int): Array[Array[Tile]] = {
+  private def borderBottom(x:Int): Array[Array[Tile]] = {
     // function that creates the left border, tells the left tiles that it is illegal to move left
     if(x >= width){
       return tiles
     }
     tiles(height-1)(x).paths(1) = Line.Illegal
-     border_Bottom(x+1)
+     borderBottom(x+1)
     }
 
   @tailrec
-  private def border_Left(x:Int): Array[Array[Tile]] = {
+  private def borderLeft(x:Int): Array[Array[Tile]] = {
     // function that creates the left border, tells the left tiles that it is illegal to move left
     if (x >= height) {
       return tiles
@@ -276,188 +271,99 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
       tiles(x)(0).paths(0) = Line.Illegal
-     border_Left(x+1)
+     borderLeft(x+1)
   }
 
   @tailrec
-  private def border_Right(x:Int): Array[Array[Tile]] = {
+  private def borderRight(x:Int): Array[Array[Tile]] = {
     // function that creates the right border, tells the bottom tiles that it is illegal to move right
     if (x >= height) {
       return tiles
     }
       tiles(x)(width-1).paths(3) = Line.Illegal
-       border_Right(x+1)
+       borderRight(x+1)
   }
 
-  def borders():Puzzle = {
-    var newpuzzle = Puzzle(width, height, copyTiles())
+  def borders:Puzzle = {
     // function that creates the borders, calls function that does that
-    newpuzzle.border_Left(0)
-    newpuzzle.border_Right(0)
-    newpuzzle.border_Top(0)
-    newpuzzle.border_Bottom(0)
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+    val newPuzzle = Puzzle(width, height, copyTiles)
+
+    newPuzzle.borderLeft(0)
+    newPuzzle.borderRight(0)
+    newPuzzle.borderTop(0)
+    newPuzzle.borderBottom(0)
+    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
 
   }
 
 
-  def set_up_white_horizontal(x: Int, y: Int): Puzzle = {
-    var newpuzzle = Puzzle(width, height, copyTiles())
+  def setUpWhiteHorizontal(x: Int, y: Int): Puzzle = {
     // checks if there is 3 white dots next to each other horizontaly
-    if ((newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.tiles(y)(x - 1).isWhite) && (newpuzzle.tiles(y)(x - 1).leftMissing() && newpuzzle.tiles(y)(x - 2).isWhite)) {
-      newpuzzle.draw_left(-1, x, y)
+    val newPuzzle = Puzzle(width, height, copyTiles)
+
+    if ((newPuzzle.tiles(y)(x).leftMissing && newPuzzle.tiles(y)(x - 1).isWhite) && (newPuzzle.tiles(y)(x - 1).leftMissing && newPuzzle.tiles(y)(x - 2).isWhite)) {
+      newPuzzle.drawLeft(-1, x, y)
 
     }
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
 
   }
-   def set_up_black_line(x: Int, y: Int):Puzzle = {
-     var newpuzzle = Puzzle(width, height, copyTiles())
+   def setUpBlackLine(x: Int, y: Int):Puzzle = {
     // checks if there are the following pattern in any direction * _ o o  from this black dot, in that case defines the move it that direction illegal
-    if(newpuzzle.tiles(y)(x).rightMissing() && newpuzzle.tiles(y)(x+1).rightMissing() &&  newpuzzle.tiles(y)(x+2).rightMissing() && (newpuzzle.tiles(y)(x+2).isWhite && newpuzzle.tiles(y)(x+3).isWhite )) draw_right(-1,x,y)
-  if (newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.tiles(y)(x - 1).leftMissing() && newpuzzle.tiles(y)(x - 2).leftMissing() && (newpuzzle.tiles(y)(x - 2).isWhite && newpuzzle.tiles(y)(x - 3).isWhite)) draw_left(-1, x, y)
-    if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.tiles(y - 1)(x).upMissing() && newpuzzle.tiles(y - 2)(x).upMissing() && (newpuzzle.tiles(y - 2)(x).isWhite && newpuzzle.tiles(y - 3)(x).isWhite)) draw_up(-1, x, y)
-    if (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.tiles(y + 1)(x).downMissing() && newpuzzle.tiles(y + 2)(x).downMissing() && (newpuzzle.tiles(y + 2)(x).isWhite && newpuzzle.tiles(y + 3)(x).isWhite)) draw_down(-1, x, y)
-     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+
+     val newPuzzle = Puzzle(width, height, copyTiles)
+
+    if(newPuzzle.tiles(y)(x).rightMissing && newPuzzle.tiles(y)(x+1).rightMissing &&  newPuzzle.tiles(y)(x+2).rightMissing && (newPuzzle.tiles(y)(x+2).isWhite && newPuzzle.tiles(y)(x+3).isWhite )) drawRight(-1,x,y)
+  if (newPuzzle.tiles(y)(x).leftMissing && newPuzzle.tiles(y)(x - 1).leftMissing && newPuzzle.tiles(y)(x - 2).leftMissing && (newPuzzle.tiles(y)(x - 2).isWhite && newPuzzle.tiles(y)(x - 3).isWhite)) drawLeft(-1, x, y)
+    if (newPuzzle.tiles(y)(x).upMissing && newPuzzle.tiles(y - 1)(x).upMissing && newPuzzle.tiles(y - 2)(x).upMissing && (newPuzzle.tiles(y - 2)(x).isWhite && newPuzzle.tiles(y - 3)(x).isWhite)) drawUp(-1, x, y)
+    if (newPuzzle.tiles(y)(x).downMissing && newPuzzle.tiles(y + 1)(x).downMissing && newPuzzle.tiles(y + 2)(x).downMissing && (newPuzzle.tiles(y + 2)(x).isWhite && newPuzzle.tiles(y + 3)(x).isWhite)) drawDown(-1, x, y)
+     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
    }
 
 
-   def set_up_black_diagonal_whites(x: Int, y: Int): Puzzle = {
+   def setUpBlackWithDiagonalWhites(x: Int, y: Int): Puzzle = {
     // check for
     //    *
     //  o _ o
     // if so defines the move in that direction illegal
-    var newpuzzle = Puzzle(width, height, copyTiles())
-    if(newpuzzle.tiles(y)(x).downMissing()&&newpuzzle.tiles(y)(x).leftMissing()&&newpuzzle.tiles(y)(x).rightMissing()){
-      if(newpuzzle.tiles(y+1)( x-1).isWhite  & newpuzzle.tiles(y+1)(x+1).isWhite){
-        draw_down(-1,x,y)
+    val newPuzzle = Puzzle(width, height, copyTiles)
+    if(newPuzzle.tiles(y)(x).downMissing&&newPuzzle.tiles(y)(x).leftMissing&&newPuzzle.tiles(y)(x).rightMissing){
+      if(newPuzzle.tiles(y+1)( x-1).isWhite  & newPuzzle.tiles(y+1)(x+1).isWhite){
+        drawDown(-1,x,y)
       }
     }
-    if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.tiles(y)(x).rightMissing()) {
-      if (newpuzzle.tiles(y - 1)(x - 1).isWhite & newpuzzle.tiles(y - 1)(x + 1).isWhite) {
-        newpuzzle.draw_up(-1, x, y)
+    if (newPuzzle.tiles(y)(x).upMissing && newPuzzle.tiles(y)(x).leftMissing && newPuzzle.tiles(y)(x).rightMissing) {
+      if (newPuzzle.tiles(y - 1)(x - 1).isWhite & newPuzzle.tiles(y - 1)(x + 1).isWhite) {
+        newPuzzle.drawUp(-1, x, y)
       }
     }
-    if (newpuzzle.tiles(y)(x).leftMissing() && (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.tiles(y)(x).upMissing())) {
-      if (newpuzzle.tiles(y + 1)(x - 1).isWhite & newpuzzle.tiles(y - 1)(x - 1).isWhite) {
-        draw_left(-1, x, y)
+    if (newPuzzle.tiles(y)(x).leftMissing && (newPuzzle.tiles(y)(x).downMissing && newPuzzle.tiles(y)(x).upMissing)) {
+      if (newPuzzle.tiles(y + 1)(x - 1).isWhite & newPuzzle.tiles(y - 1)(x - 1).isWhite) {
+        drawLeft(-1, x, y)
       }
     }
-    if (tiles(y)(x).rightMissing() && (tiles(y)(x).downMissing() && tiles(y)(x).upMissing())) {
+    if (tiles(y)(x).rightMissing && (tiles(y)(x).downMissing && tiles(y)(x).upMissing)) {
       if (tiles(y + 1)(x + 1).isWhite & tiles(y - 1)(x + 1).isWhite) {
-        newpuzzle.draw_right(-1, x, y)
+        newPuzzle.drawRight(-1, x, y)
       }
     }
-     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
   }
 
-  def print_ugly(): Unit = {
-    // function that print the board for debugging, contains information that is not in the solution string
-
-
-    println("Left")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if (tiles(ii)(j).leftMissing()) {
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).leftIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).left()) {
-          print(" ─ ")
-        }
-      }
-      println
-    }
-    println("Down")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if (tiles(ii)(j).downMissing()) {
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).downIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).down()) {
-          print(" | ")
-        }
-      }
-      println
-    }
-
-    println("Right")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if (tiles(ii)(j).rightMissing()) {
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).rightIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).right()) {
-          print(" ─ ")
-        }
-      }
-      println()
-    }
-    println("UP")
-    for (ii <- 0 until height) {
-      for (j <- 0 until width) {
-
-        if (tiles(ii)(j).upMissing()) {
-          print(" 0 ")
-        }
-        if (tiles(ii)(j).upIllegal()) {
-          print(" x ")
-        }
-        if (tiles(ii)(j).up()) {
-          print(" | ")
-        }
-      }
-      println()
-    }
-  }
-
-  def won(): Set[(Boolean,Int,Int,Int,Int,Int)] = {
+  def won: Set[(Boolean,Int,Int,Int,Int,Int)] = {
     // checks if the board is completed
     val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
 
         if(tile.isEmpty){
+          if (tile.left && circle(tile.width-1 , tile.height, tile.width, tile.height, countDots, 3) == 1) {
 
-
-
-       //   if (tiles(ii)(j).down() && circle(j, ii+1, j, ii, count_dots, 2) == 1) {
-         //   println("w,d")
-        //    return true
-         // }
-       //   if (tiles(ii)(j).up() && circle(j, ii+1, j, ii , count_dots, 2) == 1)  {
-         //   println("w,u")
-          //  return true
-         // }
-
-         // if (tiles(ii)(j).left() && circle(j, ii, j+1 , ii, count_dots, 0) == 1) {
-           // println("w,l")
-            //return true
-          //}tile.width, tile.height
-          if (tile.left() && circle(tile.width-1 , tile.height, tile.width, tile.height, count_dots, 3) == 1) {
-            println("w,r")
             return Set((true,tile.width,tile.height,tile.width-1,tile.height,3))
           }
-          if (tile.right() && circle(tile.width + 1, tile.height, tile.width, tile.height, count_dots, 0) == 1) {
-            println("w,r")
+          if (tile.right && circle(tile.width + 1, tile.height, tile.width, tile.height, countDots, 0) == 1) {
+
             return Set((true,tile.width,tile.height,tile.width+1,tile.height,0))
           }
-        //  if (tiles(ii)(j).right() && circle(j+1, ii, j, ii, count_dots, 0) == 1) {
-          //  println("w,r")
-            //return true
-          //}
-
-
         }
       })
 
@@ -465,116 +371,115 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     Set((false,0,0,0,0,0))
   }
 
-  def illegal_black_dot(x: Int, y: Int): Puzzle = {
-    var newpuzzle = Puzzle(width, height, copyTiles())
-
-
-
+  def illegalBlackDot(x: Int, y: Int): Puzzle = {
     // checks if any move is illegal for a black dot
-    if (newpuzzle.tiles(y)(x).downMissing() && (newpuzzle.tiles(y + 1)(x).downIllegal() | (newpuzzle.tiles(y + 1)(x).left() | newpuzzle.tiles(y + 1)(x).right()))) newpuzzle.draw_down(-1, x, y)
-    if (newpuzzle.tiles(y)(x).upMissing() && (newpuzzle.tiles(y - 1)(x).upIllegal() | newpuzzle.tiles(y - 1)(x).left() | newpuzzle.tiles(y - 1)(x).right())) newpuzzle.draw_up(-1, x, y)
-    if (newpuzzle.tiles(y)(x).leftMissing() && (newpuzzle.tiles(y)(x - 1).leftIllegal() | (newpuzzle.tiles(y)(x - 1).up() | newpuzzle.tiles(y)(x - 1).down()))) newpuzzle.draw_left(-1, x, y)
-    if (newpuzzle.tiles(y)(x).rightMissing() && (newpuzzle.tiles(y)(x + 1).rightIllegal() | newpuzzle.tiles(y)(x + 1).up() | newpuzzle.tiles(y)(x + 1).down())) newpuzzle.draw_right(-1, x, y)
+    val newPuzzle = Puzzle(width, height, copyTiles)
+
+    if (newPuzzle.tiles(y)(x).downMissing && (newPuzzle.tiles(y + 1)(x).downIllegal | (newPuzzle.tiles(y + 1)(x).left | newPuzzle.tiles(y + 1)(x).right))) newPuzzle.drawDown(-1, x, y)
+    if (newPuzzle.tiles(y)(x).upMissing && (newPuzzle.tiles(y - 1)(x).upIllegal | newPuzzle.tiles(y - 1)(x).left | newPuzzle.tiles(y - 1)(x).right)) newPuzzle.drawUp(-1, x, y)
+    if (newPuzzle.tiles(y)(x).leftMissing && (newPuzzle.tiles(y)(x - 1).leftIllegal | (newPuzzle.tiles(y)(x - 1).up | newPuzzle.tiles(y)(x - 1).down))) newPuzzle.drawLeft(-1, x, y)
+    if (newPuzzle.tiles(y)(x).rightMissing && (newPuzzle.tiles(y)(x + 1).rightIllegal | newPuzzle.tiles(y)(x + 1).up | newPuzzle.tiles(y)(x + 1).down)) newPuzzle.drawRight(-1, x, y)
     // check if circle is formed
-    if (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.circle(x, y + 2, x, y, newpuzzle.count_dots, 2) == -1) newpuzzle.draw_down(-1, x, y)
-    if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.circle(x, y - 2, x, y, newpuzzle.count_dots, 1) == -1) newpuzzle.draw_up(-1, x, y)
-    if (newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.circle(x - 2, y, x, y, newpuzzle.count_dots, 3) == -1) newpuzzle.draw_left(-1, x, y)
-    if (newpuzzle.tiles(y)(x).rightMissing() && newpuzzle.circle(x + 2, y, x, y, newpuzzle.count_dots, 0) == -1) newpuzzle.draw_right(-1, x, y)
+    if (newPuzzle.tiles(y)(x).downMissing && newPuzzle.circle(x, y + 2, x, y, newPuzzle.countDots, 2) == -1) newPuzzle.drawDown(-1, x, y)
+    if (newPuzzle.tiles(y)(x).upMissing && newPuzzle.circle(x, y - 2, x, y, newPuzzle.countDots, 1) == -1) newPuzzle.drawUp(-1, x, y)
+    if (newPuzzle.tiles(y)(x).leftMissing && newPuzzle.circle(x - 2, y, x, y, newPuzzle.countDots, 3) == -1) newPuzzle.drawLeft(-1, x, y)
+    if (newPuzzle.tiles(y)(x).rightMissing && newPuzzle.circle(x + 2, y, x, y, newPuzzle.countDots, 0) == -1) newPuzzle.drawRight(-1, x, y)
 
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
   }
 
-  def legal_crowded(x: Int, y: Int): Puzzle = {
-    var newpuzzle = Puzzle(width, height,tiles)
+  def legalCrowded(x: Int, y: Int): Puzzle = {
     // called when there are two illegal moves in the tile and one placed, this function setts the last move to placed
+    val newPuzzle = Puzzle(width, height,tiles)
 
+    if (newPuzzle.tiles(y)(x).leftMissing) newPuzzle.drawLeft(1, x, y)
+    if (newPuzzle.tiles(y)(x).downMissing) newPuzzle.drawDown(1, x, y)
+    if (newPuzzle.tiles(y)(x).upMissing) newPuzzle.drawUp(1, x, y)
+    if (newPuzzle.tiles(y)(x).rightMissing) newPuzzle.drawRight(1, x, y)
 
-    if (newpuzzle.tiles(y)(x).leftMissing()) newpuzzle.draw_left(1, x, y)
-    if (newpuzzle.tiles(y)(x).downMissing()) newpuzzle.draw_down(1, x, y)
-    if (newpuzzle.tiles(y)(x).upMissing()) newpuzzle.draw_up(1, x, y)
-    if (newpuzzle.tiles(y)(x).rightMissing()) newpuzzle.draw_right(1, x, y)
-
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.copyTiles())
+    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.copyTiles)
   }
 
-  def illegal_white_dots(x: Int, y: Int): Puzzle = {
-    val newpuzzle = Puzzle(width, height, copyTiles())
-
+  def illegalWhiteDot(x: Int, y: Int): Puzzle = {
     // checks if any move is illegal for a white dot
-    if (newpuzzle.tiles(y)(x).down() && newpuzzle.tiles(y + 1)(x).down()) newpuzzle.draw_up(-1, x, y - 1)
-    if (newpuzzle.tiles(y)(x).up() && newpuzzle.tiles(y - 1)(x).up()) newpuzzle.draw_down(-1, x, y + 1)
-    if (newpuzzle.tiles(y)(x).right() && newpuzzle.tiles(y)(x + 1).right()) newpuzzle.draw_left(-1, x - 1, y)
-    if (newpuzzle.tiles(y)(x).left() && newpuzzle.tiles(y)(x - 1).left()) newpuzzle.draw_right(-1, x + 1, y)
-    if (newpuzzle.tiles(y)(x).left()) {
-      newpuzzle.draw_up(-1, x, y)
-      newpuzzle.draw_down(-1, x, y)
+
+    val newPuzzle = Puzzle(width, height, copyTiles)
+
+    if (newPuzzle.tiles(y)(x).down && newPuzzle.tiles(y + 1)(x).down) newPuzzle.drawUp(-1, x, y - 1)
+    if (newPuzzle.tiles(y)(x).up && newPuzzle.tiles(y - 1)(x).up) newPuzzle.drawDown(-1, x, y + 1)
+    if (newPuzzle.tiles(y)(x).right && newPuzzle.tiles(y)(x + 1).right) newPuzzle.drawLeft(-1, x - 1, y)
+    if (newPuzzle.tiles(y)(x).left && newPuzzle.tiles(y)(x - 1).left) newPuzzle.drawRight(-1, x + 1, y)
+    if (newPuzzle.tiles(y)(x).left) {
+      newPuzzle.drawUp(-1, x, y)
+      newPuzzle.drawDown(-1, x, y)
 
     }
-    if (newpuzzle.tiles(y)(x).right()) {
-      newpuzzle.draw_up(-1, x, y)
-      newpuzzle.draw_down(-1, x, y)
+    if (newPuzzle.tiles(y)(x).right) {
+      newPuzzle.drawUp(-1, x, y)
+      newPuzzle.drawDown(-1, x, y)
 
     }
-    if (newpuzzle.tiles(y)(x).up()) {
-      newpuzzle.draw_left(-1, x, y)
-      newpuzzle.draw_right(-1, x, y)
+    if (newPuzzle.tiles(y)(x).up) {
+      newPuzzle.drawLeft(-1, x, y)
+      newPuzzle.drawRight(-1, x, y)
 
     }
-    if (newpuzzle.tiles(y)(x).down()) {
-      newpuzzle.draw_left(-1, x, y)
-      newpuzzle.draw_right(-1, x, y)
+    if (newPuzzle.tiles(y)(x).down) {
+      newPuzzle.drawLeft(-1, x, y)
+      newPuzzle.drawRight(-1, x, y)
 
     }
-    if (newpuzzle.tiles(y)(x).leftIllegal()) newpuzzle.draw_right(-1, x, y)
-    if (newpuzzle.tiles(y)(x).downIllegal()) newpuzzle.draw_up(-1, x, y)
-    if (newpuzzle.tiles(y)(x).upIllegal()) newpuzzle.draw_down(-1, x, y)
-    if (newpuzzle.tiles(y)(x).rightIllegal()) newpuzzle.draw_left(-1, x, y)
-    if ((!newpuzzle.tiles(y)(x).leftIllegal && newpuzzle.tiles(y)(x - 1).left) && (!newpuzzle.tiles(y)(x).rightIllegal() && newpuzzle.tiles(y)(x + 1).right)) {
-      newpuzzle.draw_left(-1, x, y)
-      newpuzzle.draw_right(-1, x, y)
+    if (newPuzzle.tiles(y)(x).leftIllegal) newPuzzle.drawRight(-1, x, y)
+    if (newPuzzle.tiles(y)(x).downIllegal) newPuzzle.drawUp(-1, x, y)
+    if (newPuzzle.tiles(y)(x).upIllegal) newPuzzle.drawDown(-1, x, y)
+    if (newPuzzle.tiles(y)(x).rightIllegal) newPuzzle.drawLeft(-1, x, y)
+    if ((!newPuzzle.tiles(y)(x).leftIllegal && newPuzzle.tiles(y)(x - 1).left) && (!newPuzzle.tiles(y)(x).rightIllegal && newPuzzle.tiles(y)(x + 1).right)) {
+      newPuzzle.drawLeft(-1, x, y)
+      newPuzzle.drawRight(-1, x, y)
     }
-    if ((!newpuzzle.tiles(y)(x).upIllegal && newpuzzle.tiles(y - 1)(x).up) && (!newpuzzle.tiles(y)(x).downIllegal && newpuzzle.tiles(y + 1)(x).down)) {
-      newpuzzle.draw_up(-1, x, y)
-      newpuzzle.draw_down(-1, x, y)
+    if ((!newPuzzle.tiles(y)(x).upIllegal && newPuzzle.tiles(y - 1)(x).up) && (!newPuzzle.tiles(y)(x).downIllegal && newPuzzle.tiles(y + 1)(x).down)) {
+      newPuzzle.drawUp(-1, x, y)
+      newPuzzle.drawDown(-1, x, y)
     }
 
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
   }
 
-  def illegal_crowded(x: Int, y: Int): Puzzle = {
-    val newpuzzle = Puzzle(width, height, copyTiles())
+  def illegalCrowded(x: Int, y: Int): Puzzle = {
     // called when a tile has two placed moves this function defines remaining moves to illegal.
+    val newPuzzle = Puzzle(width, height, copyTiles)
 
-    if (newpuzzle.tiles(y)(x).leftMissing()) newpuzzle.draw_left(-1, x, y)
-    if (newpuzzle.tiles(y)(x).downMissing()) newpuzzle.draw_down(-1, x, y)
-    if (newpuzzle.tiles(y)(x).upMissing()) newpuzzle.draw_up(-1, x, y)
-    if (newpuzzle.tiles(y)(x).rightMissing()) newpuzzle.draw_right(-1, x, y)
-    Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+
+    if (newPuzzle.tiles(y)(x).leftMissing) newPuzzle.drawLeft(-1, x, y)
+    if (newPuzzle.tiles(y)(x).downMissing) newPuzzle.drawDown(-1, x, y)
+    if (newPuzzle.tiles(y)(x).upMissing) newPuzzle.drawUp(-1, x, y)
+    if (newPuzzle.tiles(y)(x).rightMissing) newPuzzle.drawRight(-1, x, y)
+    Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.tiles)
   }
 
-   def legal_black(x: Int, y: Int): Puzzle = {
+   def legalBlack(x: Int, y: Int): Puzzle = {
     // called for every black dot, checks if a move is illegal that makes an other move forced
-    var newpuzzle = Puzzle(width, height, copyTiles())
-    if (newpuzzle.tiles(y)(x).leftIllegal()) {
-      newpuzzle.draw_right(1, x, y)
-      newpuzzle.draw_right(1, x + 1, y)
+    val newPuzzle = Puzzle(width, height, copyTiles)
+    if (newPuzzle.tiles(y)(x).leftIllegal) {
+      newPuzzle.drawRight(1, x, y)
+      newPuzzle.drawRight(1, x + 1, y)
     }
-    if (newpuzzle.tiles(y)(x).rightIllegal()) {
-      newpuzzle.draw_left(1, x, y)
-      newpuzzle.draw_left(1, x - 1, y)
+    if (newPuzzle.tiles(y)(x).rightIllegal) {
+      newPuzzle.drawLeft(1, x, y)
+      newPuzzle.drawLeft(1, x - 1, y)
     }
-    if (newpuzzle.tiles(y)(x).downIllegal()) {
-      newpuzzle.draw_up(1, x, y)
-      newpuzzle.draw_up(1, x, y - 1)
+    if (newPuzzle.tiles(y)(x).downIllegal) {
+      newPuzzle.drawUp(1, x, y)
+      newPuzzle.drawUp(1, x, y - 1)
     }
-    if (newpuzzle.tiles(y)(x).upIllegal()) {
-      newpuzzle.draw_down(1, x, y)
-      newpuzzle.draw_down(1, x, y + 1)
+    if (newPuzzle.tiles(y)(x).upIllegal) {
+      newPuzzle.drawDown(1, x, y)
+      newPuzzle.drawDown(1, x, y + 1)
     }
-     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.copyTiles)
 
   }
-   def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
+   private def circle(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Int={
     // recursive function that determine of from start position one there is a line to the current position and if so if it passes trough every dot
     if(Remaining_dots <0) return -1
     if(!tiles(current_y)(Current_x).isEmpty) {
@@ -591,11 +496,11 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
 
-        if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circle(start_x, start_y, Current_x, current_y-1, Remaining_dots-1, 1)
-        if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y+1, Remaining_dots-1, 2)
-        if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots-1, 0)
-        if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circle(start_x , start_y, Current_x-1, current_y, Remaining_dots-1, 3)
-      if (!tiles(current_y)(Current_x).crowded()) return 0
+        if (tiles(current_y)(Current_x).up && 2 != Current_direction) return circle(start_x, start_y, Current_x, current_y-1, Remaining_dots-1, 1)
+        if (tiles(current_y)(Current_x).down && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y+1, Remaining_dots-1, 2)
+        if (tiles(current_y)(Current_x).right && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots-1, 0)
+        if (tiles(current_y)(Current_x).left && 0 != Current_direction) return circle(start_x , start_y, Current_x-1, current_y, Remaining_dots-1, 3)
+      if (!tiles(current_y)(Current_x).crowded) return 0
 
     }
     else {
@@ -611,18 +516,18 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         }
       }
 
-        if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circle(start_x, start_y , Current_x, current_y-1, Remaining_dots, 1)
-        if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y +1, Remaining_dots, 2)
-        if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots, 0)
-        if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circle(start_x, start_y, Current_x-1, current_y, Remaining_dots, 3)
-      if (!tiles(current_y)(Current_x).crowded()) return 0
+        if (tiles(current_y)(Current_x).up && 2 != Current_direction) return circle(start_x, start_y , Current_x, current_y-1, Remaining_dots, 1)
+        if (tiles(current_y)(Current_x).down && 1 != Current_direction) return circle(start_x, start_y, Current_x, current_y +1, Remaining_dots, 2)
+        if (tiles(current_y)(Current_x).right && 3 != Current_direction) return circle(start_x, start_y, Current_x+1, current_y, Remaining_dots, 0)
+        if (tiles(current_y)(Current_x).left && 0 != Current_direction) return circle(start_x, start_y, Current_x-1, current_y, Remaining_dots, 3)
+      if (!tiles(current_y)(Current_x).crowded) return 0
 
 
     }
      0
   }
 
-  def circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, visited: List[Tuple2[Int, Int]]): List[Tuple2[Int, Int]] = {
+  private def circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, visited: List[Tuple2[Int, Int]]): List[Tuple2[Int, Int]] = {
     // recursive function that determine of from start position one there is a line to the current position and if so if it passes trough every dot
 
     val currentTileSet: Tuple2[Int, Int] = Tuple2(current_y, Current_x)
@@ -634,10 +539,10 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
 
 
       }
-      if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots - 1, 1, visited :+ currentTileSet)
-      if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circleList(start_x, start_y, Current_x, current_y + 1, Remaining_dots - 1, 2, visited :+ currentTileSet)
-      if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circleList(start_x, start_y, Current_x + 1, current_y, Remaining_dots - 1, 0, visited :+ currentTileSet)
-      if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circleList(start_x, start_y, Current_x - 1, current_y, Remaining_dots - 1, 3, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).up && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots - 1, 1, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).down && 1 != Current_direction) return circleList(start_x, start_y, Current_x, current_y + 1, Remaining_dots - 1, 2, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).right && 3 != Current_direction) return circleList(start_x, start_y, Current_x + 1, current_y, Remaining_dots - 1, 0, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).left && 0 != Current_direction)  circleList(start_x, start_y, Current_x - 1, current_y, Remaining_dots - 1, 3, visited :+ currentTileSet)
       else {
         List.empty[Tuple2[Int, Int]]
       }
@@ -647,38 +552,39 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
         return visited :+ currentTileSet
       }
 
-      if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots, 1, visited :+ currentTileSet)
-      if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circleList(start_x, start_y, Current_x, current_y + 1, Remaining_dots, 2, visited :+ currentTileSet)
-      if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circleList(start_x, start_y, Current_x + 1, current_y, Remaining_dots, 0, visited :+ currentTileSet)
-      if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circleList(start_x, start_y, Current_x - 1, current_y, Remaining_dots, 3, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).up && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots, 1, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).down && 1 != Current_direction) return circleList(start_x, start_y, Current_x, current_y + 1, Remaining_dots, 2, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).right && 3 != Current_direction) return circleList(start_x, start_y, Current_x + 1, current_y, Remaining_dots, 0, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).left && 0 != Current_direction)  circleList(start_x, start_y, Current_x - 1, current_y, Remaining_dots, 3, visited :+ currentTileSet)
 
       else {
-        val fullListErrorBackup = for (tile <- tiles.flatten) yield Tuple2(tile.height, tile.width)
+
         List.empty[Tuple2[Int, Int]]
       }
     }
   }
 def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Puzzle = {
-    val newPuzzle = Puzzle(width,height,copyTiles())
-    val startList: List[Tuple2[Int, Int]] = List.empty[Tuple2[Int, Int]]
+  // function to clean away lines not in the completed circle
+    val newPuzzle = Puzzle(width,height,copyTiles)
+    val startList: List[(Int, Int)] = List.empty[(Int, Int)]
     val mainLoop = newPuzzle.circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, startList)
-    val messyTiles: Array[Tile] = newPuzzle.tiles.flatMap(_.filter(tile => !mainLoop.contains((Tuple2(tile.height, tile.width)))))
-    println(messyTiles.length)
+    val messyTiles: Array[Tile] = newPuzzle.tiles.flatMap(_.filter(tile => !mainLoop.contains(Tuple2(tile.height, tile.width))))
+
     messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(0) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(1) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(2) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(3) = Line.Illegal)
-  return Puzzle(newPuzzle.width,newPuzzle.height,newPuzzle.copyTiles)
+   Puzzle(newPuzzle.width,newPuzzle.height,newPuzzle.copyTiles)
 }
-   def avoid_circle_one_move(x: Int, y: Int): Puzzle = {
+   def avoidCircleOneMove(x: Int, y: Int): Puzzle = {
      // called in tiles if any move can results in an mini circle if so sets this move to illegal
-    var newpuzzle = Puzzle(width, height, copyTiles())
-    if (newpuzzle.tiles(y)(x).downMissing() && newpuzzle.circle(x, y, x, y + 1, count_dots, 2) == -1) newpuzzle.draw_down(-1, x, y)
-    if (newpuzzle.tiles(y)(x).upMissing() && newpuzzle.circle(x, y, x, y - 1, count_dots, 1) == -1) newpuzzle.draw_up(-1, x, y)
-    if (newpuzzle.tiles(y)(x).leftMissing() && newpuzzle.circle(x, y, x - 1, y, count_dots, 3) == -1) newpuzzle.draw_left(-1, x, y)
-    if (newpuzzle.tiles(y)(x).rightMissing() && newpuzzle.circle(x, y, x + 1, y, count_dots, 0) == -1) newpuzzle.draw_right(-1, x, y)
+    val newPuzzle = Puzzle(width, height, copyTiles)
+    if (newPuzzle.tiles(y)(x).downMissing && newPuzzle.circle(x, y, x, y + 1, countDots, 2) == -1) newPuzzle.drawDown(-1, x, y)
+    if (newPuzzle.tiles(y)(x).upMissing && newPuzzle.circle(x, y, x, y - 1, countDots, 1) == -1) newPuzzle.drawUp(-1, x, y)
+    if (newPuzzle.tiles(y)(x).leftMissing && newPuzzle.circle(x, y, x - 1, y, countDots, 3) == -1) newPuzzle.drawLeft(-1, x, y)
+    if (newPuzzle.tiles(y)(x).rightMissing && newPuzzle.circle(x, y, x + 1, y, countDots, 0) == -1) newPuzzle.drawRight(-1, x, y)
 
-     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
+     Puzzle(newPuzzle.width, newPuzzle.height, newPuzzle.copyTiles)
   }
 
   def illegalize(): Puzzle = {
@@ -686,12 +592,11 @@ def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remainin
     // this function sett all moves to illegal to tel the lower function call that this path is illegal or the move possible due to depth
     val flatTiles = tiles.flatten
     flatTiles.foreach(tile => {
-        for (h <- 0 until 4){
-          if(tile.paths(h)==Line.Missing) tile.paths(h)= Line.Illegal
-        }
-      })
-
-      Puzzle(width, height, tiles)
+      if(tile.paths(0)==Line.Missing) tile.paths(0)= Line.Illegal
+      if(tile.paths(1)==Line.Missing) tile.paths(1)= Line.Illegal
+      if(tile.paths(2)==Line.Missing) tile.paths(2)= Line.Illegal
+      if(tile.paths(3)==Line.Missing) tile.paths(3)= Line.Illegal})
+      Puzzle(width, height, newPuzzle.copyTiles)
   }
 }
 

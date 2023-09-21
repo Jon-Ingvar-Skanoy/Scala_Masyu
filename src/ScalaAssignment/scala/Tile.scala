@@ -19,68 +19,71 @@ case class Tile ( char: Char,  h: Int,  w: Int) {
 
   private def returnTileType(char: Char): TileType = {
     if (char == '*') {
-     TileType.Black
+      TileType.Black
     }
     else if (char == 'o') {
-     TileType.White
+      TileType.White
     }
     else {
-     TileType.Empty
+      TileType.Empty
     }
   }
+
   //index 0 = left, 1 = down, 2 = up, 3 = right
   private def initializeLine(): Array[Line] = {
     Array[Line](Line.Missing, Line.Missing, Line.Missing, Line.Missing)
   }
 
-private  val ttype: TileType = returnTileType(char)
+  private val ttype: TileType = returnTileType(char)
   val paths: Array[Line] = initializeLine()
   val width: Int = w
   val height: Int = h
 
-  def copyTile(x:Int): Tile = {
+  def copyTile(x: Int): Tile = {
 
 
     if (x >= 3) {
       val newTile: Tile = Tile(char, h, w)
       newTile.paths(x) = paths(x)
-      return  newTile
+      return newTile
     }
-    val newTile: Tile =  copyTile(x+1)
+    val newTile: Tile = copyTile(x + 1)
     newTile.paths(x) = paths(x)
 
 
-   newTile
+    newTile
   }
-  def left(): Boolean = {
+
+  def left: Boolean = {
     if (paths(0) == Line.Placed) {
-       return true
+      return true
     }
     false
   }
 
-  def down(): Boolean = {
+  def down: Boolean = {
     if (paths(1) == Line.Placed) {
       return true
     }
     false
   }
-// hello
-  def up(): Boolean = {
+
+  // hello
+  def up: Boolean = {
     if (paths(2) == Line.Placed) {
       return true
     }
     false
   }
 
-  def right(): Boolean = {
+  def right: Boolean = {
     if (paths(3) == Line.Placed) {
       return true
     }
     false
   }
 
-  def crowded(): Boolean = {
+  def crowded: Boolean = {
     val lineCount =
       for (i <- paths.toList if i == Line.Placed) yield i
     if (lineCount.length >= 2) {
@@ -89,7 +92,7 @@ private  val ttype: TileType = returnTileType(char)
     false
   }
 
-  def Illegal_crowded(): Boolean = {
+  def illegalCrowded: Boolean = {
     val lineCount =
       for (i <- paths.toList if i == Line.Illegal) yield i
     if (lineCount.length >= 2) {
@@ -98,7 +101,7 @@ private  val ttype: TileType = returnTileType(char)
     false
   }
 
-  def inn_ring(): Boolean = {
+  def inRing: Boolean = {
     val lineCount =
       for (i <- paths.toList if i == Line.Placed) yield i
     if (lineCount.nonEmpty | ttype != TileType.Empty) {
@@ -107,9 +110,9 @@ private  val ttype: TileType = returnTileType(char)
     false
 
 
-
   }
-  def dead_end(): Boolean = {
+
+  def deadEnd: Boolean = {
     val lineCount =
       for (i <- paths.toList if i == Line.Illegal) yield i
     if (lineCount.length >= 3) {
@@ -118,56 +121,57 @@ private  val ttype: TileType = returnTileType(char)
     false
   }
 
-  def leftMissing(): Boolean = {
-    if (paths(0) == Line.Missing){
+  def leftMissing: Boolean = {
+    if (paths(0) == Line.Missing) {
       return true
     }
     false
   }
 
 
-  def upMissing(): Boolean = {
+  def upMissing: Boolean = {
     if (paths(2) == Line.Missing) {
       return true
     }
     false
   }
 
-  def downMissing(): Boolean = {
+  def downMissing: Boolean = {
     if (paths(1) == Line.Missing) {
       return true
     }
     false
   }
 
-  def rightMissing(): Boolean = {
+  def rightMissing: Boolean = {
     if (paths(3) == Line.Missing) {
       return true
     }
     false
   }
-  def rightIllegal(): Boolean = {
+
+  def rightIllegal: Boolean = {
     if (paths(3) == Line.Illegal) {
       return true
     }
     false
   }
 
-  def leftIllegal(): Boolean = {
+  def leftIllegal: Boolean = {
     if (paths(0) == Line.Illegal) {
       return true
     }
     false
   }
 
-  def upIllegal(): Boolean = {
+  def upIllegal: Boolean = {
     if (paths(2) == Line.Illegal) {
       return true
     }
     false
   }
 
-  def downIllegal(): Boolean = {
+  def downIllegal: Boolean = {
     if (paths(1) == Line.Illegal) {
       return true
     }
@@ -175,7 +179,7 @@ private  val ttype: TileType = returnTileType(char)
   }
 
   def isEmpty: Boolean = {
-    if(ttype == TileType.Empty){
+    if (ttype == TileType.Empty) {
       return true
     }
     false
@@ -195,23 +199,4 @@ private  val ttype: TileType = returnTileType(char)
     }
     false
   }
-def placedCount: Int = {
-  val placed = {
-  for(i <- paths if i==Line.Placed) yield i
-  }
-  return placed.length
 }
-
-  def illegalCount: Int = {
-    val placed = {
-      for(i <- paths if i==Line.Illegal) yield i
-    }
-    return placed.length
-  }
-
-  def missingCount: Int = {
-    val placed = {
-      for(i <- paths if i==Line.Missing) yield i
-    }
-    return placed.length
-  }}

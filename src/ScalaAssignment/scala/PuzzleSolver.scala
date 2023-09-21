@@ -35,19 +35,19 @@ object PuzzleSolver {
     //initRW(line1, line2)
     initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
     var newBoard: Puzzle =  Puzzle(0,0,Array.ofDim[Tile](0, 0))
-    val puzzleCount: Int = getNumPizzles()
+    val puzzleCount: Int = getNumPuzzles
       val counter = 0 until puzzleCount
     counter.foreach(i=>{
 
       newBoard=  getPuzzle(i)
-      newBoard = newBoard.borders()
-      newBoard = set_Up(newBoard)
-      val result = withTimeLimit(Duration(120,"seconds")) {
+      newBoard = newBoard.borders
+      newBoard = setUp(newBoard)
+      withTimeLimit(Duration(15,"seconds")) {
         newBoard = solve(newBoard,0)
       }
-      //print(newBoard.won())
+
       writeAnswer(board = newBoard)})
-    closing()
+    closing
   }
 
 
@@ -61,12 +61,12 @@ object PuzzleSolver {
     while(!compare(oldPuzzle,newpuzzle)) {
       oldPuzzle = Puzzle(newpuzzle.width,newpuzzle.height,newpuzzle.copyTiles())
 
-    newpuzzle = illegal_moves(newpuzzle)
-      newpuzzle = legal_moves(newpuzzle)
+    newpuzzle = illegalMoves(newpuzzle)
+      newpuzzle = legalMoves(newpuzzle)
 
     }
 
-    newpuzzle = illegal_moves(newpuzzle)
+    newpuzzle = illegalMoves(newpuzzle)
 
     if (dept > 15) {
 
@@ -88,13 +88,13 @@ object PuzzleSolver {
     var move:Array[Int] = Array(0,2,33)
 
     while(move(0) != - 1){
-      copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles())
-      copy = illegal_moves(copy)
-      copy = legal_moves(copy)
+      copy =  Puzzle(puzzle.width,puzzle.height,puzzle.copyTiles)
+      copy = illegalMoves(copy)
+      copy = legalMoves(copy)
       while (!compare(oldPuzzle, copy)) {
-        oldPuzzle = Puzzle(copy.width, copy.height, copy.copyTiles())
-        copy = illegal_moves(copy)
-        copy = legal_moves(copy)
+        oldPuzzle = Puzzle(copy.width, copy.height, copy.copyTiles)
+        copy = illegalMoves(copy)
+        copy = legalMoves(copy)
 
 
 
@@ -108,20 +108,20 @@ object PuzzleSolver {
 
       if (move(2) == 0) {
 
-        copy.draw_left(1, move(1), move(0))
+        copy.drawLeft(1, move(1), move(0))
       }
       if (move(2) == 3) {
 
-        copy.draw_right(1, move(1), move(0))
+        copy.drawRight(1, move(1), move(0))
       }
       if (move(2) == 1) {
 
 
-        copy.draw_down(1, move(1), move(0))
+        copy.drawDown(1, move(1), move(0))
       }
       if (move(2) == 2) {
 
-        copy.draw_up(1, move(1), move(0))
+        copy.drawUp(1, move(1), move(0))
       }
 
 
@@ -130,26 +130,22 @@ object PuzzleSolver {
       copy= solve(copy,dept+1)
       val wonResults = copy.won()
       if (wonResults.head._1) {
-        println(copy.boardString)
-        copy =  copy.cleanUp(wonResults.head._2, wonResults.head._3, wonResults.head._4, wonResults.head._5, copy.count_dots, wonResults.head._6)
-
-        println(copy.boardString)
-        return copy
+        return copy.cleanUp(wonResults.head._2, wonResults.head._3, wonResults.head._4, wonResults.head._5, copy.countDots, wonResults.head._6)
         }
       if (copy.lost()){
 
 
         if (move(2) == 0) {
-          puzzle.draw_right(-1, move(1), move(0))
+          puzzle.drawRight(-1, move(1), move(0))
         }
         if (move(2) == 3) {
-          puzzle.draw_right(-1, move(1), move(0))
+          puzzle.drawRight(-1, move(1), move(0))
         }
         if (move(2) == 1) {
-          puzzle.draw_down(-1, move(1), move(0))
+          puzzle.drawDown(-1, move(1), move(0))
         }
         if (move(2) == 2) {
-          puzzle.draw_up(-1, move(1), move(0))
+          puzzle.drawUp(-1, move(1), move(0))
         }
 
 
@@ -183,13 +179,13 @@ object PuzzleSolver {
     val flatTiles = newpuzzle.tiles.flatMap(tile => tile)
     flatTiles.foreach(tile => {
       if (tile.isWhite) {
-        newpuzzle = set_up_white_vertical(tile.width, tile.height,newpuzzle)
+        newpuzzle = setUpWhiteVertical(tile.width, tile.height,newpuzzle)
       }
-      if (tile.isWhite) newpuzzle =newpuzzle.set_up_white_horizontal(tile.width, tile.height)
+      if (tile.isWhite) newpuzzle =newpuzzle.setUpWhiteHorizontal(tile.width, tile.height)
       if (tile.isBlack) {
-        newpuzzle = set_up_black(tile.width, tile.height, newpuzzle)
-        newpuzzle = newpuzzle.set_up_black_diagonal_whites(tile.width, tile.height)
-        newpuzzle = newpuzzle.set_up_black_line(tile.width, tile.height)
+        newpuzzle = setUpBlack(tile.width, tile.height, newpuzzle)
+        newpuzzle = newpuzzle.setUpBlackWithDiagonalWhites(tile.width, tile.height)
+        newpuzzle = newpuzzle.setUpBlackLine(tile.width, tile.height)
       }
 
     })
@@ -210,7 +206,7 @@ object PuzzleSolver {
    val newTilesFlat = newPuzzle.tiles.flatMap(_.flatMap(_.paths))
    (oldTilesFlat.sameElements(newTilesFlat))
  }
-  private def legal_moves(puzzle: Puzzle): Puzzle = {
+  private def legalMoves(puzzle: Puzzle): Puzzle = {
     // calls functions in relevant tiles to determine if any moves are
     var newpuzzle = Puzzle(puzzle.width, puzzle.height, puzzle.copyTiles())
 
@@ -228,10 +224,10 @@ object PuzzleSolver {
 
     val flatTiles = newpuzzle.tiles.flatten
     flatTiles.foreach(tile => {
-      if (tile.isBlack) newpuzzle = newpuzzle.illegal_black_dot(tile.width, tile.height)
-      if (tile.isWhite) newpuzzle = newpuzzle.illegal_white_dots(tile.width, tile.height)
-      if (tile.crowded() | tile.dead_end()) newpuzzle = newpuzzle.illegal_crowded(tile.width, tile.height)
-      if (!tile.crowded() && tile.inn_ring()) newpuzzle = newpuzzle.avoid_circle_one_move(tile.width, tile.height)
+      if (tile.isBlack) newpuzzle = newpuzzle.illegalBlackDot(tile.width, tile.height)
+      if (tile.isWhite) newpuzzle = newpuzzle.illegalWhiteDot(tile.width, tile.height)
+      if (tile.crowded | tile.deadEnd) newpuzzle = newpuzzle.illegalCrowded(tile.width, tile.height)
+      if (!tile.crowded && tile.inRing) newpuzzle = newpuzzle.avoidCircleOneMove(tile.width, tile.height)
     })
     Puzzle(newpuzzle.width, newpuzzle.height, newpuzzle.tiles)
 

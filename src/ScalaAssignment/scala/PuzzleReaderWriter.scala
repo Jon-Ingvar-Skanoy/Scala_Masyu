@@ -16,8 +16,8 @@ object PuzzleReaderWriter{
     lines = Source.fromFile(unsolvedFile).getLines().toList
     fw = new FileWriter(SolvedFile, false)
   }
-  def getNumPizzles():Int={
-    val count = lines(0).split(" ").last.toInt
+  def getNumPuzzles:Int={
+    val count = lines.head.split(" ").last.toInt
     fw.write("puzzles "+ count.toString + "\n")
     return count
   }
@@ -52,7 +52,7 @@ object PuzzleReaderWriter{
      tiles
   }
 
-  def closing()={
+  def closing: Unit={
     fw.close()
   }
 

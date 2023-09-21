@@ -665,9 +665,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
   }
 def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Puzzle = {
     val newPuzzle = Puzzle(width,height,copyTiles())
-    val startList: List[Set[(Int, Int)]] = List.empty[Set[(Int, Int)]]
+    val startList: List[Tuple2[Int, Int]] = List.empty[Tuple2[Int, Int]]
     val mainLoop = newPuzzle.circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, startList)
-    val messyTiles: Array[Tile] = tiles.flatMap(_.filterNot(tile => mainLoop.exists(_.contains((tile.height, tile.width)))))
+    val messyTiles: Array[Tile] = tiles.flatMap(_.filterNot(tile => mainLoop.contains(((tile.height, tile.width)))))
     println(mainLoop.length)
     messyTiles.foreach(tile=> tiles(tile.height)(tile.width).paths(0) = Line.Illegal)
   messyTiles.foreach(tile=> tiles(tile.height)(tile.width).paths(1) = Line.Illegal)

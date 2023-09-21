@@ -31,8 +31,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     //Sort tiles by proximity to middle square and some fancy math.
     val flatTiles = tiles.flatten.sortBy {
       tile=>
-        val prox1 = Math.abs((height/2)^2-(tile.height)^2)
-        val prox2 = Math.abs((width/16)^4-(tile.width/8)^4)
+        val prox1 = Math.abs(((height+4)/2)^2-(tile.height+4)^2)
+        val prox2 = Math.abs(((width)/16)^4-((tile.width)/8)^4)
+
         prox1-prox2
     }
     flatTiles.foreach(tile => {

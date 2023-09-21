@@ -31,9 +31,9 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
     //Sort tiles by proximity to middle square. Just using (height/2)^2 - tile.height^2 caused a stack overflow somehow
     val flatTiles = tiles.flatten.sortBy {
       tile=>
-        val prox1 = Math.abs((height/4)^2-(tile.height/2)^2)
-        val prox2 = Math.abs((width/4)^2-(tile.width/2)^2)
-        0.1*prox1+0.1*prox2
+        val prox1 = Math.abs((height/2)^2-(tile.height)^2)
+        val prox2 = Math.abs((width/16)^3-(tile.width/8)^3)
+        prox1-prox2
     }
     flatTiles.foreach(tile => {
               if (!tile.crowded) {

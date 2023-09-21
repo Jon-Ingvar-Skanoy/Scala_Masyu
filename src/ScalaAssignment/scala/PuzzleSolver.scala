@@ -130,9 +130,12 @@ object PuzzleSolver {
       copy= solve(copy,dept+1)
       val wonResults = copy.won()
       if (wonResults.head._1) {
-        println("won")
-        return copy.cleanUp(wonResults.head._2,wonResults.head._3,wonResults.head._4,wonResults.head._5,copy.count_dots,wonResults.head._6)
-      }
+        println(copy.boardString)
+        copy =  copy.cleanUp(wonResults.head._2, wonResults.head._3, wonResults.head._4, wonResults.head._5, copy.count_dots, wonResults.head._6)
+
+        println(copy.boardString)
+        return copy
+        }
       if (copy.lost()){
 
 

@@ -622,45 +622,46 @@ case class Puzzle(x:Int, y:Int, sol: Array[Array[Tile]]  ){
      0
   }
 
-  def circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, visited: List[Tuple2[Int,Int]]):List[Tuple2[Int,Int]]= {
+  def circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, visited: List[Tuple2[Int, Int]]): List[Tuple2[Int, Int]] = {
     // recursive function that determine of from start position one there is a line to the current position and if so if it passes trough every dot
+
     val currentTileSet: Tuple2[Int, Int] = Tuple2(current_y, Current_x)
     if (!tiles(current_y)(Current_x).isEmpty) {
 
       if (start_y == current_y && start_x == Current_x) {
-        if (Remaining_dots == 0) {
-          return visited
-        }
+
+        return visited
+
+
       }
       if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots - 1, 1, visited :+ currentTileSet)
       if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circleList(start_x, start_y, Current_x, current_y + 1, Remaining_dots - 1, 2, visited :+ currentTileSet)
       if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circleList(start_x, start_y, Current_x + 1, current_y, Remaining_dots - 1, 0, visited :+ currentTileSet)
       if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circleList(start_x, start_y, Current_x - 1, current_y, Remaining_dots - 1, 3, visited :+ currentTileSet)
-      else{
-         List.empty[Tuple2[Int, Int]]
+      else {
+        List.empty[Tuple2[Int, Int]]
       }
     }
     else {
       if (start_y == current_y & start_x == Current_x) {
 
-        if (Remaining_dots == 0) {
-          return visited
-        }
 
-        if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots, 1, visited :+ currentTileSet)
-        if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circleList(start_x, start_y, Current_x, current_y + 1, Remaining_dots, 2, visited :+ currentTileSet)
-        if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circleList(start_x, start_y, Current_x + 1, current_y, Remaining_dots, 0, visited :+ currentTileSet)
-        if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circleList(start_x, start_y, Current_x - 1, current_y, Remaining_dots, 3, visited :+ currentTileSet)
+        return visited
 
-      else{
-        val fullListErrorBackup = for(tile<-tiles.flatten) yield Tuple2(tile.height,tile.width)
-        List.empty[Tuple2[Int, Int]]
       }
-    }
-      else{
-        val fullListErrorBackup = for (tile <- tiles.flatten) yield Tuple2(tile.height,tile.width)
+
+      if (tiles(current_y)(Current_x).up() && 2 != Current_direction) return circleList(start_x, start_y, Current_x, current_y - 1, Remaining_dots, 1, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).down() && 1 != Current_direction) return circleList(start_x, start_y, Current_x, current_y + 1, Remaining_dots, 2, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).right() && 3 != Current_direction) return circleList(start_x, start_y, Current_x + 1, current_y, Remaining_dots, 0, visited :+ currentTileSet)
+      if (tiles(current_y)(Current_x).left() && 0 != Current_direction) return circleList(start_x, start_y, Current_x - 1, current_y, Remaining_dots, 3, visited :+ currentTileSet)
+
+      else {
+        val fullListErrorBackup = for (tile <- tiles.flatten) yield Tuple2(tile.height, tile.width)
         List.empty[Tuple2[Int, Int]]
+
       }
+
+
     }
   }
 def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int): Puzzle = {
@@ -668,7 +669,7 @@ def cleanUp(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remainin
     val startList: List[Tuple2[Int, Int]] = List.empty[Tuple2[Int, Int]]
     val mainLoop = newPuzzle.circleList(start_x: Int, start_y: Int, Current_x: Int, current_y: Int, Remaining_dots: Int, Current_direction: Int, startList)
     val messyTiles: Array[Tile] = newPuzzle.tiles.flatMap(_.filterNot(tile => mainLoop.contains(((tile.height, tile.width)))))
-    println(mainLoop.length)
+    println(messyTiles.length)
     messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(0) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(1) = Line.Illegal)
   messyTiles.foreach(tile=> newPuzzle.tiles(tile.height)(tile.width).paths(2) = Line.Illegal)

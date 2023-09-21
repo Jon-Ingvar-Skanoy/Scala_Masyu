@@ -29,6 +29,7 @@ object PuzzleSolver {
   }
 
     def main(args: Array[String]): Unit = {
+      val startTime: Long = System.currentTimeMillis()
     //val line1: String = args(0)
     //val line2: String = args(1)
     //initRW(line1, line2)
@@ -47,6 +48,7 @@ object PuzzleSolver {
 
       writeAnswer(board = newBoard)})
     closing
+      println(System.currentTimeMillis()-startTime)
   }
 
 
@@ -68,7 +70,7 @@ object PuzzleSolver {
 
     newpuzzle = illegalMoves(newpuzzle)
 
-    if (depth > 15 | newpuzzle.won.head._1 | newpuzzle.lost) return newpuzzle
+    if (depth > 12 | newpuzzle.won.head._1 | newpuzzle.lost) return newpuzzle
 
     var copy:Puzzle =  Puzzle(newpuzzle.width,newpuzzle.height,newpuzzle.copyTiles)
     var move:Array[Int] = Array(0,2,33)

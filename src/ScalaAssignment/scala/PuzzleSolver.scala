@@ -1,36 +1,13 @@
 import PuzzleReaderWriter.{closing, getNumPuzzles, getPuzzle, initRW, writeAnswer}
-import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future, TimeoutException}
-import scala.concurrent.duration.Duration
-
 
 
 
 object PuzzleSolver {
 
 
- private def withTimeLimit[T](timeout: Duration)(block: => T):Any = {
-   // function from chat gpt to end function when x time has passed
-    val promise = Promise[T]()
-    val future = Future {
-      val result = block
-      if (!promise.isCompleted) {
-        promise.success(result)
-      }
-    }
 
-    try {
-      Some(Await.result(future, timeout))
-    } catch {
-      case ex: TimeoutException =>
-        promise.tryFailure(new TimeoutException)
-        None
-    }
-  }
 
     def main(args: Array[String]): Unit = {
-      val startTime: Long = System.currentTimeMillis()
     initRW("src/ScalaAssignment/scala/puzzle_unsolved.txt", "src/ScalaAssignment/scala/puzzle_solved.txt")
     val line1: String = args(0)
     val line2: String = args(1)
@@ -50,7 +27,6 @@ object PuzzleSolver {
 
       writeAnswer(board = newBoard)})
     closing
-      println(System.currentTimeMillis()-startTime)
   }
 
 
